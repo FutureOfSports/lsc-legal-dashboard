@@ -1,14 +1,14 @@
 /**
  * The app's own public origin, for links inside outbound notifications.
  *
- * Vercel does not expose a single canonical origin, so resolve in order:
- * an explicit NEXT_PUBLIC_APP_URL, then the deployment's production host,
- * then the known production host. Vercel's host values carry no scheme.
+ * Server-generated links use the same runtime origin as magic-link login.
+ * Legacy Vercel settings remain fallback inputs for older deployments.
  */
 const FALLBACK_ORIGIN = "https://lsc-legal-dashboard.vercel.app"
 
 export function getAppBaseUrl(): string {
   const configured =
+    process.env.AUTH_APP_URL?.trim() ||
     process.env.NEXT_PUBLIC_APP_URL?.trim() ||
     process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim()
 

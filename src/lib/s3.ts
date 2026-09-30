@@ -1,14 +1,14 @@
 /**
  * File storage for the legal platform, on Google Cloud Storage.
  *
- * The estate is GCP-only, so objects live in the fsp-legal-esign-documents
- * bucket (asia-southeast1, beside Cloud Run; PostgreSQL is hosted by Neon). Access goes
- * through GCS's S3-compatible XML interop API with an HMAC key, which keeps
- * the existing AWS SDK client with the GCS endpoint. The exported names keep their historical s3
- * spelling because eight call sites use them; the semantics are unchanged.
+ * All reads and writes use the configured bucket through GCS's S3-compatible
+ * XML API. Explicit migrated bucket aliases preserve immutable stored URLs,
+ * resolving their unchanged object keys in the current bucket only. Enable an
+ * alias only after copying and verifying every source object.
  *
  * Env:
- *   GCS_BUCKET_NAME       fsp-legal-esign-documents
+ *   GCS_BUCKET_NAME       Current private document bucket
+ *   GCS_MIGRATED_BUCKET_ALIASES  Comma-separated copied source bucket names
  *   GCS_HMAC_ACCESS_ID    HMAC access id for the legal-storage service account
  *   GCS_HMAC_SECRET       HMAC secret for the same key
  *
@@ -111,24 +111,34 @@ export async function getPresignedUrl(key: string): Promise<string> {
 
 export function getS3KeyFromUrl(fileUrl: string): string | null {
   try {
+    // Reject syntax URL would silently normalize before we identify the object.
+    if (fileUrl !== fileUrl.trim() || fileUrl.includes("\\") ||
+      [...fileUrl].some((character) => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)) return null
     const url = new URL(fileUrl)
     const bucket = getBucketName()
+    if (!bucket || url.protocol !== "https:" || url.username || url.password || url.port) return null
+    const buckets = new Set([bucket, ...(process.env.GCS_MIGRATED_BUCKET_ALIASES ?? "")
+      .split(",").map((value) => value.trim()).filter(Boolean)])
+    // Use the original path: URL.pathname removes encoded and literal dot segments.
+    const path = fileUrl.match(/^https:\/\/[^/?#]+(\/[^?#]*)?/i)?.[1]
+    if (!path) return null
+    let encodedKey: string | undefined
 
     // Path style on the interop endpoint: storage.googleapis.com/<bucket>/<key>
     if (url.hostname === "storage.googleapis.com") {
-      const [urlBucket, ...keyParts] = url.pathname.replace(/^\//, "").split("/")
-      if (urlBucket === bucket && keyParts.length > 0) {
-        return decodeURIComponent(keyParts.join("/"))
-      }
+      const [urlBucket, ...keyParts] = path.slice(1).split("/")
+      if (buckets.has(urlBucket)) encodedKey = keyParts.join("/")
     }
 
     // Virtual-hosted style: <bucket>.storage.googleapis.com/<key>
-    if (url.hostname === `${bucket}.storage.googleapis.com`) {
-      return decodeURIComponent(url.pathname.replace(/^\//, ""))
-    }
+    if ([...buckets].some((name) => url.hostname === `${name}.storage.googleapis.com`)) encodedKey = path.slice(1)
 
     // Anything else, the retired amazonaws URLs included, is not ours to sign.
-    return null
+    if (!encodedKey) return null
+    const key = decodeURIComponent(encodedKey)
+    if (key.includes("\\") || [...key].some((character) => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127) ||
+      key.split("/").some((part) => part === "." || part === "..")) return null
+    return key
   } catch {
     return null
   }

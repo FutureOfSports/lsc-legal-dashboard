@@ -216,7 +216,7 @@ export default async function ExpirationsPage({
                           {doc.title}
                         </Link>
                         {doc.file_url && (
-                          <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="ml-1.5 text-muted-foreground hover:text-primary inline-block" title="Open file">
+                          <a href={`/api/documents/${doc.id}/file`} target="_blank" rel="noopener noreferrer" className="ml-1.5 text-muted-foreground hover:text-primary inline-block" title="Open file">
                             <ExternalLink className="h-3 w-3 inline" />
                           </a>
                         )}

@@ -1,75 +1,155 @@
-# US production migration preflight, 30 September 2026
+# US production migration, 30 September 2026
 
-Status: preparation only. No production resources, data, billing links or traffic
-have been changed. Anuj requested moving Legal OS to US production because billing
-appears to work there. The discovered candidate is `fsp-us-prod-499705`
-(`FSP-US-PROD`); destination confirmation and authenticated access are pending.
+Status: preparation verified, cutover blocked. Anuj authorized moving Legal OS to
+`fsp-us-prod-499705` (`FSP-US-PROD`) and confirmed `anuj@futureofsports.io` as the
+deployment account. CLI access now works. Use explicit account/project/region
+flags and do not reopen browser authentication.
 
-## Executed checks
+The target application region is `us-central1`. Source configuration, database
+writes and traffic were not changed by migration preparation. Target resources
+were created as listed below, so preparation is no longer read-only.
 
-- Source project: `fsp-legal-esign`. Cloud Run `lsc-legal-dashboard` in
-  `asia-southeast1` still assigns 100% of traffic to revision
-  `lsc-legal-dashboard-00032-civ`.
-- Source maintenance job: `legal-os-maintenance`, `asia-southeast1`.
-- Source VMs: `legal-generation-worker`, `asia-southeast1-b`, and `opensign-vm`,
-  `me-central1-a`. Both report RUNNING; that is not an application health check.
-- Document and recovery buckets are in `ASIA-SOUTHEAST1`. The current Neon
-  connection endpoints contain `ap-southeast-1`; database relocation is separate
-  from moving the GCP deployment.
-- Source project billing linkage reports enabled on account
-  `01093C-C0D401-782C53`, but listing its Cloud Scheduler jobs fails with
-  `BILLING_DISABLED`. Linkage alone is insufficient evidence of working billing.
-- Destination linkage reports enabled on `0188A1-F73D51-01F161`. Its account status
-  and deployment health remain unverified. The active `anuj@futureofsports.io`
-  account cannot list destination Cloud Run services or inspect that billing
-  account. Official reauthentication of `anuj@xtzesports.com` succeeded during
-  this preflight; fresh requests still deny project inspection, Cloud Run listing,
-  project IAM inspection and billing-account inspection. Its blocker is project
-  authorization, not the expired session. The cached personal Gmail account also
-  lacks destination project access. An account with destination deployment access
-  is required before the migration can proceed.
+## Source and dependencies verified
 
-## Cutover requirements
+- Cloud Run `lsc-legal-dashboard`, project `fsp-legal-esign`, `asia-southeast1`,
+  still sends 100% of traffic to `lsc-legal-dashboard-00032-civ` at
+  `https://lsc-legal-dashboard-221817683102.asia-southeast1.run.app`.
+- Its deployed image digest is
+  `sha256:f1376bb05a8d7dc3175b952b27ce586b82e832e0055ebc781bac559f992191d4`.
+  No migration code has been deployed.
+- Maintenance job: `legal-os-maintenance`, `asia-southeast1`.
+- VMs: `legal-generation-worker`, `asia-southeast1-b`, and `opensign-vm`,
+  `me-central1-a`. Both report RUNNING; this is not application health proof.
+- Document bucket `fsp-legal-esign-documents` and recovery bucket
+  `fsp-legal-esign-recovery` are in `ASIA-SOUTHEAST1`. The document listing returned
+  545 object entries. Listing metadata does not prove bytes are readable.
+- Neon endpoints contain `ap-southeast-1`. Preserve the database; this GCP hosting
+  move does not establish full US data residency.
+- OpenSign's 40 GB VM boot disk holds Mongo, local files and sealing credentials.
+  Its state requires a consistent, verified recovery copy before replacement.
+- The application database has two documents awaiting signature and four SENT
+  signer requests using `sign-34-18-92-76.sslip.io`. These are application records,
+  not independently refreshed provider statuses. Preserve that hostname. Its
+  regional static IP cannot move to a US region.
+- The actual self-hosted signing completion path is polling, not the legacy
+  webhook description in older runbook sections.
 
-1. Confirm the destination project and its working region, restore operator
-   authentication, and verify billing with actual destination service operations.
-2. Inventory source runtime configuration privately, including deployed image,
-   IAM, all schedules, Slack app request URLs and OpenSign persistent state.
-   Do not print or commit credentials. Source Scheduler inventory is currently
-   blocked by billing, so the three previously recorded schedules are not an
-   exhaustive current inventory.
-3. Copy the verified application image and configuration to the destination.
-   Keep generation disabled and scheduled dispatch inactive during verification.
-   Preserve the existing database unless a separate data move is confirmed and
-   backed by a verified backup and controlled writer cutover.
-4. Set both login and application link origins. `AUTH_APP_URL` controls magic
-   links; `src/lib/app-url.ts` instead reads `NEXT_PUBLIC_APP_URL` and the legacy
-   Vercel hostname. Verify compiled output and actual generated links. A new
-   hostname requires users to sign in again because cookies are host-only.
-5. Do not change `GCS_BUCKET_NAME` alone. Existing absolute URLs are accepted only
-   for the configured bucket. A bucket move needs copied, hash-verified objects
-   and an audited URL migration or explicit legacy-bucket read support. Preserve
-   immutable artifact bytes, provenance and partial-backup status.
-6. Preserve OpenSign Mongo data, local files, sealing certificate and existing
-   signer links. It is a separate stateful server with an IP-bound hostname.
-   A full project migration must address it explicitly; moving only Cloud Run
-   does not remove the old project's billing dependency.
-7. Update the actual Slack command/interactivity configuration, generation worker
-   origin and configured inbound integrations. The checked-in Slack manifest
-   contains old Vercel URLs and is not evidence of the live configuration.
-8. Transfer maintenance and review schedules and the existing OpenSign completion
-   poll. Verify dispatches, then switch from old dispatchers to new ones without
-   concurrent duplicate external work. The real self-hosted signing completion
-   path is polling, not the webhook described by older runbook sections.
-9. Verify access controls, login, protected file and archive hashes, generated
-   URLs, signing reachability and schedule receipts. Run an independent
-   adversarial verification before routing production use to the replacement.
-10. Retain source resources for rollback. Record the new canonical URL, image,
-    runtime identity, region and executed receipts before changing current
-    deployment instructions or calling the migration complete.
+## Target resources created
+
+In `fsp-us-prod-499705`:
+
+1. Runtime service account
+   `legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com`.
+2. Private bucket `gs://fsp-us-prod-499705-legal-documents`, `us-central1`, with
+   uniform bucket-level access and public-access prevention. The runtime account
+   has `roles/storage.objectAdmin` on this bucket only.
+3. Docker Artifact Registry repository `legal-os`, `us-central1`.
+
+A 45-byte synthetic object was written to the target bucket, read back, compared
+and deleted successfully. This proves destination storage is operational, not a
+successful application deployment or data migration. No target Cloud Run service,
+scheduled job or VM has been deployed.
+
+## External blockers
+
+### Source billing
+
+Source linkage reports billing enabled on `01093C-C0D401-782C53`, but object reads
+and copies return HTTP 403:
+
+> The billing account for the owning project is disabled in state delinquent
+
+Bulk copy, a single-object copy and a copy with
+`--billing-project=fsp-us-prod-499705` all failed on that source error. No source
+object copy has been verified. Source billing must be restored by its billing
+administrator before copying and verifying the files. Do not switch to the new
+bucket first. Target linkage reports enabled on `0188A1-F73D51-01F161` and target
+storage passed the actual write/read check; billing-account inspection is denied.
+
+### Operator permissions
+
+The operator can inspect/deploy Cloud Run and manage destination storage and
+Artifact Registry. These attempted operations were denied:
+
+| Operation | Denied permission | Requested target project role |
+| --- | --- | --- |
+| Create runtime storage HMAC key | `storage.hmacKeys.create` | `roles/storage.hmacKeyAdmin` |
+| Snapshot source OpenSign disk into target | `compute.snapshots.create` | `roles/compute.instanceAdmin.v1` |
+
+An administrator must grant the required permissions to
+`anuj@futureofsports.io`. These are the currently observed denials; check further
+source/destination permissions when the operations can proceed. No HMAC key or
+VM snapshot was created by these failed attempts.
+
+### Source schedules still dispatch
+
+Source Scheduler management returns `BILLING_DISABLED`, but logs show existing
+dispatches on 30 September 2026:
+
+| Observed schedule | Latest checked dispatch, UTC | Result |
+| --- | --- | --- |
+| `legal-os-maintenance` | 10:15 | HTTP 200 |
+| `opensign-poll` | 10:15 | HTTP 500 |
+| `legal-document-reviews` | 02:17 | HTTP 500 |
+
+These three observed jobs are not an exhaustive inventory. Do not infer they
+are paused from a denied management request. Inventory and pause old dispatchers
+before enabling target schedules.
+
+## Implemented compatibility and executed verification
+
+- `src/lib/s3.ts` accepts explicit `GCS_MIGRATED_BUCKET_ALIASES`. Accepted source
+  URLs resolve unchanged keys in the configured current bucket only. Unconfigured
+  hosts, malformed encodings and traversal are rejected. After all source objects
+  are copied and verified, configure:
+
+  ```text
+  GCS_BUCKET_NAME=fsp-us-prod-499705-legal-documents
+  GCS_MIGRATED_BUCKET_ALIASES=fsp-legal-esign-documents
+  ```
+
+- The expiration file link now uses the authenticated document file route.
+- Server notification links prefer runtime `AUTH_APP_URL`, matching magic-link
+  configuration. Set a full HTTPS origin without a path and verify it against the
+  actual target service. The new hostname requires a fresh host-only login cookie.
+- `npm run release:gate` passed using `legal_os_v2_verify_20260921` on
+  30 September 2026. Production storage, mail and Slack credentials were omitted.
+  TypeScript, workflow checks, lint (zero errors, 50 existing warnings) and the
+  Next.js 16.3.5 production build passed.
+- Focused checks exercised 11 exact-key destination signatures, 33 rejected URLs,
+  opt-in aliases, the existing GCS file-upload transport and eight protected file
+  routes. Independent review executed actual-source Slack/redline link checks
+  with a changed runtime origin and found no blocker.
+- A read-only schema comparison confirmed the isolated database's 63 tables and
+  784 column definitions match production on names, types and nullability.
+
+These checks do not prove a live US production cutover.
+
+## Remaining cutover sequence
+
+1. Restore source billing and operator permissions. Recheck service operations.
+2. Inventory all schedules and privately preserve runtime configuration. Never
+   print/commit credentials or include private exports in build uploads.
+3. Copy document and recovery data, verify hashes and counts, and preserve
+   immutable provenance and the existing partial-backup status.
+4. Prepare and verify isolated VM recovery, retaining OpenSign's data, certificate
+   and signer URL continuity. A US backend may need an old-host gateway. Do not
+   interrupt existing signers or run duplicate signing workers during preparation.
+5. Build and deploy the reviewed app privately in the target with its runtime
+   identity and storage HMAC credentials. Keep generation and target schedules
+   disabled during validation. Preserve the existing Neon database.
+6. Verify authenticated access, file/archive bytes, generated links and signing
+   reachability. Update actual Slack/inbound integration URLs and worker origin.
+7. Pause old dispatchers before enabling target replacements. Prevent concurrent
+   writers from splitting uploads across buckets during cutover.
+8. Complete independent adversarial verification and route production use to the
+   verified replacement. Record URL, image, runtime identity, region and executed
+   receipts. Retain source resources for rollback.
 
 Existing incomplete backups and pending Drive, Finance, mailbox and generation
 acceptance remain incomplete after any hosting move.
 
 References: [Cloud Run service copying](https://docs.cloud.google.com/run/docs/managing/services#copy),
-[moving bucket data between projects](https://docs.cloud.google.com/storage/docs/moving-buckets).
+[moving bucket data](https://docs.cloud.google.com/storage/docs/moving-buckets),
+[requester billing](https://docs.cloud.google.com/storage/docs/using-requester-pays),
+[regional IP project transfer](https://docs.cloud.google.com/vpc/docs/move-ip-address-different-project).

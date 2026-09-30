@@ -98,3 +98,22 @@ This application uses the affected App Router and Server Actions architecture.
 The release moves narrowly to Next.js 16.3.5 with its matching lint configuration
 and required PostCSS version. No broad dependency auto-fix is authorized by this
 change. Build, workflow and deployed access checks still gate production cutover.
+
+## 30 September 2026: US production migration
+
+Anuj authorized moving the GCP deployment to `fsp-us-prod-499705` and confirmed
+`anuj@futureofsports.io` as the deployment account. CLI access is now verified;
+use that CLI session and do not reopen browser authentication. The target
+application region is `us-central1`. The existing Neon database stays in place,
+so the hosting move does not establish full US data residency.
+
+Preserve immutable document URLs by explicitly mapping verified copied bucket
+names to unchanged keys in the destination bucket. Do not rewrite provenance or
+enable an alias before the object copy is complete. Server-generated links use
+the runtime `AUTH_APP_URL` to support the new application origin.
+
+Target storage, runtime identity and image repository have been prepared, but
+source billing and operator permissions block completion. Source traffic remains
+in place. Preserve OpenSign's pending signer URLs and inventory active schedules
+before cutover. Executed receipts and remaining prerequisites are recorded in
+`ops/us-prod-migration.md`; this decision is not a completed-deployment claim.

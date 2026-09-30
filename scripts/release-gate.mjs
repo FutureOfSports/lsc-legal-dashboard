@@ -15,6 +15,8 @@ const commands = [
   ["node", ["scripts/verify-review-completion-race.mjs"]],
   ["node", ["scripts/verify-protected-file-responses.mjs"]],
   ["node", ["scripts/verify-gcs-upload-transport.mjs"]],
+  ["npx", ["tsx", "scripts/verify-storage-migration.ts"]],
+  ["npx", ["tsx", "scripts/verify-app-origin.ts"]],
   ["npx", ["tsx", "scripts/verify-document-foundations.ts"]],
   ["npx", ["tsx", "scripts/verify-entities-reviews-disputes.ts"]],
   ["node", ["scripts/verify-dispute-finance.mjs"]],

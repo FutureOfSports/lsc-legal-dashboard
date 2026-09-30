@@ -13,7 +13,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Deployment and verification gotchas, 21 September 2026
 
-- Always pass `--project=fsp-legal-esign`; local gcloud defaults to another project.
+- Always pass the intended `--project` explicitly. Source production is
+  `fsp-legal-esign`; the migration destination is `fsp-us-prod-499705`. Local
+  gcloud defaults to an unrelated project.
 - Live data is Neon Postgres; Cloud Run hosting does not imply a Cloud SQL backup.
 - Use the isolated verification database for fixtures. Never seed synthetic legal
   entities, money, signatures or Finance payloads into production.
@@ -52,6 +54,19 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - `billingEnabled: true` on a project does not prove operational billing. Source
   Scheduler requests returned `BILLING_DISABLED` despite that flag. Require
   successful destination service operations before calling billing healthy.
-- US production migration is pending destination access and confirmation. See
-  `ops/us-prod-migration.md`; current deployment instructions remain the source
-  environment until a verified cutover. Do not substitute the default project.
+- CLI access as `anuj@futureofsports.io` to `fsp-us-prod-499705` is verified.
+  Source object reads still fail because its owning billing account is delinquent;
+  destination write/read success does not clear that source dependency. Supplying
+  the destination billing project also failed. Restore source billing before copy.
+- Source Scheduler management can be billing-blocked while existing jobs still
+  dispatch. Verify and pause old dispatchers before enabling destination schedules.
+- Enable `GCS_MIGRATED_BUCKET_ALIASES` only after all source objects are copied and
+  verified in the configured destination bucket. Aliases preserve stored URLs and
+  exact object keys; they never read from the old bucket.
+- Set `AUTH_APP_URL` to the complete HTTPS origin without a path. Server links
+  prefer that runtime value over build-time public environment configuration.
+- OpenSign has pending signer links on its old IP-bound hostname. Preserve that
+  hostname and state when migrating; a regional IP cannot move to a US region.
+- See `ops/us-prod-migration.md` for created resources, verification and remaining
+  permissions. Current deployment instructions remain the source environment
+  until a verified cutover. Use CLI operations; Anuj requested no browser use.
