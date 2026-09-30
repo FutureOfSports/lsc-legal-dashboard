@@ -46,3 +46,12 @@ This version has breaking changes — APIs, conventions, and file structure may 
   queries runtime schema tables; a fake connection URL is insufficient. Reject
   production database targets, omit storage/mail/Slack/provider secrets, and
   remove the temporary job after verification.
+
+## Migration preflight, 30 September 2026
+
+- `billingEnabled: true` on a project does not prove operational billing. Source
+  Scheduler requests returned `BILLING_DISABLED` despite that flag. Require
+  successful destination service operations before calling billing healthy.
+- US production migration is pending destination access and confirmation. See
+  `ops/us-prod-migration.md`; current deployment instructions remain the source
+  environment until a verified cutover. Do not substitute the default project.
