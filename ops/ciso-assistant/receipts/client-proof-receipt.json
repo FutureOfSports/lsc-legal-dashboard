@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "domainId": "f29b4f34-9b8d-496a-9483-d878e0998bb4",
+  "controlId": "4e9ed520-509e-4037-b4f2-e7cfe3c12583",
+  "evidenceId": "c5e19c15-7f44-455f-8dc7-dbc10cfe3198",
+  "refId": "legal-os:11948326-3fcb-4d2e-b92b-4d3951cbe04f",
+  "marker": "legal-os:93952f37-541c-439d-be94-2a05a96177ad",
+  "checks": [
+    "scoped list before creation",
+    "control POST to_do",
+    "control GET",
+    "control PATCH preserves status",
+    "control ref_id lookup",
+    "evidence POST applied_controls",
+    "evidence GET",
+    "evidence marker lookup",
+    "evidence PATCH clears applied_controls",
+    "evidence PATCH preserves link",
+    "updated metadata reread"
+  ]
+}

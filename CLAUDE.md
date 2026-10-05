@@ -19,10 +19,10 @@ Existing analysis agents and deterministic MNDA sending are separate workflows.
 Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()`.
 
 - **Orchestrator** (`orchestrator.ts`): Single registry for runnable agents and direct `runAgent()` triggers
-- **Compliance Agent**: 15-day scan of all entities/jurisdictions for compliance issues
+- **Compliance Agent**: Legacy stored-record compliance and deadline checks
 - **Agreement Analyzer**: AI-powered document categorization, clause extraction, file naming
 - **Invoice Detection**: Scans emails for invoices, verifies math, routes to finance
-- **Compliance Audit**: Full adversarial audit every 15 days, produces AuditReport records
+- **Compliance Audit**: Legacy database audit producing AuditReport records; not the FSP source-backed legal review
 - `AgentMessage` is diagnostic/legacy plumbing only; production workflows use direct triggers. Cross-dashboard events use the durable `CrossModuleEvent` queue.
 
 ## Tech Stack
@@ -34,7 +34,7 @@ Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()
 - **Drag & Drop**: @dnd-kit/core
 - **Icons**: lucide-react
 - **Auth**: Custom cookie-based HMAC sessions
-- **Deploy**: GCP Cloud Run `lsc-legal-dashboard`, project `fsp-legal-esign`, region `asia-southeast1`; GitHub source
+- **Deploy**: primary GCP Cloud Run `lsc-legal-dashboard` in `fsp-us-prod-499705` / `us-central1`; original `fsp-legal-esign` / `asia-southeast1` URL remains compatible. Existing Neon data, document bucket and signing URLs are retained.
 
 ## Key Rules
 1. **Read Next.js 16 docs first**: Check `node_modules/next/dist/docs/` before writing any code. `params` and `searchParams` are Promises in page components — always `await` them.
@@ -82,3 +82,14 @@ Platform Admin (AK) | Finance Admin (Anuj) | Legal Admin (Arvind) | Ops Admin (A
 - Use explicit GCP project flags. The operator's default gcloud project is unrelated.
 - Runtime configuration and credentials are separate from tested implementation.
   See `docs/v2/documents-runtime.md`, `docs/v2/entities-runtime.md`, and `PLAN.md`.
+
+## FSP compliance integration
+
+FSP compliance uses immutable source snapshots, three-valued applicability,
+source and fact review, append-only legal decisions, and a restricted CISO
+Assistant Community metadata outbox. The initial feed is for legal review, not
+a certification. Human-requested delivery starts an isolated worker; recurring
+Codex CLI review automation is deferred. No API-based AI review is activated.
+See `docs/compliance-integration/PLAN.md` and
+`docs/compliance-integration/deployment-20261006.md` before extending it.
+The historical isolated API proof is in `implementation-cpl02.md`.

@@ -124,6 +124,9 @@ if (process.env.MAGIC_LINK_LOGIN_ENABLED === "1") {
 // database does not have. Every table and column a patch adds belongs here.
 // AuthMagicLinkToken is included because login itself now depends on it.
 const REQUIRED_TABLES = [
+  "FspComplianceSnapshot",
+  "FspComplianceAssessment",
+  "FspComplianceDecision",
   "DocumentAnalysis",
   "WebhookEventLog",
   "CrossModuleEvent",
@@ -135,10 +138,21 @@ const REQUIRED_TABLES = [
 ]
 
 const REQUIRED_COLUMNS = [
+  ["FspComplianceSnapshot", "feed_hash"],
+  ["FspComplianceDecision", "revision"],
+  ["FspComplianceDecision", "evidence_as_of"],
   ["LegalDocument", "last_tracker_notified_at"],
   ["LegalDocument", "tracker_notify_status"],
   ["LegalDocument", "last_tracker_notify_error"],
 ]
+
+if (process.env.CISO_ASSISTANT_ENABLED === "1") {
+  REQUIRED_TABLES.push("CisoSyncObject", "CisoSyncJob", "CisoSyncAttempt")
+  REQUIRED_COLUMNS.push(["CisoSyncJob", "requested_email"])
+  for (const name of ["CISO_ASSISTANT_URL", "CISO_ASSISTANT_TOKEN", "CISO_ASSISTANT_DOMAIN_ID", "CISO_ASSISTANT_SYNC_JOB", "AUTH_APP_URL"]) {
+    if (!process.env[name]) errors.push(`${name} is required when CISO_ASSISTANT_ENABLED=1`)
+  }
+}
 
 if (process.env.DATABASE_URL) {
   const client = new Client({ connectionString: process.env.DATABASE_URL })

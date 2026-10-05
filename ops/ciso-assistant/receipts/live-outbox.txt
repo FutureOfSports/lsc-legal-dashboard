@@ -1,0 +1,5 @@
+Scope: synthetic local CISO Community v4.1.0 and isolated Legal OS Postgres. No production integration.
+PASS actual CISO allowlisted shared framework read and foreign-domain control denial
+PASS actual CISO CONTROL: create, read confirmation, durable receipt, duplicate no-op, same-object revision, status preserved
+PASS actual CISO EVIDENCE: create, read confirmation, durable receipt, duplicate no-op, same-object revision, status preserved
+PASS actual CISO evidence relationship create and explicit removal receipts

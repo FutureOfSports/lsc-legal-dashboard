@@ -153,3 +153,18 @@ References: [Cloud Run service copying](https://docs.cloud.google.com/run/docs/m
 [moving bucket data](https://docs.cloud.google.com/storage/docs/moving-buckets),
 [requester billing](https://docs.cloud.google.com/storage/docs/using-requester-pays),
 [regional IP project transfer](https://docs.cloud.google.com/vpc/docs/move-ip-address-different-project).
+
+
+## Application hosting completed, 6 October 2026
+
+The new primary dashboard is in `fsp-us-prod-499705` / `us-central1`, with the
+same new release deployed at the original URL for compatibility. Both origins
+passed authenticated legal-access and existing-document checksum checks. New
+application links use the US origin. The private CISO service and manual worker
+are also in US production. See the exact revisions and runtime proofs in
+[the compliance release](../docs/compliance-integration/deployment-20261006.md).
+
+This deliberately retains the existing Neon database, original document bucket,
+OpenSign hostname and established callbacks. No replacement recurring schedules
+were enabled. The broader storage/signing relocation sequence above remains
+future work, not a claim of complete US data residency.

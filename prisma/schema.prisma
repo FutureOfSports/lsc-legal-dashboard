@@ -1257,6 +1257,63 @@ model CrossModuleEvent {
   @@index([created_at])
 }
 
+// CISO metadata outbox. Decisions and original evidence remain in Legal OS.
+model CisoSyncObject {
+  id                 String   @id @default(uuid())
+  instance_key       String
+  kind               String
+  source_reference   String
+  remote_marker      String   @unique
+  remote_id          String?
+  delivered_revision Int      @default(0)
+  created_at         DateTime @default(now())
+  jobs               CisoSyncJob[]
+
+  @@unique([instance_key, kind, source_reference])
+}
+
+model CisoSyncJob {
+  id                 String   @id @default(uuid())
+  object_id          String
+  revision           Int
+  requested_by       String
+  requested_email    String
+  approval_reference String
+  payload            Json
+  payload_hash       String
+  status             String   @default("QUEUED")
+  attempt_count      Int      @default(0)
+  available_at       DateTime @default(now())
+  lease_token        String?
+  lease_until        DateTime?
+  last_error_code    String?
+  completed_at       DateTime?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  object             CisoSyncObject @relation(fields: [object_id], references: [id], onDelete: Restrict)
+  attempts           CisoSyncAttempt[]
+
+  @@unique([object_id, revision])
+  @@index([status, available_at])
+  @@index([status, lease_until])
+}
+
+model CisoSyncAttempt {
+  id             String   @id @default(uuid())
+  job_id         String
+  attempt        Int
+  lease_token    String   @unique
+  started_at     DateTime @default(now())
+  finished_at    DateTime?
+  outcome        String   @default("STARTED")
+  error_code     String?
+  remote_id      String?
+  response_hash  String?
+  job            CisoSyncJob @relation(fields: [job_id], references: [id], onDelete: Restrict)
+
+  @@unique([job_id, attempt])
+}
+
 // ─── Document Notes & Comments ───────────────────────────────────────────────
 
 model DocumentNote {
@@ -1563,4 +1620,50 @@ model ContractGenerationJob {
   completed_at DateTime?
   @@index([actor_user_id, status])
   @@index([status, created_at])
+}
+
+// FSP snapshots and decisions are append-only. Published findings are proposals until reviewed.
+model FspComplianceSnapshot {
+  id          String   @id @default(uuid())
+  revision    Int      @unique
+  origin_key  String   @unique
+  feed_hash   String
+  feed        Json
+  created_by  String
+  created_at  DateTime @default(now())
+  assessment  FspComplianceAssessment?
+}
+
+model FspComplianceAssessment {
+  id           String   @id @default(uuid())
+  snapshot_id  String   @unique
+  as_of        DateTime
+  results      Json
+  result_hash  String
+  created_at   DateTime @default(now())
+  snapshot     FspComplianceSnapshot @relation(fields: [snapshot_id], references: [id], onDelete: Restrict)
+  decisions    FspComplianceDecision[]
+}
+
+model FspComplianceDecision {
+  id                 String   @id @default(uuid())
+  assessment_id      String
+  rule_id            String
+  revision           Int
+  status             String
+  reason             String
+  source_reference   String
+  evidence_as_of     DateTime
+  review_on          DateTime
+  owner              String?
+  control_status     String   @default("NOT_ASSESSED")
+  evidence_reference String?
+  actor_id           String
+  actor_email        String
+  created_at         DateTime @default(now())
+  assessment         FspComplianceAssessment @relation(fields: [assessment_id], references: [id], onDelete: Restrict)
+
+  @@unique([assessment_id, rule_id, revision])
+  @@index([rule_id, created_at])
+  @@index([assessment_id, rule_id, created_at])
 }

@@ -5,6 +5,7 @@ const commands = [
   ["node", ["scripts/check-agent-hygiene.mjs"]],
   ["npx", ["prisma", "validate"]],
   ["npx", ["tsc", "--noEmit"]],
+  ["node", ["--conditions=react-server", "--import", "tsx", "scripts/verify-ciso-client.ts"]],
   ["node", ["scripts/verify-generation-pause.mjs"]],
   ["node", ["scripts/verify-v2-generation-slack.mjs"]],
   ["node", ["scripts/verify-generation-worker.mjs"]],

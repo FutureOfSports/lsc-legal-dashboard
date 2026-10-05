@@ -170,4 +170,4 @@ with no data connections. Publication is owner-private.
 
 Anuj selected B and C on 21 September 2026: entity-centered dashboard context
 with Slack-led operations. The direction-selection gate is satisfied. Execute
-one `PLAN.md` task per run and PR, retaining the shared shell and navigation.
+the full authorized scope, retaining the shared shell and navigation.

@@ -164,3 +164,56 @@ source findings and the next implementation gates are in
 [the compliance specification](compliance-integration/specification.md) and
 [its scoped plan](compliance-integration/PLAN.md). This decision does not deploy
 the engine, modify FSP product behavior or complete the separate US migration.
+
+## 5 October 2026: CISO metadata integration implementation
+
+Anuj authorized the proposed compliance implementation. Preserve the existing
+B+C shell and use the applicability register with feature context and legal
+review queue. CPL-02 implemented the connection, local Community API acceptance
+and durable metadata receipts first.
+
+CISO receives restricted control/evidence metadata, not legal applicability or
+compliance-status decisions. Legal OS retains source provenance and protected
+documents. Fresh central-principal and role checks apply to enqueue and dispatch.
+A supplied approval reference is a caller attestation until CPL-03 binds it to a
+reviewed decision. No UI, scheduler or production integration is activated here.
+
+Durable jobs have immutable revisions, per-instance/domain markers and leased
+attempt receipts. Unknown write outcomes enter read-only reconciliation. Failed
+receipt persistence must leave the lease intact and must not authorize replay.
+See [CPL-02 implementation](compliance-integration/implementation-cpl02.md).
+
+## 6 October 2026: complete manual FSP compliance deployment
+
+Anuj retired workflow limits that stop work at plan-item boundaries and requested
+completion of the integration, its first sourced feed and deployment. The shared
+instruction mirrors and project specifications now require completion of the full
+authorized scope, with reviewable commits and executed verification.
+
+The initial publication contains 30 review items, 42 facts and 53 sources. It
+separates source capabilities from verified deployment and business scope. No
+rule is automatically approved and no control is marked verified. Known source
+limitations remain visible. Sources checked on 6 October Asia/Kolkata use the
+corresponding 5 October UTC date in the stored date-only fields.
+
+Recurring compliance reviews will use a later Codex CLI setup. No new recurring
+review schedule or AI provider call is enabled. A human may review facts and
+sources, record an applicability decision and request CISO delivery. That manual
+request starts an isolated job; its success is established by the durable receipt,
+not by the worker launch response. Superseded or expired approvals cannot authorize
+new CISO mutations.
+
+Deploy the dashboard and private CISO backend in FSP-US-PROD, us-central1. Preserve
+the existing Neon database, original document bucket and signing URLs to avoid
+breaking existing records or callbacks. Update the original dashboard URL as a
+compatibility entry point. This is US application hosting, not a claim that every
+stored file, database or signing service has moved to the US.
+
+
+Deployment completed with US revision `lsc-legal-dashboard-00001-dg4` and source
+compatibility revision `lsc-legal-dashboard-00034-xim`, both using runtime source
+`932f044`. The CISO private service uses one warm instance because its measured
+35.74-second cold start exceeds the bounded adapter timeout. The manual worker
+launch and empty queue execution passed from the real application identity.
+The first feed still has no human approvals. Exact evidence, backup boundaries
+and deferred work are in [the release receipt](compliance-integration/deployment-20261006.md).

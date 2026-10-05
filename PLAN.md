@@ -10,8 +10,7 @@ Decisions are in [docs/decisions.md](docs/decisions.md).
 
 On 21 September 2026, Anuj selected B+C and explicitly authorized completing all
 v2 implementations in this run and deploying them to the GCP service below.
-This overrides the earlier one-task-per-run preparation limit. Keep separate
-verified implementation commits where practical. External integrations only count
+Keep separate verified implementation commits where practical. External integrations only count
 as live after actual runtime acceptance, and missing credentials remain explicit.
 
 For implementation, read the installed Next.js guide relevant to the change.
@@ -60,8 +59,8 @@ The calendar follow-up was explicitly removed from scope by Anuj on
 
 ## Production acceptance, 21 September 2026
 
-Code commit `2b3e296` is deployed as `lsc-legal-dashboard-00032-civ` with 100%
-traffic. The exact image passed the full release gate in an isolated GCP test
+On 21 September, code commit `2b3e296` was deployed as
+`lsc-legal-dashboard-00032-civ` with 100% traffic. The exact image passed the full release gate in an isolated GCP test
 job. The canonical URL passed 31 HTTP access checks, including anonymous denial
 and fifth-user restrictions. Protected archive and document downloads passed
 byte-hash and response-header checks. Full receipts are in
@@ -87,4 +86,16 @@ The new app-specific compliance work has a separate
 [scoped plan](docs/compliance-integration/PLAN.md) and
 [source assessment](docs/compliance-integration/source-evidence.md). It begins
 with published static choices under the mock-first rule. The existing v2 B+C
-direction remains selected; the new compliance layout is awaiting selection.
+direction remains selected; Anuj authorized the compliance implementation and
+complete manual source-feed deployment. Recurring Codex CLI reviews are deferred.
+
+
+## FSP compliance production acceptance, 6 October 2026
+
+The full approved manual FSP compliance integration is deployed in US production
+and at the original compatibility URL. The first 30-item source feed is live,
+with unresolved business facts, human review history and restricted CISO metadata
+delivery. The runtime source is `932f044`; receipts and tested limitations are in
+[the release record](docs/compliance-integration/deployment-20261006.md).
+Recurring Codex CLI review remains deferred. The separate v2 acceptance items
+above are not silently marked complete by this release.

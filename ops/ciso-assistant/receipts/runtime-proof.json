@@ -1,0 +1,28 @@
+{
+  "recorded_at": "2026-10-05T13:59:10.964484+00:00",
+  "scope": "isolated local synthetic backend",
+  "image": "ghcr.io/intuitem/ciso-assistant-community/backend:v4.1.0@sha256:3a23b82afa4c02612e8d86870d94546fb6271c56cb4cb00cf84ff06a5e1c4a28",
+  "image_id": "sha256:3a23b82afa4c02612e8d86870d94546fb6271c56cb4cb00cf84ff06a5e1c4a28",
+  "user": "1001:1001",
+  "root_read_only": true,
+  "capabilities_dropped": [
+    "ALL"
+  ],
+  "memory_limit_bytes": 3221225472,
+  "cpu_limit": 2.0,
+  "internal_network": true,
+  "outbound_tcp_probe_error": 101,
+  "api_build": {
+    "version": "v4.1.0",
+    "build": "5d62f2d2f",
+    "infrastructure": "S-FS"
+  },
+  "observed_memory": "324MiB / 3GiB",
+  "observed_cpu": "0.04%",
+  "private_credential_mode": "0o600",
+  "public_ingress": false,
+  "notes": [
+    "Loopback-only host bridge forwards via docker exec to offline backend.",
+    "Runtime snapshot is not a production sizing or recovery test."
+  ]
+}

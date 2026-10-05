@@ -1,0 +1,1654 @@
+{
+  "id": "fsp-initial-2026-10-06",
+  "title": "FSP initial compliance review, 6 October 2026",
+  "checkedAt": "2026-10-05",
+  "sources": [
+    {
+      "id": "owner-scope",
+      "title": "Anuj: FSP app first and Delaware incorporation",
+      "url": "urn:legal-os:business-confirmation:fsp-delaware-scope",
+      "checkedAt": "2026-10-05",
+      "kind": "BUSINESS_CONFIRMATION",
+      "note": "User-supplied incorporation fact and FSP-first instruction in this task. No certificate, entity number or legal-form evidence was supplied."
+    },
+    {
+      "id": "live-app",
+      "title": "FSP public web app",
+      "url": "https://app.futureofsports.io",
+      "checkedAt": "2026-10-05",
+      "kind": "PUBLIC_POLICY",
+      "note": "Public unauthenticated HTML returned HTTP 200 on 6 October 2026. This proves reachability only, not logged-in feature behavior or backend deployment identity."
+    },
+    {
+      "id": "public-privacy",
+      "title": "FSP linked privacy notice, retrieval unverified",
+      "url": "https://futureofsports.io/privacy",
+      "checkedAt": "2026-10-05",
+      "kind": "PUBLIC_POLICY",
+      "note": "Web retrieval failed; initial direct HTTP timed out and subsequent apex/www requests returned HTTP 403 on 6 October 2026. Notice contents and effective version were not reviewed. Retrieval failure does not establish absence."
+    },
+    {
+      "id": "public-terms",
+      "title": "FSP linked terms, retrieval unverified",
+      "url": "https://futureofsports.io/terms",
+      "checkedAt": "2026-10-05",
+      "kind": "PUBLIC_POLICY",
+      "note": "Web retrieval failed; initial direct HTTP timed out and subsequent apex/www requests returned HTTP 403 on 6 October 2026. Terms contents and effective version were not reviewed. Retrieval failure does not establish absence."
+    },
+    {
+      "id": "mobile-pin",
+      "title": "FSP mobile/web port source pin",
+      "url": "https://github.com/FutureOfSports/app-frontend/tree/7a87e6326d24565dcc81a48aa46af5181cd2a23f",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Main commit refreshed through authenticated GitHub API on 6 October 2026. Repository visibility does not prove store distribution."
+    },
+    {
+      "id": "profile-source",
+      "title": "Profile fields and server age/guardian gates",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/users.js#L265",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Current pinned source rejects profile completion below 13 and requires server-owned verified guardian status for minors. This is source behavior, not executed production proof."
+    },
+    {
+      "id": "guardian-source",
+      "title": "Guardian agreement flow",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/guardianPortal.js#L35",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Email agreement appears in the guardian flow. Do not equate this with government-ID verification for every guardian."
+    },
+    {
+      "id": "country-source",
+      "title": "Country and currency configuration",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/schemas/countryCurrencyMap.js#L8",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Country choices are supported configuration, not evidence of residents, targeting or volumes."
+    },
+    {
+      "id": "payments-source",
+      "title": "Paid entry and Stripe payment intents",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/payments.js#L90",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Source includes paid entry, identity/address collection and optional tax handling; live mode and payment flows remain unknown."
+    },
+    {
+      "id": "geofence-source",
+      "title": "Configured paid-entry restrictions",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/geofence.js#L8",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "The source restricts AZ, AR, CT, DE, LA, MT, SD, TN and WA. This list is implementation evidence, not a validated legal state matrix."
+    },
+    {
+      "id": "wallet-source",
+      "title": "FSP Bucks ledger and gifting",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/wallet.js#L53",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "A ledger/gifting implementation does not establish cash redemption, custody or money transmission."
+    },
+    {
+      "id": "draw-source",
+      "title": "Golden Ticket draw entries",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/goldenTicketDrawEntries.js#L1",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Draw-entry code is present. Prior inspected ticket purchase flow was marked test pricing; production paid lottery operation is not established."
+    },
+    {
+      "id": "payout-source",
+      "title": "Creator/captain Stripe Connect payouts",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/payouts.js#L392",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Connect transfer and onboarding paths are source signals. Actual recipients, tax classification and active payouts remain unknown."
+    },
+    {
+      "id": "identity-source",
+      "title": "Stripe Identity integration",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/services/stripe.js#L201",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Document identity-session source does not prove FSP receives or retains identifying biometric templates."
+    },
+    {
+      "id": "nutrition-source",
+      "title": "Nutrition backend handlers",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/nutrition.js#L1",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Food logs and water/protein handlers exist; public product activation and provider relationships are unverified."
+    },
+    {
+      "id": "analytics-source",
+      "title": "Advertising analytics identity/event handling",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0002w-fsp-analytics.js#L1",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Source references GTM and Clarity, with an identity-label email fallback. No deployed tag configuration or network transmission audit was performed."
+    },
+    {
+      "id": "rights-source",
+      "title": "Player data-export request handler",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/accountDataRequests.js#L31",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Fresh source read confirms the player request handler returns HTTP 423 data_export_requests_locked. Manual channels and deployed behavior remain unverified."
+    },
+    {
+      "id": "settings-source",
+      "title": "Settings privacy and deletion controls",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0434-script-s53-69-browse-arenas-55.js#L31",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Fresh source read shows DOM-only settings toggles and a deletion confirmation-email toast in this controller. Other live wiring and manual alternatives are unverified."
+    },
+    {
+      "id": "lifecycle-source",
+      "title": "Account lifecycle retention/deletion rules",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/services/accountLifecycleService.js#L41",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Source has financial and media-provenance deletion guards. A code retention comment does not establish a legal retention basis."
+    },
+    {
+      "id": "sports-source",
+      "title": "Video challenge and sports participation flow",
+      "url": "https://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0627-showtakechallenge.js#L182",
+      "checkedAt": "2026-10-05",
+      "kind": "REPOSITORY",
+      "note": "Challenges, video, scores and leaderboards are source signals. This does not prove live competition mechanics or prize terms."
+    },
+    {
+      "id": "de-corp",
+      "title": "Delaware corporate annual report and franchise tax",
+      "url": "https://corp.delaware.gov/paytaxes/",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "de-alt",
+      "title": "Delaware LLC/LP/GP tax instructions",
+      "url": "https://corp.delaware.gov/alt-entitytaxinstructions/",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "boi",
+      "title": "FinCEN: US-created entities exempt from BOI reporting",
+      "url": "https://www.fincen.gov/news/news-releases/fincen-removes-beneficial-ownership-reporting-requirements-us-companies-and-us",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR",
+      "note": "Current official guidance distinguishes US-created entities from foreign entities registered to do business in the US."
+    },
+    {
+      "id": "dpdpa",
+      "title": "Delaware Personal Data Privacy Act, Title 6 Chapter 12D",
+      "url": "https://delcode.delaware.gov/title6/c012d/index.html",
+      "checkedAt": "2026-10-05",
+      "kind": "LAW",
+      "note": "Read the version effective on the assessment date. The page separately publishes amendments effective 1 January 2027; these are not current duties on 6 October 2026."
+    },
+    {
+      "id": "ccpa",
+      "title": "California AG: CCPA applicability and consumer rights",
+      "url": "https://oag.ca.gov/privacy/ccpa",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "ccpa-threshold",
+      "title": "California CPPA: monetary thresholds from 1 January 2025",
+      "url": "https://cppa.ca.gov/announcements/2024/20241217.html",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "tx-privacy",
+      "title": "Texas AG: consumer privacy rights",
+      "url": "https://www.texasattorneygeneral.gov/consumer-protection/file-consumer-complaint/consumer-privacy-rights",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "coppa",
+      "title": "FTC COPPA scope and compliance FAQ",
+      "url": "https://www.ftc.gov/business-guidance/resources/complying-coppa-frequently-asked-questions",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR",
+      "note": "FAQ warns readers to consult the amended 2025 rule. Scope guidance does not replace the amended operative rule."
+    },
+    {
+      "id": "coppa-2025",
+      "title": "COPPA amended rule, 90 FR 16918",
+      "url": "https://www.govinfo.gov/content/pkg/FR-2025-04-22/html/2025-05904.htm",
+      "checkedAt": "2026-10-05",
+      "kind": "LAW",
+      "note": "Published 22 April 2025; effective 23 June 2025. General compliance date 22 April 2026, with separate earlier safe-harbor provisions."
+    },
+    {
+      "id": "gdpr",
+      "title": "EU GDPR, Articles 3, 5, 6, 12-22, 28, 32-35 and 44-49",
+      "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng",
+      "checkedAt": "2026-10-05",
+      "kind": "LAW"
+    },
+    {
+      "id": "ico-cookies",
+      "title": "ICO: cookies and similar technologies",
+      "url": "https://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/guide-to-pecr/cookies-and-similar-technologies/",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR",
+      "note": "Review the currently commenced PECR rules and exemptions for each technology. The direct legislation.gov.uk regulation page could not be parsed by the web tool."
+    },
+    {
+      "id": "wa-health",
+      "title": "Washington My Health My Data Act, RCW 19.373",
+      "url": "https://app.leg.wa.gov/RCW/default.aspx?cite=19.373&full=true",
+      "checkedAt": "2026-10-05",
+      "kind": "LAW"
+    },
+    {
+      "id": "hipaa",
+      "title": "HHS: resources for mobile health app developers",
+      "url": "https://www.hhs.gov/hipaa/for-professionals/special-topics/health-apps/index.html",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR",
+      "note": "HHS page states last reviewed 22 April 2026; classification depends on function and relationships."
+    },
+    {
+      "id": "hbnr",
+      "title": "FTC: Health Breach Notification Rule guidance",
+      "url": "https://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-notification-rule-0",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "bipa",
+      "title": "Illinois BIPA section 15",
+      "url": "https://www.ilga.gov/legislation/ilcs/fulltext?DocName=074000140K15",
+      "checkedAt": "2026-10-05",
+      "kind": "LAW",
+      "note": "Official indexed section text retrieved through search after direct fetch returned an error. Full current act and amendments require legal verification before approval."
+    },
+    {
+      "id": "fl-contests",
+      "title": "Florida Statutes section 849.094, game promotions",
+      "url": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0849/Sections/0849.094.html",
+      "checkedAt": "2026-10-05",
+      "kind": "LAW",
+      "note": "Illustrates a specific state promotion rule; it is not a nationwide skill-contest safe harbor."
+    },
+    {
+      "id": "stripe-restrictions",
+      "title": "Stripe prohibited and restricted businesses",
+      "url": "https://stripe.com/legal/restricted-businesses",
+      "checkedAt": "2026-10-05",
+      "kind": "PUBLIC_POLICY",
+      "note": "Processor policy, not legislation. The policy lists prize-bearing skill games, chance games and certain entry fees under gambling; obtain classification for the exact account and mechanics."
+    },
+    {
+      "id": "fincen-msb",
+      "title": "FinCEN: money services business registration and definitions",
+      "url": "https://www.fincen.gov/resources/money-services-business-msb-registration",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "irs-misc",
+      "title": "IRS: Form 1099-MISC, prizes and awards",
+      "url": "https://www.irs.gov/forms-pubs/about-form-1099-misc",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR",
+      "note": "Tax-year-specific thresholds and payer obligations require reconciliation with the operative statute and instructions. Do not turn this general page into a fixed 2026 reporting threshold."
+    },
+    {
+      "id": "irs-k",
+      "title": "IRS: understanding Form 1099-K",
+      "url": "https://www.irs.gov/businesses/understanding-your-form-1099-k",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "ftc-act",
+      "title": "FTC Act section 5, unfair or deceptive practices",
+      "url": "https://www.ftc.gov/legal-library/browse/statutes/federal-trade-commission-act",
+      "checkedAt": "2026-10-05",
+      "kind": "LAW"
+    },
+    {
+      "id": "rosca",
+      "title": "FTC: Restore Online Shoppers Confidence Act",
+      "url": "https://www.ftc.gov/legal-library/browse/statutes/restore-online-shoppers-confidence-act",
+      "checkedAt": "2026-10-05",
+      "kind": "LAW"
+    },
+    {
+      "id": "copyright",
+      "title": "US Copyright Office: copyright rights and permission",
+      "url": "https://www.copyright.gov/what-is-copyright/",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "dmca",
+      "title": "US Copyright Office: section 512 safe harbors",
+      "url": "https://www.copyright.gov/512/",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "ofcom",
+      "title": "Ofcom: protection of children duties",
+      "url": "https://www.ofcom.org.uk/online-safety/protecting-children/protection-of-children-duties-under-the-online-safety-act",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR",
+      "note": "Updated 1 April 2026. Scope and UK links must be assessed; source does not establish FSP is regulated."
+    },
+    {
+      "id": "ada",
+      "title": "US DOJ: web accessibility and the ADA",
+      "url": "https://www.ada.gov/resources/web-guidance/",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "nist-csf",
+      "title": "NIST Cybersecurity Framework 2.0 release",
+      "url": "https://www.nist.gov/news-events/news/2024/02/nist-releases-version-20-landmark-cybersecurity-framework",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR",
+      "note": "Version published 26 February 2024. A voluntary risk-management baseline, not a statutory certification."
+    },
+    {
+      "id": "ftc-security",
+      "title": "FTC: protecting personal information",
+      "url": "https://www.ftc.gov/business-guidance/resources/protecting-personal-information-guide-business",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "de-breach",
+      "title": "Delaware Title 6 Chapter 12B, security and breach notices",
+      "url": "https://delcode.delaware.gov/title6/c012b/index.html",
+      "checkedAt": "2026-10-05",
+      "kind": "LAW"
+    },
+    {
+      "id": "can-spam",
+      "title": "FTC: CAN-SPAM compliance guide",
+      "url": "https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "endorsements",
+      "title": "FTC: endorsement guides and material connections",
+      "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "irs-workers",
+      "title": "IRS: employee or independent contractor classification",
+      "url": "https://www.irs.gov/businesses/small-businesses-self-employed/independent-contractor-self-employed-or-employee",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR"
+    },
+    {
+      "id": "dol-workers",
+      "title": "DOL: worker classification guidance and 2026 rulemaking",
+      "url": "https://www.dol.gov/agencies/whd/flsa/misclassification/small-entity-compliance-guide",
+      "checkedAt": "2026-10-05",
+      "kind": "REGULATOR",
+      "note": "Source includes a 2026 proposed rulemaking notice. A proposal is not treated as an enacted final rule; counsel must verify current federal and state tests before a classification decision."
+    }
+  ],
+  "facts": [
+    {
+      "key": "delaware_reported",
+      "label": "Delaware incorporation reported",
+      "value": "TRUE",
+      "certainty": "USER_CONFIRMED",
+      "detail": "Anuj stated the company is Delaware incorporated. Exact registered name, form, number, standing and contracting entity are not independently verified.",
+      "sourceIds": [
+        "owner-scope"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "public_app_reachable",
+      "label": "Public FSP web app is reachable",
+      "value": "TRUE",
+      "certainty": "LIVE_VERIFIED",
+      "detail": "Unauthenticated HTTP 200 was observed on 6 October 2026. No app login, production user data or live payment was inspected.",
+      "sourceIds": [
+        "live-app"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_profile",
+      "label": "Personal-data profile fields in source",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "Name, email, DOB, gender, country and other profile fields are represented in code; deployed collection and retention need evidence.",
+      "sourceIds": [
+        "profile-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_minors",
+      "label": "Teen and guardian paths in source",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "Server code rejects under-13 profile completion and includes 13-17 guardian gates; enforcement and audience composition have not been tested live.",
+      "sourceIds": [
+        "profile-source",
+        "guardian-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_international",
+      "label": "Multiple countries in configuration",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "Country/currency options include US, UK, EU and other markets. Options do not establish users or targeting.",
+      "sourceIds": [
+        "country-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_payments",
+      "label": "Paid-entry source paths",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "Stripe intents, entry eligibility and address collection exist in source. Test/live mode and actual use are unknown.",
+      "sourceIds": [
+        "payments-source",
+        "geofence-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_rewards",
+      "label": "Wallet and reward source paths",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "Bucks gifting and Golden Ticket draw code exist; cash convertibility and live mechanics are not established.",
+      "sourceIds": [
+        "wallet-source",
+        "draw-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_payouts",
+      "label": "Creator/captain payout source paths",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "Connect transfers and onboarding appear in source; live recipients and contracts are not reviewed.",
+      "sourceIds": [
+        "payout-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_identity",
+      "label": "Identity verification source paths",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "Stripe Identity is referenced; FSP storage, permissions and biometric processing remain unknown.",
+      "sourceIds": [
+        "identity-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_nutrition",
+      "label": "Nutrition backend source paths",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "Nutrition logs and analytics handlers exist. No inspected designer-spa call established public activation.",
+      "sourceIds": [
+        "nutrition-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_analytics",
+      "label": "Ad and analytics source paths",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "GTM/Clarity references and email fallback exist in code. Actual tags, recipients and consent enforcement are unknown.",
+      "sourceIds": [
+        "analytics-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_rights",
+      "label": "Rights flow investigation signals",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "Player export handler is locked in refreshed code; settings controller shows a deletion toast and local preference toggles. This does not prove a legal violation or absence of manual channels.",
+      "sourceIds": [
+        "rights-source",
+        "settings-source",
+        "lifecycle-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "feature_sports",
+      "label": "Sports video and UGC source paths",
+      "value": "TRUE",
+      "certainty": "SOURCE_SIGNAL",
+      "detail": "Video challenges, results and leaderboards appear in the app source. Production moderation and physical safety controls are unverified.",
+      "sourceIds": [
+        "sports-source",
+        "profile-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "entity_verified",
+      "label": "FSP is a Delaware entity subject to corporate filing or governance duties",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need certificate, exact legal name and number, corporation versus LLC, registered agent/office, current filing receipts, tax year, cap table and foreign registrations.",
+      "sourceIds": [
+        "owner-scope",
+        "de-corp",
+        "de-alt"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "de_privacy_scope",
+      "label": "FSP meets the operative Delaware privacy scope tests",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need preceding-calendar-year Delaware resident counts, payment-only exclusions, sales revenue share, targeting/business nexus and exemptions. Incorporation alone is insufficient.",
+      "sourceIds": [
+        "dpdpa",
+        "country-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "ca_privacy_scope",
+      "label": "FSP meets the operative CCPA business scope tests",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need for-profit/doing-business status, annual revenue, California consumer/household counts, sale/sharing activity and exceptions.",
+      "sourceIds": [
+        "ccpa",
+        "ccpa-threshold"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "other_us_scope",
+      "label": "FSP has processing within other US state privacy-law scope",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need actual resident distribution and state-by-state revenues, activity and exemptions. Delaware and California review is not a complete US inventory.",
+      "sourceIds": [
+        "country-source",
+        "tx-privacy"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "coppa_scope",
+      "label": "FSP is child-directed or has actual knowledge of covered under-13 collection",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need audience design/marketing, pre-age-gate tracking, rejected-user handling, known-under-13 escalation and evidence that the deployed age gate works.",
+      "sourceIds": [
+        "coppa",
+        "profile-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "teen_scope",
+      "label": "FSP processes teen data within a relevant teen-protection regime",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need live teen population by jurisdiction, guardian method, targeting/sale-sharing practices and privacy defaults.",
+      "sourceIds": [
+        "profile-source",
+        "dpdpa"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "eu_uk_scope",
+      "label": "FSP has establishment, targeting or monitoring that triggers EU or UK data protection",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need actual markets, establishments, UK/EU users, offered services and behavioral monitoring; country options alone are insufficient.",
+      "sourceIds": [
+        "country-source",
+        "gdpr"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "ad_scope",
+      "label": "FSP advertising or tracking engages a consent or opt-out requirement",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need deployed tag inventory/network trace by age and country, purposes, recipients, exemption analysis, sale/sharing classification and persisted withdrawal behavior.",
+      "sourceIds": [
+        "analytics-source",
+        "settings-source",
+        "ico-cookies"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "rights_scope",
+      "label": "FSP processes data of users with applicable access, deletion or other request rights",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need applicable laws, privacy mailbox/manual workflow, identity checks, response/appeal logs and end-to-end export/deletion tests with media/payout records.",
+      "sourceIds": [
+        "rights-source",
+        "settings-source",
+        "gdpr"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "retention_scope",
+      "label": "FSP processing is subject to binding minimization or retention obligations",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need per-category purposes, legal bases, storage locations, deletion schedules, legal holds and evidence that backups/vendors follow disposal rules.",
+      "sourceIds": [
+        "lifecycle-source",
+        "ftc-security"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "vendor_scope",
+      "label": "FSP uses vendors with binding data-processing or security obligations",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need executed vendor terms, data-processing roles, subprocessors, storage/remote-access countries, transfer mechanisms and security/incident commitments.",
+      "sourceIds": [
+        "analytics-source",
+        "identity-source",
+        "gdpr"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "wa_health_scope",
+      "label": "FSP processing falls within Washington consumer health-data law",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need active health features, health inferences, Washington nexus, residents or collection in Washington, exemptions, recipients and any sale.",
+      "sourceIds": [
+        "nutrition-source",
+        "wa-health"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "hipaa_scope",
+      "label": "FSP acts as a HIPAA covered entity or business associate for a relevant activity",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need covered-entity/business-associate relationships and what information is handled for whom. A fitness/nutrition feature alone is insufficient.",
+      "sourceIds": [
+        "nutrition-source",
+        "hipaa"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "hbnr_scope",
+      "label": "FSP is a covered PHR vendor, related entity or service provider",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need identifiable health information, technical capacity to draw from multiple sources and vendor/PHR-related/service-provider role, separately from HIPAA status.",
+      "sourceIds": [
+        "nutrition-source",
+        "hbnr"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "biometric_scope",
+      "label": "FSP collects or possesses qualifying biometric data within relevant legal scope",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need vendor specifications and data access proving whether identifiers/templates identify people, locations, retention and disclosures. Ordinary video or pose metrics alone do not establish BIPA coverage.",
+      "sourceIds": [
+        "identity-source",
+        "sports-source",
+        "bipa"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "contest_scope",
+      "label": "FSP runs a contest, draw or promotion within a relevant jurisdiction",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need live entry consideration, chance/skill mechanics, prize values, cash-out, free-entry route, age, jurisdictions and sponsor/host terms for each competition.",
+      "sourceIds": [
+        "payments-source",
+        "draw-source",
+        "geofence-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "stripe_scope",
+      "label": "FSP uses Stripe for an actual competition or payout product",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need merchant country/account entity, live products, written processor classification/acceptance and specific terms. Working SDK calls do not prove product approval.",
+      "sourceIds": [
+        "payments-source",
+        "payout-source",
+        "stripe-restrictions"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "wallet_scope",
+      "label": "FSP wallet or funds flows engage financial-regulatory classification",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need flow of funds, redemption/transfer restrictions, who holds funds, payer/payee roles, chargebacks and licensing/exemption advice for actual jurisdictions.",
+      "sourceIds": [
+        "wallet-source",
+        "payout-source",
+        "fincen-msb"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "tax_scope",
+      "label": "FSP payments engage prize, compensation or settlement tax obligations",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need tax year, payer entity, recipient residency/classification, prize versus services amounts, W-9/W-8 process, processor reporting allocation and state/international tax nexus.",
+      "sourceIds": [
+        "payout-source",
+        "irs-misc",
+        "irs-k"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "consumer_scope",
+      "label": "FSP offers a consumer service within relevant commercial-practice law",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need retrievable current terms/privacy versions, seller identity, charges, cancellation/refund and dispute terms, assent records and consumer countries.",
+      "sourceIds": [
+        "public-terms",
+        "public-privacy",
+        "payments-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "subscription_scope",
+      "label": "FSP offers live recurring charges or trials with automatic charges",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. No recurring subscription model was established by inspected app code. Confirm actual products, renewals, trials, billing consent and cancellation paths before activating this rule.",
+      "sourceIds": [
+        "payments-source",
+        "rosca"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "ugc_scope",
+      "label": "FSP hosts or reuses user or third-party content requiring a rights review",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need live uploads, music/media sources, participant/guardian publicity consent, creator licenses, moderation terms and US safe-harbor eligibility facts.",
+      "sourceIds": [
+        "sports-source",
+        "copyright",
+        "dmca"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "safety_scope",
+      "label": "FSP is an in-scope UK service for child access or content-safety duties",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need actual user-to-user features, UK links/child access, age groups, reports/blocking, moderation staffing, escalation and appeals.",
+      "sourceIds": [
+        "sports-source",
+        "profile-source",
+        "settings-source",
+        "ofcom"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "physical_safety_scope",
+      "label": "Live FSP challenges create physical participant safety risks",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need enabled challenge types, venue/coach involvement, contraindications, incident response, age safeguards, insurance and jurisdiction-specific waiver review.",
+      "sourceIds": [
+        "sports-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "accessibility_scope",
+      "label": "FSP service is subject to an accessibility obligation or commitment",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need business/public-accommodation context, target countries, procurement promises and keyboard/screen-reader/caption testing. A single website WCAG rule is not assumed universally binding.",
+      "sourceIds": [
+        "live-app",
+        "ada"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "incident_scope",
+      "label": "FSP handles data within an applicable security or breach-notification regime",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need actual data/residencies, processor responsibilities, incident inventory, discovery/escalation timestamps and applicable notice regimes. No current breach is alleged.",
+      "sourceIds": [
+        "de-breach",
+        "profile-source"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "marketing_scope",
+      "label": "FSP sends commercial messages or uses paid or rewarded endorsements",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need message channels, campaign purposes, recipient countries/ages, unsubscribe enforcement and paid or rewarded endorsements.",
+      "sourceIds": [
+        "analytics-source",
+        "payout-source",
+        "can-spam",
+        "endorsements"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "workforce_scope",
+      "label": "FSP engages workers or service providers requiring classification",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need employees, contractors, creators/captains, work locations, actual control/economic facts, contracts, IP assignment and payroll/tax arrangements.",
+      "sourceIds": [
+        "payout-source",
+        "irs-workers",
+        "dol-workers"
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "key": "de_2027_scope",
+      "label": "FSP processing will be affected by the Delaware 2027 amendments",
+      "value": "UNKNOWN",
+      "certainty": "UNKNOWN",
+      "detail": "Resolve whether this scope condition is true; collecting the evidence alone does not make it true. Need projected processing scope, roles, profiling/significant-effect uses and contract relationships assessed against the future statutory version. Sports scoring alone does not establish legally significant automated decisions.",
+      "sourceIds": [
+        "dpdpa",
+        "sports-source"
+      ],
+      "reviewOn": "2026-10-21"
+    }
+  ],
+  "rules": [
+    {
+      "id": "FSP-001",
+      "title": "Confirm entity identity and filing calendar",
+      "category": "Corporate",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US-DE",
+      "summary": "Select corporate duties only after verifying entity form. Delaware corporations and LLCs have different filing regimes. FinCEN currently exempts US-created entities from BOI reporting; do not create a blanket BOI filing task.",
+      "sourceIds": [
+        "de-corp",
+        "de-alt",
+        "boi",
+        "owner-scope"
+      ],
+      "trigger": {
+        "fact": "entity_verified"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Attach formation and current standing evidence, agent details and the actual contracting entity.",
+        "After form/tax-year review, enter supported filing dates and receipts. Review foreign registrations and governance approvals separately."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-002",
+      "title": "Determine Delaware privacy applicability",
+      "category": "Privacy",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US-DE",
+      "summary": "Current coverage tests include 35,000 consumers, excluding payment-only data, or 10,000 consumers plus more than 20% of gross revenue from data sales. Business/targeting nexus and exclusions also matter.",
+      "sourceIds": [
+        "dpdpa",
+        "country-source"
+      ],
+      "trigger": {
+        "fact": "de_privacy_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Produce an aggregated preceding-year Delaware scope calculation with provenance.",
+        "If covered, map notice, rights, sensitive-data, opt-out and assessment duties to tested controls."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-003",
+      "title": "Determine CCPA applicability and rights",
+      "category": "Privacy",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US-CA",
+      "summary": "Review CCPA business criteria and exceptions. The adjusted revenue threshold is $26,625,000 from 1 January 2025; alternative consumer/household and sale/sharing tests still require assessment.",
+      "sourceIds": [
+        "ccpa",
+        "ccpa-threshold"
+      ],
+      "trigger": {
+        "fact": "ca_privacy_scope"
+      },
+      "effectiveFrom": "2025-01-01",
+      "effectiveTo": null,
+      "actions": [
+        "Record California scope evidence without exporting user records into Legal OS.",
+        "If covered, assess notices, access/delete/correct, sale/sharing opt-out, sensitive-data limits and request handling."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-004",
+      "title": "Build the remaining US state privacy matrix",
+      "category": "Privacy",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US, states to confirm",
+      "summary": "Scope laws using actual resident and operating facts. Texas is a separate screening example; the first feed does not establish complete coverage of every US state.",
+      "sourceIds": [
+        "tx-privacy",
+        "country-source"
+      ],
+      "trigger": {
+        "fact": "other_us_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Obtain aggregated jurisdiction counts and an actual market list.",
+        "Add a separately sourced, dated rule for each relevant state, including small-business and sensitive-data exceptions; record unresolved jurisdictions."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-005",
+      "title": "Review COPPA scope and age assurance",
+      "category": "Children",
+      "priority": "CRITICAL",
+      "basis": "LAW",
+      "jurisdiction": "US",
+      "summary": "Under-13 child-directed or actual-knowledge collection must be assessed separately from teen access. The amended rule became effective 23 June 2025, with general compliance required by 22 April 2026. An age-gate statement alone is insufficient.",
+      "sourceIds": [
+        "coppa",
+        "coppa-2025",
+        "profile-source",
+        "guardian-source"
+      ],
+      "trigger": {
+        "fact": "coppa_scope"
+      },
+      "effectiveFrom": "2025-06-23",
+      "effectiveTo": null,
+      "actions": [
+        "Test data collection before age capture, under-13 rejection, known-child escalation and third-party tracking.",
+        "If covered, review parental notice/consent, disclosure consent, security, retention and parent rights against the amended rule."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-006",
+      "title": "Review teen privacy and guardian safeguards",
+      "category": "Children",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US-DE and other confirmed teen jurisdictions",
+      "summary": "Teen protection has different triggers from COPPA. The current Delaware text addresses consent for targeted advertising and data sales for known 13-17-year-olds when the Act applies.",
+      "sourceIds": [
+        "dpdpa",
+        "profile-source",
+        "guardian-source"
+      ],
+      "trigger": {
+        "fact": "teen_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Test guardian verification and privacy defaults across profile, video, payouts and ad paths.",
+        "Document applicable teen-specific rules by actual jurisdiction and retain the evidence supporting age treatment."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-007",
+      "title": "Assess EU and UK market obligations",
+      "category": "International",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "EU / UK, conditional",
+      "summary": "GDPR Article 3 considers establishment, offering goods/services and monitoring behavior. If engaged, assess lawful bases, notices, rights, children, security, representatives and transfers. UK scope and current amendments need a separate legal decision.",
+      "sourceIds": [
+        "gdpr",
+        "country-source",
+        "ico-cookies"
+      ],
+      "trigger": {
+        "fact": "eu_uk_scope"
+      },
+      "effectiveFrom": "2018-05-25",
+      "effectiveTo": null,
+      "actions": [
+        "Confirm actual EU/UK targeting, establishments and monitoring, not just country-menu availability.",
+        "Prepare the processing record and a jurisdiction-specific applicability decision before approving EU/UK coverage."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-008",
+      "title": "Verify advertising consent and preference enforcement",
+      "category": "Advertising",
+      "priority": "CRITICAL",
+      "basis": "LAW",
+      "jurisdiction": "UK / EU / relevant US states",
+      "summary": "Source-only privacy toggles and analytics identifiers justify a priority investigation. Applicable consent, opt-out and exemption rules depend on the technology, location, audience and processing purpose. No transmission or violation is presumed.",
+      "sourceIds": [
+        "analytics-source",
+        "settings-source",
+        "ico-cookies",
+        "ccpa"
+      ],
+      "trigger": {
+        "fact": "ad_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Capture a consent-by-age-and-country test matrix and sanitized network evidence before/after consent and withdrawal.",
+        "Check GTM/Clarity fields, email fallback, tags, server ad eligibility and persisted preferences; block unsupported disclosures where the review confirms a gap."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-009",
+      "title": "Prove access, export, deletion and appeal handling",
+      "category": "Privacy",
+      "priority": "CRITICAL",
+      "basis": "LAW",
+      "jurisdiction": "Applicable user jurisdictions",
+      "summary": "The refreshed player export handler is locked and a settings deletion button displays a toast. Confirm live wiring and manual channels before concluding that a right is unavailable.",
+      "sourceIds": [
+        "rights-source",
+        "settings-source",
+        "lifecycle-source",
+        "gdpr",
+        "ccpa"
+      ],
+      "trigger": {
+        "fact": "rights_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Run an authorized synthetic request through intake, verification, search, export/deletion, exceptions, response and appeal.",
+        "Define law-specific deadlines only after coverage is approved; retain delivery and exception evidence."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-010",
+      "title": "Approve a category-specific retention schedule",
+      "category": "Data governance",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "Applicable privacy and records jurisdictions",
+      "summary": "GDPR storage limitation is conditional on scope. Proposed governance work should distinguish videos, identity checks, logs, consents, payments, backups and legal holds. Source comments are not authority for universal retention.",
+      "sourceIds": [
+        "gdpr",
+        "ftc-security",
+        "lifecycle-source"
+      ],
+      "trigger": {
+        "fact": "retention_scope"
+      },
+      "effectiveFrom": "2018-05-25",
+      "effectiveTo": null,
+      "actions": [
+        "Inventory data classes, purposes, legal bases and locations; obtain a supported duration per class.",
+        "Verify disposal and legal-hold exceptions across primary stores, backups and processors, with minimal retained deletion evidence."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-011",
+      "title": "Review vendors, processors and international transfers",
+      "category": "Vendors",
+      "priority": "HIGH",
+      "basis": "CONTRACT",
+      "jurisdiction": "Vendor and data-flow jurisdictions",
+      "summary": "Executed commitments and applicable transfer law must be established. Source references to Stripe, analytics and hosting do not prove reviewed data-processing terms or authorized transfers.",
+      "sourceIds": [
+        "gdpr",
+        "analytics-source",
+        "identity-source"
+      ],
+      "trigger": {
+        "fact": "vendor_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Create a vendor register with role, data categories, region, subprocessors and contract evidence.",
+        "Review processor clauses, access, onward transfers, incident notice, deletion and audit rights against the applicable legal regime."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-012",
+      "title": "Assess Washington consumer health data",
+      "category": "Health",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US-WA",
+      "summary": "Nutrition, fitness measurements or inferences may need review under Washington My Health My Data. Coverage depends on the statutory data and business definitions, not on whether the product is called a health app.",
+      "sourceIds": [
+        "wa-health",
+        "nutrition-source"
+      ],
+      "trigger": {
+        "fact": "wa_health_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Confirm feature activation, data/inference categories and Washington nexus.",
+        "If covered, review separate health-data notice, consent, sharing/sale, deletion, processor and security controls."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-013",
+      "title": "Resolve HIPAA role before making claims",
+      "category": "Health",
+      "priority": "MEDIUM",
+      "basis": "LAW",
+      "jurisdiction": "US",
+      "summary": "Fitness and nutrition functionality alone does not establish HIPAA coverage. Determine whether FSP acts as a covered entity or business associate for a covered relationship.",
+      "sourceIds": [
+        "hipaa",
+        "nutrition-source"
+      ],
+      "trigger": {
+        "fact": "hipaa_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Map each health relationship and contract; use HHS app scenarios to document the role decision.",
+        "Require any relevant BAA and controls before promising HIPAA compliance; record a reasoned exclusion if appropriate."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-014",
+      "title": "Assess FTC health breach notification coverage",
+      "category": "Health",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US",
+      "summary": "The FTC rule covers specified PHR vendors, related entities and service providers outside or alongside certain HIPAA relationships. Technical capacity to draw identifiable health information from multiple sources is a key fact.",
+      "sourceIds": [
+        "hbnr",
+        "nutrition-source"
+      ],
+      "trigger": {
+        "fact": "hbnr_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Document PHR classification, data sources and sharing authorizations.",
+        "If covered, add the rule-specific discovery, recipient, timing and content requirements to the incident procedure, including unauthorized disclosures."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-015",
+      "title": "Determine biometric and identity-data obligations",
+      "category": "Identity and video",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US-IL and other confirmed jurisdictions",
+      "summary": "Ordinary video, pose scoring and document checks do not by themselves establish regulated biometric processing. Illinois section 15 warrants review if qualifying biometric identifiers/information are collected or possessed.",
+      "sourceIds": [
+        "bipa",
+        "identity-source",
+        "sports-source"
+      ],
+      "trigger": {
+        "fact": "biometric_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Obtain vendor data-flow and retention specifications, including templates and what FSP can access.",
+        "If triggered, review notice, written release, published retention/destruction policy, disclosure limits and safeguards; verify the full current act first."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-016",
+      "title": "Classify each paid contest, draw and prize",
+      "category": "Competitions",
+      "priority": "CRITICAL",
+      "basis": "LAW",
+      "jurisdiction": "Participant states/countries to confirm",
+      "summary": "A state list in code is not legal clearance. Florida section 849.094 illustrates a specific promotion regime; it does not validate all FSP sports contests, draws or entry-fee models.",
+      "sourceIds": [
+        "fl-contests",
+        "payments-source",
+        "draw-source",
+        "geofence-source"
+      ],
+      "trigger": {
+        "fact": "contest_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Prepare a mechanics sheet per format covering consideration, chance/skill, prizes, eligibility and actual locations.",
+        "Obtain jurisdiction-specific classification and official rules, including promotion registration/bonding or restrictions where relevant, before enabling unapproved formats."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-017",
+      "title": "Obtain processor acceptance for competition payments",
+      "category": "Payments",
+      "priority": "CRITICAL",
+      "basis": "PROCESSOR",
+      "jurisdiction": "Stripe account country and product",
+      "summary": "Stripe lists prize-bearing games of chance, skill competitions and certain entry fees under prohibited gambling activities. The actual account, product and any written provider acceptance require review. A successful payment integration is insufficient.",
+      "sourceIds": [
+        "stripe-restrictions",
+        "payments-source",
+        "payout-source"
+      ],
+      "trigger": {
+        "fact": "stripe_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Present accurate mechanics and flow of funds to the processor and retain its written classification.",
+        "Verify permitted products and connected-account responsibilities before live collection; stop relying on test-mode success as approval."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-018",
+      "title": "Classify wallet custody, transfers and redemption",
+      "category": "Payments",
+      "priority": "CRITICAL",
+      "basis": "LAW",
+      "jurisdiction": "US federal/state and operating countries",
+      "summary": "Money-transmission or stored-value analysis needs actual funds flow and redemption facts. FSP Bucks code is not proof of cash custody, cryptocurrency activity or a licensing exemption.",
+      "sourceIds": [
+        "fincen-msb",
+        "wallet-source",
+        "payout-source"
+      ],
+      "trigger": {
+        "fact": "wallet_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Diagram legal ownership and movement of funds, liability, balances, refunds and cash-out.",
+        "Obtain financial-regulatory review for the exact model and jurisdictions; document any licensing or exemption basis without inferring it from Stripe usage."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-019",
+      "title": "Map prize, creator and payment tax reporting",
+      "category": "Tax",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US federal/state and recipient countries",
+      "summary": "Prizes, service compensation and processor settlement may follow different reporting paths. Current tax year, payer, recipient and reporting allocation must be established before setting forms or thresholds.",
+      "sourceIds": [
+        "irs-misc",
+        "irs-k",
+        "payout-source",
+        "payments-source"
+      ],
+      "trigger": {
+        "fact": "tax_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Obtain tax-adviser classification of each payment stream, W-9/W-8 requirements, withholding and actual tax-year thresholds.",
+        "Reconcile processor versus platform reporting, retain filing receipts and assess relevant sales/VAT/GST nexus separately."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-020",
+      "title": "Reconcile consumer terms, privacy promises and refunds",
+      "category": "Consumer",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "Consumer markets to confirm",
+      "summary": "FTC unfair/deceptive-practice principles make accurate product promises a priority. Public terms and privacy links could not be retrieved in this check, so their content is unverified rather than presumed absent.",
+      "sourceIds": [
+        "ftc-act",
+        "public-terms",
+        "public-privacy",
+        "payments-source"
+      ],
+      "trigger": {
+        "fact": "consumer_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Retrieve approved published versions and reconcile seller identity, fees, refunds, prize terms, safety and privacy representations with actual operations.",
+        "Verify notice accessibility and versioned assent; review country-specific consumer rights and dispute provisions."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-021",
+      "title": "Screen any recurring subscriptions or trials",
+      "category": "Consumer",
+      "priority": "MEDIUM",
+      "basis": "LAW",
+      "jurisdiction": "US and other confirmed subscription markets",
+      "summary": "Recurring subscriptions were not established in this source review. If offered, assess ROSCA disclosure, informed consent and cancellation requirements plus applicable state renewal rules. No vacated or proposed click-to-cancel rule is assumed operative.",
+      "sourceIds": [
+        "rosca",
+        "payments-source"
+      ],
+      "trigger": {
+        "fact": "subscription_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Confirm whether any product renews or charges after a trial.",
+        "If yes, test billing consent, renewal disclosures, cancellation and refunds end to end and obtain state-specific review."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-022",
+      "title": "Review user-content rights and takedown handling",
+      "category": "Content and IP",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US and content markets",
+      "summary": "Video uploads need an evidence-based rights review. Section 512 safe harbors are conditional protections with specific requirements, not an automatic platform entitlement.",
+      "sourceIds": [
+        "copyright",
+        "dmca",
+        "sports-source"
+      ],
+      "trigger": {
+        "fact": "ugc_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Review upload licenses, music/third-party rights, participant and guardian publicity permissions, creator contracts and permitted reuse.",
+        "If relying on a US safe harbor, assess eligibility, designated agent, notice/counter-notice and repeat-infringer process; retain implementation evidence."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-023",
+      "title": "Review child access, reporting and moderation duties",
+      "category": "Content safety",
+      "priority": "CRITICAL",
+      "basis": "LAW",
+      "jurisdiction": "UK, conditional; other markets require separate review",
+      "summary": "If FSP is an in-scope UK user-to-user service likely accessed by children, Ofcom describes access/risk assessments, protections and review records. Source report handlers alone do not establish effective moderation.",
+      "sourceIds": [
+        "ofcom",
+        "profile-source",
+        "sports-source",
+        "settings-source"
+      ],
+      "trigger": {
+        "fact": "safety_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Determine scope and actual UK links, then assess child access and service/content risks where required.",
+        "Test reporting, blocking, escalation, response and appeal; separately obtain jurisdiction-specific child-safety and mandatory-reporting advice."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-024",
+      "title": "Review physical challenge safety and waivers",
+      "category": "Participant safety",
+      "priority": "HIGH",
+      "basis": "ASSURANCE",
+      "jurisdiction": "Competition and venue locations",
+      "summary": "Proposed safety review for sports challenges and filming. This is a risk-management control, not a claim that one universal waiver or statutory safety standard applies.",
+      "sourceIds": [
+        "sports-source",
+        "ofcom"
+      ],
+      "trigger": {
+        "all": [
+          {
+            "fact": "feature_sports"
+          },
+          {
+            "fact": "physical_safety_scope"
+          }
+        ]
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Assess injury-prone challenges, age suitability, filming/location safety, escalation and emergency contacts.",
+        "Review venue/coach responsibilities, insurance, guardian permissions and local waiver enforceability; do not treat a waiver as proof of safe design."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-025",
+      "title": "Assess accessibility and verify critical journeys",
+      "category": "Accessibility",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US and other served markets",
+      "summary": "DOJ guidance addresses accessible websites for covered entities. Legal scope and the applicable standard require review; public-sector technical rules are not automatically the rule for every private app.",
+      "sourceIds": [
+        "ada",
+        "live-app"
+      ],
+      "trigger": {
+        "fact": "accessibility_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Review applicable accessibility obligations and contractual promises.",
+        "Test signup, guardian, challenge/video, payments, privacy rights and support with keyboard and assistive technology; record fixes and acceptance evidence."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-026",
+      "title": "Adopt and test a security baseline",
+      "category": "Security",
+      "priority": "HIGH",
+      "basis": "ASSURANCE",
+      "jurisdiction": "FSP platform and supporting systems",
+      "summary": "NIST CSF 2.0 is a voluntary baseline published on 26 February 2024. Adoption is proposed; this row does not declare SOC 2, ISO 27001 or NIST legally mandatory, certified or implemented.",
+      "sourceIds": [
+        "nist-csf",
+        "ftc-security",
+        "live-app"
+      ],
+      "trigger": {
+        "fact": "public_app_reachable"
+      },
+      "effectiveFrom": "2024-02-26",
+      "effectiveTo": null,
+      "actions": [
+        "Select a proportionate baseline for identity/access, secrets, secure changes, vulnerability remediation, logs, vendors and backup recovery.",
+        "Attach current evidence and accountable owners, then test access revocation and restoration before marking controls verified."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-027",
+      "title": "Build and test incident response and notification",
+      "category": "Security",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US-DE and affected resident jurisdictions",
+      "summary": "Delaware Chapter 12B includes reasonable-security and conditional breach-notice duties. Notice assessment must use actual affected data, residence and discovery facts; this feed alleges no breach.",
+      "sourceIds": [
+        "de-breach",
+        "profile-source",
+        "hbnr"
+      ],
+      "trigger": {
+        "fact": "incident_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Document detection, containment, evidence preservation, legal escalation and vendor coordination.",
+        "Build a jurisdiction-specific notice matrix and tabletop the workflow; preserve real incident deadlines separately from this proposed review date."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-028",
+      "title": "Review marketing consent and sponsored claims",
+      "category": "Marketing",
+      "priority": "HIGH",
+      "basis": "LAW",
+      "jurisdiction": "US and campaign recipient markets",
+      "summary": "US commercial email requires a CAN-SPAM assessment, and material endorsement connections require review under FTC guidance. Other countries and SMS/calling channels need separate rules.",
+      "sourceIds": [
+        "can-spam",
+        "endorsements",
+        "analytics-source",
+        "payout-source"
+      ],
+      "trigger": {
+        "fact": "marketing_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Inventory campaigns and distinguish transactional messages from promotion; verify sender identity, address, unsubscribe and suppression behavior.",
+        "Review paid/rewarded creators and athlete endorsements for clear disclosures and substantiated claims; approve age/location targeting."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-029",
+      "title": "Review workforce and creator classification",
+      "category": "Corporate",
+      "priority": "MEDIUM",
+      "basis": "LAW",
+      "jurisdiction": "Worker and payer jurisdictions",
+      "summary": "Employee/contractor labels alone do not determine tax or labor status. Creator/captain payout code supplies no complete employment facts. Federal rulemaking and state tests must be checked for the actual decision date.",
+      "sourceIds": [
+        "irs-workers",
+        "dol-workers",
+        "payout-source"
+      ],
+      "trigger": {
+        "fact": "workforce_scope"
+      },
+      "effectiveFrom": null,
+      "effectiveTo": null,
+      "actions": [
+        "Collect work locations, actual control, duties and economics; obtain appropriate tax/labor classification advice.",
+        "Review employment/contractor agreements, IP assignment, confidentiality, payroll and required local registrations without extending app-user compliance assumptions to employees."
+      ],
+      "reviewOn": "2026-10-21"
+    },
+    {
+      "id": "FSP-030",
+      "title": "Prepare for Delaware privacy amendments effective 2027",
+      "category": "Regulatory change",
+      "priority": "MEDIUM",
+      "basis": "LAW",
+      "jurisdiction": "US-DE, conditional and future",
+      "summary": "The official statute publishes changed scope, rights, duties and third-party provisions effective 1 January 2027. This is a preparation item; future text must not be applied as an existing obligation on 6 October 2026.",
+      "sourceIds": [
+        "dpdpa",
+        "sports-source"
+      ],
+      "trigger": {
+        "fact": "de_2027_scope"
+      },
+      "effectiveFrom": "2027-01-01",
+      "effectiveTo": null,
+      "actions": [
+        "Compare the current and future versions against actual processing, profiling and contracts.",
+        "Record a dated legal impact assessment and implementation plan if affected, including model/scoring use where relevant."
+      ],
+      "reviewOn": "2026-10-21"
+    }
+  ]
+}

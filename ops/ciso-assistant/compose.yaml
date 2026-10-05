@@ -1,0 +1,43 @@
+# Isolated Community API proof only. Never mount a production database here.
+name: legal-os-ciso-cpl02
+services:
+  backend:
+    image: ghcr.io/intuitem/ciso-assistant-community/backend:v4.1.0@sha256:3a23b82afa4c02612e8d86870d94546fb6271c56cb4cb00cf84ff06a5e1c4a28
+    platform: linux/arm64
+    env_file:
+      - /tmp/legal-os-ciso-cpl02/runtime.env
+    environment:
+      ALLOWED_HOSTS: 127.0.0.1,localhost,backend
+      CISO_ASSISTANT_URL: http://127.0.0.1:18784
+      DJANGO_DEBUG: "False"
+      AUTH_TOKEN_TTL: "3600"
+      GUNICORN_WORKERS: "1"
+      HOME: /tmp
+      XDG_CACHE_HOME: /tmp/.cache
+      XDG_CONFIG_HOME: /tmp/.config
+      XDG_DATA_HOME: /tmp/.local/share
+    # Run the backend only. Upstream migrations initialize the stored catalog.
+    entrypoint: ["/bin/sh", "-c", "python manage.py migrate --noinput && exec gunicorn --chdir ciso_assistant --bind :8000 --workers 1 --timeout 120 ciso_assistant.wsgi:application"]
+    user: "1001:1001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:rw,noexec,nosuid,nodev"]
+    volumes:
+      - proof_db:/code/db
+    mem_limit: 3g
+    cpus: 2
+    networks: [isolated]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health/', timeout=5)"]
+      interval: 10s
+      timeout: 6s
+      retries: 30
+networks:
+  isolated:
+    internal: true
+
+volumes:
+  proof_db:
+    name: legal-os-ciso-cpl02-db
+    external: true

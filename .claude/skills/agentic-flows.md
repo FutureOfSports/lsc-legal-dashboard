@@ -146,3 +146,28 @@ Deployment invariants after the 21 September 2026 v2 implementation:
   Existing contract/tranche/share-grant Finance wire formats are legacy contracts.
 - Slack shares application services and fresh authorization. Its 17/18 command
   inventory is implementation coverage, not measured successful live operations.
+
+## FSP compliance and CISO metadata delivery
+
+- `src/actions/fsp-compliance.ts` records manual source reviews, business facts
+  and legal decisions against immutable snapshots. Reads and writes require
+  fresh membership of the four confirmed legal principals; writes require a
+  legal, platform or operations administrator role.
+- The only production enqueue action derives metadata from a current applicable
+  legal decision. Source-only feature signals never establish statutory scope.
+  Unknown business facts, future rules, stale evidence and superseded decisions
+  cannot approve a control for delivery.
+- A human Send to CISO request starts the fixed `CISO_ASSISTANT_SYNC_JOB` with no
+  caller-supplied execution overrides. Queue persistence precedes job launch;
+  a launch failure preserves the request for an explicit retry.
+- `scripts/run-ciso-sync.ts` rechecks the original actor and exact approval hash
+  immediately before provider mutation. A dedicated scoped Community PAT is
+  separate from the Cloud Run identity token used for private service access.
+- `CisoSyncObject`, `CisoSyncJob` and `CisoSyncAttempt` retain per-instance mapping,
+  consecutive payload snapshots and leased receipts. Unknown writes and expired
+  leases reconcile by marker without automatic mutation. Receipt persistence
+  failure leaves PROCESSING intact for recovery.
+- The first 30-item FSP source catalogue is unapproved review material. Delivery
+  receipts never mean that a legal requirement or control is satisfied.
+- No recurring CISO job or AI applicability review is configured. Codex CLI
+  automation is deferred by Anuj's instruction on 6 October 2026.
