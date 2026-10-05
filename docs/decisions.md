@@ -140,3 +140,27 @@ The existing public visibility and `main` default branch were preserved. Local
 origin was changed to `https://github.com/FutureOfSports/lsc-legal-dashboard.git`
 and fetching from that origin succeeded. The v2 work remains on its existing
 branch; repository transfer does not merge it or complete the GCP migration.
+
+## 5 October 2026: FSP app compliance assessment
+
+Anuj requested an open-source compliance integration inside Legal OS, scoped to
+the FSP app first, and directed the assessment to derive product facts from the
+FSP source. The audit pins both the mobile port and the authoritative web/backend
+repository, separating source capabilities from verified deployment and business
+facts. Delaware incorporation is user-provided; exact legal identity and form
+still require company evidence.
+
+CISO Assistant Community is the proposed framework/control/evidence engine.
+Legal OS needs its own maintained, versioned applicability rules, source receipts
+and legal-review decisions. A code scan cannot determine every applicable law,
+certify compliance or convert voluntary assurance into statutory duties. The
+Community API and custom framework support are documented, but its actual
+release/API behavior must be tested before installation. Preserve existing Legal
+OS authorization and document access; no CISO credentials go to the browser.
+
+The new compliance workspace follows the mock-first selection gate. Its three
+static layouts do not reopen the existing B+C foundation for Legal OS. Details,
+source findings and the next implementation gates are in
+[the compliance specification](compliance-integration/specification.md) and
+[its scoped plan](compliance-integration/PLAN.md). This decision does not deploy
+the engine, modify FSP product behavior or complete the separate US migration.

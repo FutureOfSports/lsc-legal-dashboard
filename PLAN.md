@@ -80,3 +80,11 @@ needs the intended Copilot environment and Drive acceptance; V2-18 has 17/18
 command coverage but no measured 90% real-user completion; V2-19 needs the Google
 Admin sign-in, mailbox type, delegation and recipient verification. Entity and
 review data onboarding still requires real source records, dates and owners.
+
+## FSP app compliance integration, 5 October 2026
+
+The new app-specific compliance work has a separate
+[scoped plan](docs/compliance-integration/PLAN.md) and
+[source assessment](docs/compliance-integration/source-evidence.md). It begins
+with published static choices under the mock-first rule. The existing v2 B+C
+direction remains selected; the new compliance layout is awaiting selection.
