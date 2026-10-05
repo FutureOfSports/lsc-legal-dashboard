@@ -164,3 +164,21 @@ source findings and the next implementation gates are in
 [the compliance specification](compliance-integration/specification.md) and
 [its scoped plan](compliance-integration/PLAN.md). This decision does not deploy
 the engine, modify FSP product behavior or complete the separate US migration.
+
+## 5 October 2026: CISO metadata integration implementation
+
+Anuj authorized the proposed compliance implementation. Preserve the existing
+B+C shell and use the applicability register with feature context and legal
+review queue. Under the one-task-per-run rule, CPL-02 implements the connection,
+local Community API acceptance and durable metadata receipts first.
+
+CISO receives restricted control/evidence metadata, not legal applicability or
+compliance-status decisions. Legal OS retains source provenance and protected
+documents. Fresh central-principal and role checks apply to enqueue and dispatch.
+A supplied approval reference is a caller attestation until CPL-03 binds it to a
+reviewed decision. No UI, scheduler or production integration is activated here.
+
+Durable jobs have immutable revisions, per-instance/domain markers and leased
+attempt receipts. Unknown write outcomes enter read-only reconciliation. Failed
+receipt persistence must leave the lease intact and must not authorize replay.
+See [CPL-02 implementation](compliance-integration/implementation-cpl02.md).

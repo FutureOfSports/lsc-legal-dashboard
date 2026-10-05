@@ -140,6 +140,14 @@ const REQUIRED_COLUMNS = [
   ["LegalDocument", "last_tracker_notify_error"],
 ]
 
+if (process.env.CISO_ASSISTANT_ENABLED === "1") {
+  REQUIRED_TABLES.push("CisoSyncObject", "CisoSyncJob", "CisoSyncAttempt")
+  REQUIRED_COLUMNS.push(["CisoSyncJob", "requested_email"])
+  for (const name of ["CISO_ASSISTANT_URL", "CISO_ASSISTANT_TOKEN", "CISO_ASSISTANT_DOMAIN_ID", "AUTH_APP_URL"]) {
+    if (!process.env[name]) errors.push(`${name} is required when CISO_ASSISTANT_ENABLED=1`)
+  }
+}
+
 if (process.env.DATABASE_URL) {
   const client = new Client({ connectionString: process.env.DATABASE_URL })
   try {

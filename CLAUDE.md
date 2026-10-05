@@ -82,3 +82,11 @@ Platform Admin (AK) | Finance Admin (Anuj) | Legal Admin (Arvind) | Ops Admin (A
 - Use explicit GCP project flags. The operator's default gcloud project is unrelated.
 - Runtime configuration and credentials are separate from tested implementation.
   See `docs/v2/documents-runtime.md`, `docs/v2/entities-runtime.md`, and `PLAN.md`.
+
+## FSP compliance integration
+
+CPL-02 adds a feature-gated CISO Assistant Community metadata client and durable
+sync outbox. It has no active UI or production schedule. Legal applicability,
+approval decisions and exact 15-day AI reviews remain later plan tasks.
+See `docs/compliance-integration/PLAN.md` and
+`docs/compliance-integration/implementation-cpl02.md` before extending it.

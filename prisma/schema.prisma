@@ -1257,6 +1257,63 @@ model CrossModuleEvent {
   @@index([created_at])
 }
 
+// CISO metadata outbox. Decisions and original evidence remain in Legal OS.
+model CisoSyncObject {
+  id                 String   @id @default(uuid())
+  instance_key       String
+  kind               String
+  source_reference   String
+  remote_marker      String   @unique
+  remote_id          String?
+  delivered_revision Int      @default(0)
+  created_at         DateTime @default(now())
+  jobs               CisoSyncJob[]
+
+  @@unique([instance_key, kind, source_reference])
+}
+
+model CisoSyncJob {
+  id                 String   @id @default(uuid())
+  object_id          String
+  revision           Int
+  requested_by       String
+  requested_email    String
+  approval_reference String
+  payload            Json
+  payload_hash       String
+  status             String   @default("QUEUED")
+  attempt_count      Int      @default(0)
+  available_at       DateTime @default(now())
+  lease_token        String?
+  lease_until        DateTime?
+  last_error_code    String?
+  completed_at       DateTime?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  object             CisoSyncObject @relation(fields: [object_id], references: [id], onDelete: Restrict)
+  attempts           CisoSyncAttempt[]
+
+  @@unique([object_id, revision])
+  @@index([status, available_at])
+  @@index([status, lease_until])
+}
+
+model CisoSyncAttempt {
+  id             String   @id @default(uuid())
+  job_id         String
+  attempt        Int
+  lease_token    String   @unique
+  started_at     DateTime @default(now())
+  finished_at    DateTime?
+  outcome        String   @default("STARTED")
+  error_code     String?
+  remote_id      String?
+  response_hash  String?
+  job            CisoSyncJob @relation(fields: [job_id], references: [id], onDelete: Restrict)
+
+  @@unique([job_id, attempt])
+}
+
 // ─── Document Notes & Comments ───────────────────────────────────────────────
 
 model DocumentNote {

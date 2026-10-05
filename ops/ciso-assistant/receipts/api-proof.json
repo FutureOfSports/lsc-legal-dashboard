@@ -1,0 +1,346 @@
+{
+  "recorded_at": "2026-10-05T13:58:25.951220+00:00",
+  "scope": "local synthetic Community API only",
+  "upstream_version": "v4.1.0",
+  "upstream_commit": "5d62f2d2fad19e838da9588b3d720c52b524feb3",
+  "passed": true,
+  "checks": [
+    {
+      "name": "anonymous denied",
+      "method": "GET",
+      "endpoint": "applied-controls/",
+      "status": 401,
+      "passed": true
+    },
+    {
+      "name": "scoped token authentication",
+      "method": "GET",
+      "endpoint": "iam/current-user/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "read scoped membership",
+      "method": "GET",
+      "endpoint": "iam/current-user/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "ordinary account has only the synthetic FSP domain",
+      "passed": true
+    },
+    {
+      "name": "Community service accounts gated",
+      "method": "GET",
+      "endpoint": "iam/service-accounts/",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "name": "scoped custom framework read",
+      "method": "GET",
+      "endpoint": "frameworks/64bc62a4-3b21-4ba8-8a5b-194b1347f361/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "read imported custom requirement",
+      "method": "GET",
+      "endpoint": "requirement-nodes/?framework=64bc62a4-3b21-4ba8-8a5b-194b1347f361&limit=100",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "scoped control update",
+      "method": "PATCH",
+      "endpoint": "applied-controls/d7987c87-fb64-4ffe-a9bf-537012c6b615/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "read scoped evidence",
+      "method": "GET",
+      "endpoint": "evidences/51a4e923-a883-4a60-954b-09aa43634eea/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "scoped evidence metadata update",
+      "method": "PATCH",
+      "endpoint": "evidences/51a4e923-a883-4a60-954b-09aa43634eea/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "read updated scoped evidence",
+      "method": "GET",
+      "endpoint": "evidences/51a4e923-a883-4a60-954b-09aa43634eea/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "evidence create and update preserve exact applied_controls relationships",
+      "passed": true
+    },
+    {
+      "name": "link evidence to control",
+      "method": "PATCH",
+      "endpoint": "applied-controls/d7987c87-fb64-4ffe-a9bf-537012c6b615/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "read linked control",
+      "method": "GET",
+      "endpoint": "applied-controls/d7987c87-fb64-4ffe-a9bf-537012c6b615/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "deny cross-domain read applied-controls",
+      "method": "GET",
+      "endpoint": "applied-controls/f04e2f1c-2177-44c0-a7da-461d8210d8de/",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "name": "deny cross-domain update applied-controls",
+      "method": "PATCH",
+      "endpoint": "applied-controls/f04e2f1c-2177-44c0-a7da-461d8210d8de/",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "name": "deny cross-domain create applied-controls",
+      "method": "POST",
+      "endpoint": "applied-controls/",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "name": "scoped list applied-controls",
+      "method": "GET",
+      "endpoint": "applied-controls/?limit=100",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "cross-domain omitted from applied-controls",
+      "passed": true
+    },
+    {
+      "name": "deny cross-domain read evidences",
+      "method": "GET",
+      "endpoint": "evidences/6aafc47a-c8c7-4913-be09-0ca2c23b0c09/",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "name": "deny cross-domain update evidences",
+      "method": "PATCH",
+      "endpoint": "evidences/6aafc47a-c8c7-4913-be09-0ca2c23b0c09/",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "name": "deny cross-domain create evidences",
+      "method": "POST",
+      "endpoint": "evidences/",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "name": "scoped list evidences",
+      "method": "GET",
+      "endpoint": "evidences/?limit=100",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "cross-domain omitted from evidences",
+      "passed": true
+    },
+    {
+      "name": "deny moving own control into other domain",
+      "method": "PATCH",
+      "endpoint": "applied-controls/d7987c87-fb64-4ffe-a9bf-537012c6b615/",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "name": "deny linking cross-domain evidence",
+      "method": "PATCH",
+      "endpoint": "applied-controls/d7987c87-fb64-4ffe-a9bf-537012c6b615/",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "name": "read evidence before inverse boundary check",
+      "method": "GET",
+      "endpoint": "evidences/51a4e923-a883-4a60-954b-09aa43634eea/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "deny inverse cross-domain control link",
+      "method": "PATCH",
+      "endpoint": "evidences/51a4e923-a883-4a60-954b-09aa43634eea/",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "name": "read evidence after inverse boundary check",
+      "method": "GET",
+      "endpoint": "evidences/51a4e923-a883-4a60-954b-09aa43634eea/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "read own control after denied move and link",
+      "method": "GET",
+      "endpoint": "applied-controls/d7987c87-fb64-4ffe-a9bf-537012c6b615/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "verify foreign control unchanged",
+      "method": "GET",
+      "endpoint": "applied-controls/f04e2f1c-2177-44c0-a7da-461d8210d8de/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "verify foreign evidence unchanged",
+      "method": "GET",
+      "endpoint": "evidences/6aafc47a-c8c7-4913-be09-0ca2c23b0c09/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "denied operations preserve source and target records",
+      "passed": true
+    },
+    {
+      "name": "deny global role assignment",
+      "method": "POST",
+      "endpoint": "role-assignments/",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "name": "upstream evidence link PATCH response",
+      "method": "PATCH",
+      "endpoint": "evidences/51a4e923-a883-4a60-954b-09aa43634eea/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "name": "read link after PATCH",
+      "method": "GET",
+      "endpoint": "evidences/51a4e923-a883-4a60-954b-09aa43634eea/",
+      "status": 200,
+      "passed": true
+    }
+  ],
+  "response_shapes": {
+    "framework_keys": [
+      "annotation",
+      "created_at",
+      "default_locale",
+      "description",
+      "effective_field_visibility",
+      "field_visibility",
+      "folder",
+      "has_compliance_assessments",
+      "has_update",
+      "id",
+      "implementation_groups_definition",
+      "is_dynamic",
+      "is_scale_bound",
+      "library",
+      "locale",
+      "max_score",
+      "min_score",
+      "name",
+      "outcomes_definition",
+      "provider",
+      "ref_id",
+      "reference_controls",
+      "scores_definition",
+      "third_party_field_visibility",
+      "updated_at",
+      "urn",
+      "urn_namespace"
+    ],
+    "control_keys": [
+      "annual_cost",
+      "annual_cost_display",
+      "assets",
+      "category",
+      "control_documents",
+      "control_impact",
+      "cost",
+      "created_at",
+      "csf_function",
+      "currency",
+      "description",
+      "effort",
+      "eta",
+      "evidences",
+      "expiry_date",
+      "filtering_labels",
+      "findings",
+      "findings_count",
+      "folder",
+      "id",
+      "incidents",
+      "is_assigned",
+      "link",
+      "linked_models",
+      "name",
+      "objectives",
+      "observation",
+      "owner",
+      "path",
+      "priority",
+      "progress_field",
+      "ranking_score",
+      "ref_id",
+      "reference_control",
+      "requirement_assessments",
+      "security_exceptions",
+      "stakeholders",
+      "start_date",
+      "state",
+      "status",
+      "task_templates",
+      "updated_at"
+    ],
+    "evidence_keys": [
+      "applied_controls",
+      "attachment",
+      "contracts",
+      "created_at",
+      "description",
+      "expiry_date",
+      "filtering_labels",
+      "folder",
+      "id",
+      "link",
+      "name",
+      "owner",
+      "path",
+      "requirement_assessments",
+      "security_exceptions",
+      "size",
+      "status",
+      "task_templates",
+      "updated_at"
+    ],
+    "framework_folder": "d6fadb9f-b8c9-46dd-8097-273298207fc2",
+    "domain": "f29b4f34-9b8d-496a-9483-d878e0998bb4",
+    "evidence_link_patch_behavior": "unchanged"
+  },
+  "error": null
+}

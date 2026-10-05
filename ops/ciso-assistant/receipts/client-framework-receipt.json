@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checks": [
+    "framework read denied by default",
+    "explicit framework allowlist permits scoped token global catalog read",
+    "unapproved framework ID denied"
+  ],
+  "framework": {
+    "id": "64bc62a4-3b21-4ba8-8a5b-194b1347f361",
+    "domainId": "d6fadb9f-b8c9-46dd-8097-273298207fc2",
+    "name": "Synthetic integration framework",
+    "description": "Test framework. Never treat this as an approved legal framework.",
+    "urn": "urn:legalos:risk:framework:cpl02-synthetic"
+  }
+}

@@ -146,3 +146,17 @@ Deployment invariants after the 21 September 2026 v2 implementation:
   Existing contract/tranche/share-grant Finance wire formats are legacy contracts.
 - Slack shares application services and fresh authorization. Its 17/18 command
   inventory is implementation coverage, not measured successful live operations.
+
+## CISO metadata outbox, CPL-02
+
+- `src/actions/ciso-sync.ts` enqueues metadata with fresh central legal access;
+  the approval reference is caller attestation until CPL-03 binds decisions.
+- `scripts/run-ciso-sync.ts` is an independent worker, using server-owned
+  configuration and a dedicated scoped Community PAT. It rechecks the original
+  actor's current email, activity and writer role before a mutation.
+- `CisoSyncObject`, `CisoSyncJob` and `CisoSyncAttempt` retain per-instance mapping,
+  consecutive payload snapshots and leased receipts. Unknown writes and expired
+  leases reconcile by marker without automatic mutation. Receipt persistence
+  failure leaves PROCESSING intact for recovery.
+- No CISO cron, AI applicability review or production installation is active.
+  See `docs/compliance-integration/implementation-cpl02.md` for setup and tests.

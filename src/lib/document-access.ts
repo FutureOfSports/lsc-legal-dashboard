@@ -5,12 +5,8 @@ import { redirect } from 'next/navigation'
 import type { SessionPayload } from '@/lib/session'
 import type { Prisma } from '@/generated/prisma/client'
 
-export const GLOBAL_DOCUMENT_EMAILS = [
-  'legal@futureofsports.io',
-  'ak@futureofsports.io',
-  'arvind@futureofsports.io',
-  'adi@futureofsports.io',
-] as const
+import { GLOBAL_DOCUMENT_EMAILS } from '@/lib/document-principals'
+export { GLOBAL_DOCUMENT_EMAILS } from '@/lib/document-principals'
 
 export class DocumentAccessDenied extends Error {
   constructor() { super('Document access is not available. Request access from Legal.'); this.name = 'DocumentAccessDenied' }

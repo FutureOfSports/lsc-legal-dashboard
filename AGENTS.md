@@ -85,3 +85,16 @@ This version has breaking changes — APIs, conventions, and file structure may 
   GitHub requires the recipient's emailed confirmation, which expires after one
   day. Switching CLI authentication does not accept it. Do not repeat a pending
   transfer or replace it with a fork; verify acceptance, then transfer to the org.
+
+## CISO worker gotchas, 5 October 2026
+
+- Run the standalone CISO worker with `--conditions=react-server --import tsx`.
+  Keep its authorization helper independent of Next navigation/UI imports.
+  The central principal constants live in `src/lib/document-principals.ts`.
+- A provider write and its database receipt are separate failure boundaries.
+  Never catch a receipt transaction failure as a provider failure. Leave the
+  lease intact so the next worker reconciles by stable remote marker.
+- Evidence links are immutable through CISO metadata PATCH. Require every new
+  metadata snapshot to retain its link, or fail before any provider mutation.
+- CISO's production feature flag stays disabled until the applicability,
+  approval linkage and live operational gates in the compliance PLAN pass.

@@ -82,6 +82,10 @@ if (process.env.SLACK_LEGAL_ENABLED === "1") {
   )
 }
 
+if (process.env.CISO_ASSISTANT_ENABLED === "1") {
+  requiredEnv.push("CISO_ASSISTANT_URL", "CISO_ASSISTANT_TOKEN", "CISO_ASSISTANT_DOMAIN_ID", "AUTH_APP_URL")
+}
+
 const requiredRoutes = [
   "src/app/api/webhooks/gmail/route.ts",
   "src/app/api/webhooks/opensign/route.ts",

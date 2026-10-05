@@ -1,0 +1,25 @@
+urn: urn:legalos:risk:library:cpl02-synthetic
+locale: en
+ref_id: LEGAL-OS-CPL02-SYNTHETIC
+name: Legal OS synthetic API proof
+version: 1
+publication_date: 2026-10-05
+provider: Legal OS integration test
+packager: Legal OS
+copyright: Synthetic original test data. No legal authority or real compliance assessment.
+description: Transport and import verification only. These requirements do not represent FSP legal obligations.
+objects:
+  framework:
+    urn: urn:legalos:risk:framework:cpl02-synthetic
+    ref_id: LEGAL-OS-CPL02-SYNTHETIC
+    name: Synthetic integration framework
+    description: Test framework. Never treat this as an approved legal framework.
+    min_score: 0
+    max_score: 1
+    requirement_nodes:
+      - urn: urn:legalos:risk:req_node:cpl02-synthetic:proof
+        ref_id: PROOF-01
+        name: Synthetic transport requirement
+        description: Prove that the API imports a custom requirement and can link evidence.
+        assessable: true
+        depth: 1
