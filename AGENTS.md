@@ -70,3 +70,17 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - See `ops/us-prod-migration.md` for created resources, verification and remaining
   permissions. Current deployment instructions remain the source environment
   until a verified cutover. Use CLI operations; Anuj requested no browser use.
+
+## Repository ownership handoff, 5 October 2026
+
+- The authorized destination is `FutureOfSports/lsc-legal-dashboard`, using
+  `ototoanuj` as the intermediate owner. Verify repository ID `1196034989` and
+  its current `full_name` before changing remotes or claiming completion.
+- A personal repository collaborator cannot be promoted to admin through the
+  collaborator API; that request returned HTTP 422. `k0sanuj` also lacked
+  repository-creation permission in FutureOfSports. Anuj authorized transferring
+  ownership to `ototoanuj`, an active FutureOfSports owner, as the next step.
+- A successful personal-account transfer request is not completed ownership.
+  GitHub requires the recipient's emailed confirmation, which expires after one
+  day. Switching CLI authentication does not accept it. Do not repeat a pending
+  transfer or replace it with a fork; verify acceptance, then transfer to the org.

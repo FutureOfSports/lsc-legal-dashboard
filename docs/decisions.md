@@ -117,3 +117,23 @@ source billing and operator permissions block completion. Source traffic remains
 in place. Preserve OpenSign's pending signer URLs and inventory active schedules
 before cutover. Executed receipts and remaining prerequisites are recorded in
 `ops/us-prod-migration.md`; this decision is not a completed-deployment claim.
+
+## 5 October 2026: FSP repository ownership
+
+Anuj requested organization ownership and direct FSP control of this repository.
+The exact organization is `FutureOfSports`; `ototoanuj` has active owner access.
+Direct transfer from `k0sanuj` was rejected because that account cannot create
+repositories in the organization. Anuj then explicitly authorized transfer to
+`ototoanuj` first, followed by transfer into FutureOfSports.
+
+The personal-account transfer request was accepted by GitHub, and CLI
+authentication was switched to `ototoanuj`. At this receipt, repository ID
+`1196034989` still resolves to `k0sanuj/lsc-legal-dashboard`; recipient email
+confirmation is pending. No matching invitation appeared in the CLI repository
+invitation list. Do not treat the request as a completed transfer.
+
+After acceptance, transfer the same repository into FutureOfSports, verify both
+branch histories and effective owner/collaborator permissions, then update the
+local origin URL. FSP's current default member permission is read and its owners
+administer organization repositories. Repository transfer is separate from the
+unfinished GCP production migration.
