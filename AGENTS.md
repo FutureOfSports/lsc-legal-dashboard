@@ -73,13 +73,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Repository ownership handoff, 5 October 2026
 
-- The authorized destination is `FutureOfSports/lsc-legal-dashboard`, using
-  `ototoanuj` as the intermediate owner. Verify repository ID `1196034989` and
-  its current `full_name` before changing remotes or claiming completion.
+- The canonical repository is `https://github.com/FutureOfSports/lsc-legal-dashboard`.
+  Transfer through the intermediate owner `ototoanuj` completed on 5 October
+  2026. Repository ID `1196034989` is unchanged; both branch heads were verified
+  intact before the completion receipt. Local origin now points at FutureOfSports.
 - A personal repository collaborator cannot be promoted to admin through the
   collaborator API; that request returned HTTP 422. `k0sanuj` also lacked
   repository-creation permission in FutureOfSports. Anuj authorized transferring
-  ownership to `ototoanuj`, an active FutureOfSports owner, as the next step.
+  ownership to `ototoanuj`, an active FutureOfSports owner, to complete the move.
 - A successful personal-account transfer request is not completed ownership.
   GitHub requires the recipient's emailed confirmation, which expires after one
   day. Switching CLI authentication does not accept it. Do not repeat a pending

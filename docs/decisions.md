@@ -126,14 +126,17 @@ Direct transfer from `k0sanuj` was rejected because that account cannot create
 repositories in the organization. Anuj then explicitly authorized transfer to
 `ototoanuj` first, followed by transfer into FutureOfSports.
 
-The personal-account transfer request was accepted by GitHub, and CLI
-authentication was switched to `ototoanuj`. At this receipt, repository ID
-`1196034989` still resolves to `k0sanuj/lsc-legal-dashboard`; recipient email
-confirmation is pending. No matching invitation appeared in the CLI repository
-invitation list. Do not treat the request as a completed transfer.
+The recipient accepted the personal-account transfer. CLI authentication is now
+`ototoanuj`, which then transferred the repository into FutureOfSports. GitHub's
+repository API confirms ID `1196034989` now resolves to
+`FutureOfSports/lsc-legal-dashboard`, with `ototoanuj` having admin access.
+`k0sanuj` retains write access. The organization's default member permission is
+read; organization owners administer the repository directly.
 
-After acceptance, transfer the same repository into FutureOfSports, verify both
-branch histories and effective owner/collaborator permissions, then update the
-local origin URL. FSP's current default member permission is read and its owners
-administer organization repositories. Repository transfer is separate from the
-unfinished GCP production migration.
+Both branch heads were verified unchanged across the transfer: `main` at
+`319dfd97371c8fe68fced00bebc4bfd3092b88d8`, and `codex/legal-os-v2-review` at
+`cdd5e1dfa06f2e42c428a7d43f71c7892ba90f77` before this documentation receipt.
+The existing public visibility and `main` default branch were preserved. Local
+origin was changed to `https://github.com/FutureOfSports/lsc-legal-dashboard.git`
+and fetching from that origin succeeded. The v2 work remains on its existing
+branch; repository transfer does not merge it or complete the GCP migration.
