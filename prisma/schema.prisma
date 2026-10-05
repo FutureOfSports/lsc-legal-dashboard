@@ -1621,3 +1621,49 @@ model ContractGenerationJob {
   @@index([actor_user_id, status])
   @@index([status, created_at])
 }
+
+// FSP snapshots and decisions are append-only. Published findings are proposals until reviewed.
+model FspComplianceSnapshot {
+  id          String   @id @default(uuid())
+  revision    Int      @unique
+  origin_key  String   @unique
+  feed_hash   String
+  feed        Json
+  created_by  String
+  created_at  DateTime @default(now())
+  assessment  FspComplianceAssessment?
+}
+
+model FspComplianceAssessment {
+  id           String   @id @default(uuid())
+  snapshot_id  String   @unique
+  as_of        DateTime
+  results      Json
+  result_hash  String
+  created_at   DateTime @default(now())
+  snapshot     FspComplianceSnapshot @relation(fields: [snapshot_id], references: [id], onDelete: Restrict)
+  decisions    FspComplianceDecision[]
+}
+
+model FspComplianceDecision {
+  id                 String   @id @default(uuid())
+  assessment_id      String
+  rule_id            String
+  revision           Int
+  status             String
+  reason             String
+  source_reference   String
+  evidence_as_of     DateTime
+  review_on          DateTime
+  owner              String?
+  control_status     String   @default("NOT_ASSESSED")
+  evidence_reference String?
+  actor_id           String
+  actor_email        String
+  created_at         DateTime @default(now())
+  assessment         FspComplianceAssessment @relation(fields: [assessment_id], references: [id], onDelete: Restrict)
+
+  @@unique([assessment_id, rule_id, revision])
+  @@index([rule_id, created_at])
+  @@index([assessment_id, rule_id, created_at])
+}

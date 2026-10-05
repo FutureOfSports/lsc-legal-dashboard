@@ -4,6 +4,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { GLOBAL_DOCUMENT_EMAILS } from '@/lib/document-principals'
+import { validateFspCisoApproval } from '@/lib/fsp-compliance/approval'
 import type { SessionPayload } from '@/lib/session'
 import { CisoClientError } from './client'
 import { cisoInstanceKey, configuredCisoClient } from './config'
@@ -52,6 +53,8 @@ export async function queueCisoMetadata(session: SessionPayload, value: unknown,
   const client = override ?? configuredCisoClient()
   const instanceKey = cisoInstanceKey(client)
   const hash = cisoMetadataHash(input.metadata)
+  if ((!override || input.approvalReference.startsWith('fsp-decision:'))
+    && !await validateFspCisoApproval(input.approvalReference, hash)) throw new Error('A current applicable legal decision is required.')
   return serializable(async tx => {
     const object = await tx.cisoSyncObject.upsert({
       where: { instance_key_kind_source_reference: {
@@ -136,7 +139,7 @@ function matches(metadata: CisoMetadata, remote: Remote, marker: string): boolea
     : 'marker' in remote && remote.marker === marker && (remote.link ?? undefined) === metadata.link
 }
 
-async function synchronize(job: Claimed, metadata: CisoMetadata, client: CisoAssistantClient) {
+async function synchronize(job: Claimed, metadata: CisoMetadata, client: CisoAssistantClient, testOverride: boolean) {
   const marker = job.object.remote_marker
   const found = metadata.kind === 'CONTROL'
     ? await client.findControlByRefId(marker)
@@ -148,6 +151,8 @@ async function synchronize(job: Claimed, metadata: CisoMetadata, client: CisoAss
     && (found.link ?? undefined) !== metadata.link) throw new CisoClientError('invalid_input')
   await ensureLease(job)
   if (!await stillAuthorized(job.requested_by, job.requested_email)) throw new Error('requester_access_revoked')
+  if ((!testOverride || job.approval_reference.startsWith('fsp-decision:'))
+    && !await validateFspCisoApproval(job.approval_reference, job.payload_hash)) throw new Error('approval_stale')
   let written: Remote
   if (metadata.kind === 'CONTROL') {
     const input = { refId: marker, name: metadata.name, description: metadata.description }
@@ -213,12 +218,12 @@ export async function runCisoSyncBatch(options: { client?: CisoAssistantClient; 
       }
       const metadata = parseCisoMetadata(job.payload)
       if (metadata.kind !== job.object.kind || cisoMetadataHash(metadata) !== job.payload_hash) throw new Error('payload_integrity')
-      remote = await synchronize(job, metadata, client) ?? undefined
+      remote = await synchronize(job, metadata, client, !!options.client) ?? undefined
       status = remote ? 'DELIVERED' : 'RECONCILE'
       code = remote ? null : 'write_outcome_unconfirmed'
     } catch (error) {
       const clientError = error instanceof CisoClientError ? error : null
-      const safeCodes = ['lease_lost', 'payload_integrity', 'remote_mapping_changed', 'requester_access_revoked']
+      const safeCodes = ['lease_lost', 'payload_integrity', 'remote_mapping_changed', 'requester_access_revoked', 'approval_stale']
       code = clientError?.code ?? (error instanceof Error && safeCodes.includes(error.message) ? error.message : 'sync_failed')
       status = job.reconcileOnly || clientError?.ambiguousWrite ? 'RECONCILE'
         : clientError?.retryable && job.attempt_count < MAX_ATTEMPTS ? 'RETRY_WAIT' : 'FAILED'

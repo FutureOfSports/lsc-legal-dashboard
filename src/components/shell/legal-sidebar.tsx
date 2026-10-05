@@ -149,7 +149,8 @@ export function LegalSidebar({ userRole, userName, checklistItems, globalAccess 
                 const isActive =
                   item.href === "/legal"
                     ? pathname === "/legal"
-                    : pathname.startsWith(item.href)
+                    : pathname.startsWith(item.href) && !navItems.some(other =>
+                      other.href.length > item.href.length && pathname.startsWith(other.href))
 
                 return (
                   <Link

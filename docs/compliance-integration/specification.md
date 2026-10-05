@@ -1,7 +1,7 @@
 # FSP app compliance integration
 
-Date: 5 October 2026. Status: source assessment and design review. The integration
-is not installed or running. Scope: the FSP app first, as confirmed by Anuj.
+Updated: 6 October 2026. Manual source-feed implementation and deployment.
+Executed deployment status belongs in the release receipt. Scope: the FSP app first, as confirmed by Anuj.
 
 ## Intended result
 
@@ -133,3 +133,12 @@ approved because a template exists.
 - Prepare a private GCP deployment, recovery plan and live acceptance checks.
   Runtime installation, credentials, synchronization and production findings are
   unverified at this design stage.
+
+## Current release scope, 6 October 2026
+
+Anuj authorized the complete implementation and initial source-backed publication.
+Recurring AI reviews are deferred to a later Codex CLI setup. Implement human
+source/fact updates and legal decisions now, retaining source limitations and
+unknown facts. A manual delivery request can start the isolated CISO job without
+creating a recurring schedule. Source catalogue requirements are review candidates,
+not approved applicability decisions or verified controls.

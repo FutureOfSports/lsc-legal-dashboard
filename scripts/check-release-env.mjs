@@ -83,7 +83,7 @@ if (process.env.SLACK_LEGAL_ENABLED === "1") {
 }
 
 if (process.env.CISO_ASSISTANT_ENABLED === "1") {
-  requiredEnv.push("CISO_ASSISTANT_URL", "CISO_ASSISTANT_TOKEN", "CISO_ASSISTANT_DOMAIN_ID", "AUTH_APP_URL")
+  requiredEnv.push("CISO_ASSISTANT_URL", "CISO_ASSISTANT_TOKEN", "CISO_ASSISTANT_DOMAIN_ID", "CISO_ASSISTANT_SYNC_JOB", "AUTH_APP_URL")
 }
 
 const requiredRoutes = [

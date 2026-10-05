@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import Link from "next/link"
 import { requireGlobalDocumentAccess } from "@/lib/document-access"
 import { requireSession } from "@/lib/auth"
 import { formatDate, daysUntil, ENTITIES } from "@/lib/constants"
@@ -155,11 +156,16 @@ export default async function CompliancePage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Compliance</h1>
-        <p className="text-muted-foreground">
-          Compliance deadlines across all jurisdictions
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Compliance</h1>
+          <p className="text-muted-foreground">
+            Compliance deadlines across all jurisdictions
+          </p>
+        </div>
+        <Link href="/legal/compliance/fsp" className="border border-border px-4 py-2 text-sm text-primary hover:bg-muted/50">
+          FSP app compliance
+        </Link>
       </div>
 
       {/* Overdue alert banner */}

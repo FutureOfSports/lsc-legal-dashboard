@@ -10,8 +10,7 @@ Decisions are in [docs/decisions.md](docs/decisions.md).
 
 On 21 September 2026, Anuj selected B+C and explicitly authorized completing all
 v2 implementations in this run and deploying them to the GCP service below.
-This overrides the earlier one-task-per-run preparation limit. Keep separate
-verified implementation commits where practical. External integrations only count
+Keep separate verified implementation commits where practical. External integrations only count
 as live after actual runtime acceptance, and missing credentials remain explicit.
 
 For implementation, read the installed Next.js guide relevant to the change.
@@ -87,4 +86,5 @@ The new app-specific compliance work has a separate
 [scoped plan](docs/compliance-integration/PLAN.md) and
 [source assessment](docs/compliance-integration/source-evidence.md). It begins
 with published static choices under the mock-first rule. The existing v2 B+C
-direction remains selected; the new compliance layout is awaiting selection.
+direction remains selected; Anuj authorized the compliance implementation and
+complete manual source-feed deployment. Recurring Codex CLI reviews are deferred.

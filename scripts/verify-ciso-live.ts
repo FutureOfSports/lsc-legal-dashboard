@@ -36,20 +36,20 @@ async function main() {
       const input = { sourceReference: `${run}/${kind}`, approvalReference: `${run}/synthetic-attestation`, revision: 1,
         metadata: { kind, name: `Synthetic ${kind} ${run}`, description: 'Local synthetic API acceptance only.',
           ...(kind === 'EVIDENCE' ? { link: `${process.env.AUTH_APP_URL}/legal/compliance` } : {}) } }
-      const job = await queueCisoMetadata(session, input)
-      const result = await runCisoSyncBatch({ jobId: job.id })
+      const job = await queueCisoMetadata(session, input, client)
+      const result = await runCisoSyncBatch({ client, jobId: job.id })
       assert.deepEqual(result, [{ id: job.id, status: 'DELIVERED' }])
       const receipt = await prisma.cisoSyncJob.findUniqueOrThrow({ where: { id: job.id }, include: { object: true, attempts: true } })
       assert.ok(receipt.object.remote_id)
       assert.equal(receipt.attempts.length, 1)
       assert.equal(receipt.attempts[0].outcome, 'DELIVERED')
       assert.ok(receipt.attempts[0].response_hash)
-      const duplicate = await queueCisoMetadata(session, input)
+      const duplicate = await queueCisoMetadata(session, input, client)
       assert.equal(duplicate.id, job.id)
-      assert.deepEqual(await runCisoSyncBatch({ jobId: duplicate.id }), [])
+      assert.deepEqual(await runCisoSyncBatch({ client, jobId: duplicate.id }), [])
       const second = await queueCisoMetadata(session, { ...input, revision: 2,
-        metadata: { ...input.metadata, description: 'Second synthetic metadata revision.' } })
-      assert.deepEqual(await runCisoSyncBatch({ jobId: second.id }), [{ id: second.id, status: 'DELIVERED' }])
+        metadata: { ...input.metadata, description: 'Second synthetic metadata revision.' } }, client)
+      assert.deepEqual(await runCisoSyncBatch({ client, jobId: second.id }), [{ id: second.id, status: 'DELIVERED' }])
       const secondReceipt = await prisma.cisoSyncJob.findUniqueOrThrow({ where: { id: second.id }, include: { object: true } })
       assert.equal(secondReceipt.object.remote_id, receipt.object.remote_id)
       assert.equal(secondReceipt.object.delivered_revision, 2)

@@ -240,10 +240,21 @@ export function createCisoAssistantClient(config: CisoClientConfig): CisoAssista
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), timeoutMs)
     const write = method !== "GET"
+    let dispatched = false
     try {
+      const headers: Record<string, string> = { Authorization: `Token ${token}`, Accept: "application/json", "Accept-Language": "en" }
+      if (body !== undefined) headers["Content-Type"] = "application/json"
+      if (config.getIdentityToken) {
+        const identity = await Promise.race([config.getIdentityToken(), new Promise<never>((_, reject) => {
+          controller.signal.addEventListener("abort", () => reject(new Error("Identity request timed out")), { once: true })
+        })])
+        if (!/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(identity)) throw new CisoClientError("authentication")
+        headers["X-Serverless-Authorization"] = `Bearer ${identity}`
+      }
+      dispatched = true
       const response = await fetch(url, {
         method, redirect: "error", cache: "no-store", signal: controller.signal,
-        headers: { Authorization: `Token ${token}`, Accept: "application/json", "Accept-Language": "en", ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
+        headers,
         body,
       })
       if (!response.ok) {
@@ -270,7 +281,7 @@ export function createCisoAssistantClient(config: CisoClientConfig): CisoAssista
         }
         throw error
       }
-      throw new CisoClientError(controller.signal.aborted ? "timeout" : "transport", true, write)
+      throw new CisoClientError(controller.signal.aborted ? "timeout" : "transport", true, write && dispatched)
     } finally { clearTimeout(timer) }
   }
 

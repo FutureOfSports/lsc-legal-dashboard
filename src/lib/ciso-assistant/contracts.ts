@@ -11,6 +11,8 @@ export interface CisoClientConfig {
   domainId: string
   /** Explicit read-only catalog IDs. Imported frameworks can belong to the global folder. */
   frameworkIds?: readonly string[]
+  /** Server-owned Cloud Run identity, separate from the Community PAT. */
+  getIdentityToken?: () => Promise<string>
   /** Synthetic integration tests only; rejected when NODE_ENV=production. */
   allowLoopbackHttp?: boolean
   timeoutMs?: number

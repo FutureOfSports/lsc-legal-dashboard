@@ -19,10 +19,10 @@ Existing analysis agents and deterministic MNDA sending are separate workflows.
 Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()`.
 
 - **Orchestrator** (`orchestrator.ts`): Single registry for runnable agents and direct `runAgent()` triggers
-- **Compliance Agent**: 15-day scan of all entities/jurisdictions for compliance issues
+- **Compliance Agent**: Legacy stored-record compliance and deadline checks
 - **Agreement Analyzer**: AI-powered document categorization, clause extraction, file naming
 - **Invoice Detection**: Scans emails for invoices, verifies math, routes to finance
-- **Compliance Audit**: Full adversarial audit every 15 days, produces AuditReport records
+- **Compliance Audit**: Legacy database audit producing AuditReport records; not the FSP source-backed legal review
 - `AgentMessage` is diagnostic/legacy plumbing only; production workflows use direct triggers. Cross-dashboard events use the durable `CrossModuleEvent` queue.
 
 ## Tech Stack
@@ -85,8 +85,10 @@ Platform Admin (AK) | Finance Admin (Anuj) | Legal Admin (Arvind) | Ops Admin (A
 
 ## FSP compliance integration
 
-CPL-02 adds a feature-gated CISO Assistant Community metadata client and durable
-sync outbox. It has no active UI or production schedule. Legal applicability,
-approval decisions and exact 15-day AI reviews remain later plan tasks.
+FSP compliance uses immutable source snapshots, three-valued applicability,
+source and fact review, append-only legal decisions, and a restricted CISO
+Assistant Community metadata outbox. The initial feed is for legal review, not
+a certification. Human-requested delivery starts an isolated worker; recurring
+Codex CLI review automation is deferred. No API-based AI review is activated.
 See `docs/compliance-integration/PLAN.md` and
 `docs/compliance-integration/implementation-cpl02.md` before extending it.

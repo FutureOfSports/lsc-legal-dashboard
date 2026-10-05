@@ -65,6 +65,18 @@ async function main(): Promise<void> {
     assert.throws(() => createCisoAssistantClient({ ...config, domainId: "../../outside" }), CisoClientError)
     assert.throws(() => createCisoAssistantClient({ ...config, token: "bad\nheader" }), CisoClientError)
     assert.equal((await client.getControl(CONTROL)).status, "to_do")
+    handler = (request, response) => {
+      assert.equal(request.headers["x-serverless-authorization"], "Bearer synthetic.identity.signature")
+      json(response, control)
+    }
+    const cloudClient = createCisoAssistantClient({ ...config, getIdentityToken: async () => "synthetic.identity.signature" })
+    assert.equal((await cloudClient.getControl(CONTROL)).id, CONTROL)
+    const beforeIdentityFailure = calls
+    await fails(() => createCisoAssistantClient({ ...config, getIdentityToken: async () => { throw new Error(TOKEN) } }).createControl(input), "transport")
+    await fails(() => createCisoAssistantClient({ ...config, getIdentityToken: async () => "invalid\nheader" }).createControl(input), "authentication")
+    await fails(() => createCisoAssistantClient({ ...config, timeoutMs: 20, getIdentityToken: () => new Promise(() => {}) }).createControl(input), "timeout")
+    assert.equal(calls, beforeIdentityFailure, "Identity failures do not dispatch a provider mutation")
+    handler = (_request, response) => json(response, control)
     await fails(() => client.getControl("../../outside"), "invalid_input")
 
     handler = (_request, response) => json(response, { ...control, folder: OTHER_DOMAIN })

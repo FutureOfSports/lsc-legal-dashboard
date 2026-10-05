@@ -32,6 +32,7 @@ export const PAGE_PERMISSIONS: Record<string, UserRole[]> = {
   "/legal/repositories": ALL_ROLES,
   "/legal/compliance/entities": ADMIN_ROLES,
   "/legal/compliance/reviews": ADMIN_ROLES,
+  "/legal/compliance/fsp": ALL_ROLES,
   "/legal/arbitration": ADMIN_ROLES,
   "/legal/documents": ALL_ROLES,
   "/legal/documents/[id]": ALL_ROLES,
@@ -126,6 +127,7 @@ export const NAV_ITEMS: NavItem[] = [
 
   // Compliance & Risk
   { label: "Entities", href: "/legal/compliance/entities", icon: "Building", group: "Compliance" },
+  { label: "FSP App Compliance", href: "/legal/compliance/fsp", icon: "ShieldCheck", group: "Compliance" },
   { label: "Review Schedules", href: "/legal/compliance/reviews", icon: "Clock", group: "Compliance" },
   { label: "Compliance", href: "/legal/compliance", icon: "ShieldCheck", group: "Compliance" },
   { label: "Data Protection", href: "/legal/compliance/data-protection", icon: "Lock", group: "Compliance" },
