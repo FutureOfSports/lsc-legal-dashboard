@@ -1,0 +1,68 @@
+{
+  "service": "https://legal-os-ciso-2feiiv4i4a-uc.a.run.app",
+  "project": "fsp-us-prod-499705",
+  "region": "us-central1",
+  "imageDigest": "sha256:4d46462f5eba69940546d70aa8064d9e5d043527504c3829535473bb935b10fc",
+  "domainId": "46fc0a9d-a1ed-4a5d-b0c7-2a82df55d2ae",
+  "frameworkId": "cdc2ed54-ee6d-48be-ac9a-55b00ecb5307",
+  "requirementCount": 30,
+  "controlCount": 0,
+  "checks": [
+    "Anonymous requests denied by Cloud Run IAM (HTTP 403)",
+    "CISO PAT alone cannot bypass Cloud Run IAM (HTTP 401)",
+    "Cloud IAM alone cannot authenticate to CISO",
+    "Control and evidence permissions bound to FSP domain; shared framework reads constrained by Legal OS allowlist",
+    "Community edition service-account gate remains enforced",
+    "All 30 source-backed review requirements read back from actual CISO API",
+    "Catalog import created no approved or active controls",
+    "Temporary bootstrap admin token revoked; integration PAT remains valid"
+  ],
+  "automation": "MANUAL",
+  "adminTokenRevoked": true,
+  "adminPasswordUsable": false,
+  "adminActive": true,
+  "adminNote": "Upstream prevents deactivating its only admin. The account has no usable password and its temporary PAT was revoked.",
+  "principals": [
+    {
+      "email": "ciso-bootstrap@futureofsports.io",
+      "is_active": true,
+      "is_superuser": true,
+      "password_unusable": true,
+      "token_count": 0,
+      "token_expiry": null
+    },
+    {
+      "email": "ciso-integration@futureofsports.io",
+      "is_active": true,
+      "is_superuser": false,
+      "password_unusable": true,
+      "token_count": 1,
+      "token_expiry": "2027-01-03T19:37:20.662Z"
+    }
+  ],
+  "checkedAt": "2026-10-05T19:50:55.946Z",
+  "nativeMigrationCheck": {
+    "execution": "legal-os-ciso-migrate-ksfhs",
+    "result": "SUCCEEDED",
+    "completedAt": "2026-10-05T19:42:17Z",
+    "command": "python manage.py migrate --check --noinput"
+  },
+  "readyRevision": "legal-os-ciso-00003-dhs",
+  "minimumInstances": 1,
+  "latencySeconds": {
+    "firstApiRequest": 35.739219726,
+    "warmReads": [
+      4.323332689,
+      2.1727551
+    ]
+  },
+  "sourceFeedSha256": "a1e1e5b13df19cabc003465c2e1c37602e556481fe7271ddb29bef38d070571f",
+  "catalogSha256": "58d27e87e76fbd74df1c478bad9cf046a51c9c2feae1e4ab5250ef85cae8f34e",
+  "upstreamCommit": "5d62f2d2fad19e838da9588b3d720c52b524feb3",
+  "cloudRunInvokers": [
+    "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
+    "221817683102-compute@developer.gserviceaccount.com"
+  ],
+  "cloudRunPublicInvokers": false,
+  "bootstrapJobDeleted": true
+}

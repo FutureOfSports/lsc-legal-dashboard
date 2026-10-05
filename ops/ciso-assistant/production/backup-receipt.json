@@ -1,0 +1,25 @@
+{
+  "createdAt": "20261005T195304Z",
+  "database": "legal_os_ciso",
+  "object": "gs://fsp-us-prod-499705-legal-recovery/initial-ciso/legal-os-ciso-20261005T195304Z-baa050ebd3aa.dump",
+  "generation": "1791230155723504",
+  "sha256": "baa050ebd3aaad2258d2985576b88e957ff11ba1b37a4aecbd7487cdcc46a28e",
+  "bytes": 6387152,
+  "client": "postgres:17-alpine",
+  "tls": "verify-full",
+  "archiveFormat": "custom",
+  "manifestEntries": 4003,
+  "validation": "pg_restore --list succeeded; object size matched local archive",
+  "bootstrapTokenCount": 0,
+  "scopedTokenCount": 1,
+  "fullRestoreTested": false,
+  "schedule": "None",
+  "supersededArchive": {
+    "object": "gs://fsp-us-prod-499705-legal-recovery/initial-ciso/legal-os-ciso-20261005T194924Z-abce7afcabdc.dump",
+    "generation": "1791229907934289",
+    "liveObjectDeleted": true,
+    "localFileDeleted": true,
+    "reason": "Snapshot preceded bootstrap-token revocation. Do not restore this superseded generation.",
+    "bucketSoftDeleteRetentionSeconds": 604800
+  }
+}

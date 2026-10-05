@@ -1,0 +1,264 @@
+{
+  "urn": "urn:legalos:risk:library:fsp-initial-20261006",
+  "locale": "en",
+  "ref_id": "LEGAL-OS-FSP-INITIAL-20261006",
+  "name": "FSP initial compliance review inventory (unapproved)",
+  "version": 1,
+  "publication_date": "2026-10-06",
+  "provider": "Legal OS",
+  "packager": "Legal OS",
+  "copyright": "Original source-backed summaries. Primary legal sources retain their respective rights. No certification or legal approval.",
+  "description": "Initial manually published FSP review catalog. Legal OS owns applicability decisions, source snapshots and approval history. All requirements require legal review; catalog inclusion does not establish applicability or verified compliance. Source file SHA-256: a1e1e5b13df19cabc003465c2e1c37602e556481fe7271ddb29bef38d070571f",
+  "objects": {
+    "framework": {
+      "urn": "urn:legalos:risk:framework:fsp-initial-20261006",
+      "ref_id": "LEGAL-OS-FSP-INITIAL-20261006",
+      "name": "FSP initial compliance review inventory (unapproved)",
+      "description": "Source-backed review requirements. No human applicability decisions or control verification recorded.",
+      "min_score": 0,
+      "max_score": 1,
+      "requirement_nodes": [
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-001",
+          "ref_id": "FSP-001",
+          "name": "Confirm entity identity and filing calendar",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nSelect corporate duties only after verifying entity form. Delaware corporations and LLCs have different filing regimes. FinCEN currently exempts US-created entities from BOI reporting; do not create a blanket BOI filing task.\nBasis: LAW. Jurisdiction: US-DE.\nProposed review actions:\n- Attach formation and current standing evidence, agent details and the actual contracting entity.\n- After form/tax-year review, enter supported filing dates and receipts. Review foreign registrations and governance approvals separately.\nSources:\nurn:legal-os:business-confirmation:fsp-delaware-scope (checked 2026-10-05)\nhttps://corp.delaware.gov/paytaxes/ (checked 2026-10-05)\nhttps://corp.delaware.gov/alt-entitytaxinstructions/ (checked 2026-10-05)\nhttps://www.fincen.gov/news/news-releases/fincen-removes-beneficial-ownership-reporting-requirements-us-companies-and-us (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-002",
+          "ref_id": "FSP-002",
+          "name": "Determine Delaware privacy applicability",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nCurrent coverage tests include 35,000 consumers, excluding payment-only data, or 10,000 consumers plus more than 20% of gross revenue from data sales. Business/targeting nexus and exclusions also matter.\nBasis: LAW. Jurisdiction: US-DE.\nProposed review actions:\n- Produce an aggregated preceding-year Delaware scope calculation with provenance.\n- If covered, map notice, rights, sensitive-data, opt-out and assessment duties to tested controls.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/schemas/countryCurrencyMap.js#L8 (checked 2026-10-05)\nhttps://delcode.delaware.gov/title6/c012d/index.html (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-003",
+          "ref_id": "FSP-003",
+          "name": "Determine CCPA applicability and rights",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nReview CCPA business criteria and exceptions. The adjusted revenue threshold is $26,625,000 from 1 January 2025; alternative consumer/household and sale/sharing tests still require assessment.\nBasis: LAW. Jurisdiction: US-CA.\nProposed review actions:\n- Record California scope evidence without exporting user records into Legal OS.\n- If covered, assess notices, access/delete/correct, sale/sharing opt-out, sensitive-data limits and request handling.\nSources:\nhttps://oag.ca.gov/privacy/ccpa (checked 2026-10-05)\nhttps://cppa.ca.gov/announcements/2024/20241217.html (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-004",
+          "ref_id": "FSP-004",
+          "name": "Build the remaining US state privacy matrix",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nScope laws using actual resident and operating facts. Texas is a separate screening example; the first feed does not establish complete coverage of every US state.\nBasis: LAW. Jurisdiction: US, states to confirm.\nProposed review actions:\n- Obtain aggregated jurisdiction counts and an actual market list.\n- Add a separately sourced, dated rule for each relevant state, including small-business and sensitive-data exceptions; record unresolved jurisdictions.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/schemas/countryCurrencyMap.js#L8 (checked 2026-10-05)\nhttps://www.texasattorneygeneral.gov/consumer-protection/file-consumer-complaint/consumer-privacy-rights (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-005",
+          "ref_id": "FSP-005",
+          "name": "Review COPPA scope and age assurance",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nUnder-13 child-directed or actual-knowledge collection must be assessed separately from teen access. The amended rule became effective 23 June 2025, with general compliance required by 22 April 2026. An age-gate statement alone is insufficient.\nBasis: LAW. Jurisdiction: US.\nProposed review actions:\n- Test data collection before age capture, under-13 rejection, known-child escalation and third-party tracking.\n- If covered, review parental notice/consent, disclosure consent, security, retention and parent rights against the amended rule.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/users.js#L265 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/guardianPortal.js#L35 (checked 2026-10-05)\nhttps://www.ftc.gov/business-guidance/resources/complying-coppa-frequently-asked-questions (checked 2026-10-05)\nhttps://www.govinfo.gov/content/pkg/FR-2025-04-22/html/2025-05904.htm (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-006",
+          "ref_id": "FSP-006",
+          "name": "Review teen privacy and guardian safeguards",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nTeen protection has different triggers from COPPA. The current Delaware text addresses consent for targeted advertising and data sales for known 13-17-year-olds when the Act applies.\nBasis: LAW. Jurisdiction: US-DE and other confirmed teen jurisdictions.\nProposed review actions:\n- Test guardian verification and privacy defaults across profile, video, payouts and ad paths.\n- Document applicable teen-specific rules by actual jurisdiction and retain the evidence supporting age treatment.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/users.js#L265 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/guardianPortal.js#L35 (checked 2026-10-05)\nhttps://delcode.delaware.gov/title6/c012d/index.html (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-007",
+          "ref_id": "FSP-007",
+          "name": "Assess EU and UK market obligations",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nGDPR Article 3 considers establishment, offering goods/services and monitoring behavior. If engaged, assess lawful bases, notices, rights, children, security, representatives and transfers. UK scope and current amendments need a separate legal decision.\nBasis: LAW. Jurisdiction: EU / UK, conditional.\nProposed review actions:\n- Confirm actual EU/UK targeting, establishments and monitoring, not just country-menu availability.\n- Prepare the processing record and a jurisdiction-specific applicability decision before approving EU/UK coverage.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/schemas/countryCurrencyMap.js#L8 (checked 2026-10-05)\nhttps://eur-lex.europa.eu/eli/reg/2016/679/oj/eng (checked 2026-10-05)\nhttps://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/guide-to-pecr/cookies-and-similar-technologies/ (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-008",
+          "ref_id": "FSP-008",
+          "name": "Verify advertising consent and preference enforcement",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nSource-only privacy toggles and analytics identifiers justify a priority investigation. Applicable consent, opt-out and exemption rules depend on the technology, location, audience and processing purpose. No transmission or violation is presumed.\nBasis: LAW. Jurisdiction: UK / EU / relevant US states.\nProposed review actions:\n- Capture a consent-by-age-and-country test matrix and sanitized network evidence before/after consent and withdrawal.\n- Check GTM/Clarity fields, email fallback, tags, server ad eligibility and persisted preferences; block unsupported disclosures where the review confirms a gap.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0002w-fsp-analytics.js#L1 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0434-script-s53-69-browse-arenas-55.js#L31 (checked 2026-10-05)\nhttps://oag.ca.gov/privacy/ccpa (checked 2026-10-05)\nhttps://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/guide-to-pecr/cookies-and-similar-technologies/ (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-009",
+          "ref_id": "FSP-009",
+          "name": "Prove access, export, deletion and appeal handling",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nThe refreshed player export handler is locked and a settings deletion button displays a toast. Confirm live wiring and manual channels before concluding that a right is unavailable.\nBasis: LAW. Jurisdiction: Applicable user jurisdictions.\nProposed review actions:\n- Run an authorized synthetic request through intake, verification, search, export/deletion, exceptions, response and appeal.\n- Define law-specific deadlines only after coverage is approved; retain delivery and exception evidence.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/accountDataRequests.js#L31 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0434-script-s53-69-browse-arenas-55.js#L31 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/services/accountLifecycleService.js#L41 (checked 2026-10-05)\nhttps://oag.ca.gov/privacy/ccpa (checked 2026-10-05)\nhttps://eur-lex.europa.eu/eli/reg/2016/679/oj/eng (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-010",
+          "ref_id": "FSP-010",
+          "name": "Approve a category-specific retention schedule",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nGDPR storage limitation is conditional on scope. Proposed governance work should distinguish videos, identity checks, logs, consents, payments, backups and legal holds. Source comments are not authority for universal retention.\nBasis: LAW. Jurisdiction: Applicable privacy and records jurisdictions.\nProposed review actions:\n- Inventory data classes, purposes, legal bases and locations; obtain a supported duration per class.\n- Verify disposal and legal-hold exceptions across primary stores, backups and processors, with minimal retained deletion evidence.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/services/accountLifecycleService.js#L41 (checked 2026-10-05)\nhttps://eur-lex.europa.eu/eli/reg/2016/679/oj/eng (checked 2026-10-05)\nhttps://www.ftc.gov/business-guidance/resources/protecting-personal-information-guide-business (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-011",
+          "ref_id": "FSP-011",
+          "name": "Review vendors, processors and international transfers",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nExecuted commitments and applicable transfer law must be established. Source references to Stripe, analytics and hosting do not prove reviewed data-processing terms or authorized transfers.\nBasis: CONTRACT. Jurisdiction: Vendor and data-flow jurisdictions.\nProposed review actions:\n- Create a vendor register with role, data categories, region, subprocessors and contract evidence.\n- Review processor clauses, access, onward transfers, incident notice, deletion and audit rights against the applicable legal regime.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/services/stripe.js#L201 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0002w-fsp-analytics.js#L1 (checked 2026-10-05)\nhttps://eur-lex.europa.eu/eli/reg/2016/679/oj/eng (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-012",
+          "ref_id": "FSP-012",
+          "name": "Assess Washington consumer health data",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nNutrition, fitness measurements or inferences may need review under Washington My Health My Data. Coverage depends on the statutory data and business definitions, not on whether the product is called a health app.\nBasis: LAW. Jurisdiction: US-WA.\nProposed review actions:\n- Confirm feature activation, data/inference categories and Washington nexus.\n- If covered, review separate health-data notice, consent, sharing/sale, deletion, processor and security controls.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/nutrition.js#L1 (checked 2026-10-05)\nhttps://app.leg.wa.gov/RCW/default.aspx?cite=19.373&full=true (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-013",
+          "ref_id": "FSP-013",
+          "name": "Resolve HIPAA role before making claims",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nFitness and nutrition functionality alone does not establish HIPAA coverage. Determine whether FSP acts as a covered entity or business associate for a covered relationship.\nBasis: LAW. Jurisdiction: US.\nProposed review actions:\n- Map each health relationship and contract; use HHS app scenarios to document the role decision.\n- Require any relevant BAA and controls before promising HIPAA compliance; record a reasoned exclusion if appropriate.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/nutrition.js#L1 (checked 2026-10-05)\nhttps://www.hhs.gov/hipaa/for-professionals/special-topics/health-apps/index.html (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-014",
+          "ref_id": "FSP-014",
+          "name": "Assess FTC health breach notification coverage",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nThe FTC rule covers specified PHR vendors, related entities and service providers outside or alongside certain HIPAA relationships. Technical capacity to draw identifiable health information from multiple sources is a key fact.\nBasis: LAW. Jurisdiction: US.\nProposed review actions:\n- Document PHR classification, data sources and sharing authorizations.\n- If covered, add the rule-specific discovery, recipient, timing and content requirements to the incident procedure, including unauthorized disclosures.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/nutrition.js#L1 (checked 2026-10-05)\nhttps://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-notification-rule-0 (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-015",
+          "ref_id": "FSP-015",
+          "name": "Determine biometric and identity-data obligations",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nOrdinary video, pose scoring and document checks do not by themselves establish regulated biometric processing. Illinois section 15 warrants review if qualifying biometric identifiers/information are collected or possessed.\nBasis: LAW. Jurisdiction: US-IL and other confirmed jurisdictions.\nProposed review actions:\n- Obtain vendor data-flow and retention specifications, including templates and what FSP can access.\n- If triggered, review notice, written release, published retention/destruction policy, disclosure limits and safeguards; verify the full current act first.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/services/stripe.js#L201 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0627-showtakechallenge.js#L182 (checked 2026-10-05)\nhttps://www.ilga.gov/legislation/ilcs/fulltext?DocName=074000140K15 (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-016",
+          "ref_id": "FSP-016",
+          "name": "Classify each paid contest, draw and prize",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nA state list in code is not legal clearance. Florida section 849.094 illustrates a specific promotion regime; it does not validate all FSP sports contests, draws or entry-fee models.\nBasis: LAW. Jurisdiction: Participant states/countries to confirm.\nProposed review actions:\n- Prepare a mechanics sheet per format covering consideration, chance/skill, prizes, eligibility and actual locations.\n- Obtain jurisdiction-specific classification and official rules, including promotion registration/bonding or restrictions where relevant, before enabling unapproved formats.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/payments.js#L90 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/geofence.js#L8 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/goldenTicketDrawEntries.js#L1 (checked 2026-10-05)\nhttps://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0800-0899/0849/Sections/0849.094.html (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-017",
+          "ref_id": "FSP-017",
+          "name": "Obtain processor acceptance for competition payments",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nStripe lists prize-bearing games of chance, skill competitions and certain entry fees under prohibited gambling activities. The actual account, product and any written provider acceptance require review. A successful payment integration is insufficient.\nBasis: PROCESSOR. Jurisdiction: Stripe account country and product.\nProposed review actions:\n- Present accurate mechanics and flow of funds to the processor and retain its written classification.\n- Verify permitted products and connected-account responsibilities before live collection; stop relying on test-mode success as approval.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/payments.js#L90 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/payouts.js#L392 (checked 2026-10-05)\nhttps://stripe.com/legal/restricted-businesses (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-018",
+          "ref_id": "FSP-018",
+          "name": "Classify wallet custody, transfers and redemption",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nMoney-transmission or stored-value analysis needs actual funds flow and redemption facts. FSP Bucks code is not proof of cash custody, cryptocurrency activity or a licensing exemption.\nBasis: LAW. Jurisdiction: US federal/state and operating countries.\nProposed review actions:\n- Diagram legal ownership and movement of funds, liability, balances, refunds and cash-out.\n- Obtain financial-regulatory review for the exact model and jurisdictions; document any licensing or exemption basis without inferring it from Stripe usage.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/wallet.js#L53 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/payouts.js#L392 (checked 2026-10-05)\nhttps://www.fincen.gov/resources/money-services-business-msb-registration (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-019",
+          "ref_id": "FSP-019",
+          "name": "Map prize, creator and payment tax reporting",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nPrizes, service compensation and processor settlement may follow different reporting paths. Current tax year, payer, recipient and reporting allocation must be established before setting forms or thresholds.\nBasis: LAW. Jurisdiction: US federal/state and recipient countries.\nProposed review actions:\n- Obtain tax-adviser classification of each payment stream, W-9/W-8 requirements, withholding and actual tax-year thresholds.\n- Reconcile processor versus platform reporting, retain filing receipts and assess relevant sales/VAT/GST nexus separately.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/payments.js#L90 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/payouts.js#L392 (checked 2026-10-05)\nhttps://www.irs.gov/forms-pubs/about-form-1099-misc (checked 2026-10-05)\nhttps://www.irs.gov/businesses/understanding-your-form-1099-k (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-020",
+          "ref_id": "FSP-020",
+          "name": "Reconcile consumer terms, privacy promises and refunds",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nFTC unfair/deceptive-practice principles make accurate product promises a priority. Public terms and privacy links could not be retrieved in this check, so their content is unverified rather than presumed absent.\nBasis: LAW. Jurisdiction: Consumer markets to confirm.\nProposed review actions:\n- Retrieve approved published versions and reconcile seller identity, fees, refunds, prize terms, safety and privacy representations with actual operations.\n- Verify notice accessibility and versioned assent; review country-specific consumer rights and dispute provisions.\nSources:\nhttps://futureofsports.io/privacy (checked 2026-10-05)\nhttps://futureofsports.io/terms (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/payments.js#L90 (checked 2026-10-05)\nhttps://www.ftc.gov/legal-library/browse/statutes/federal-trade-commission-act (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-021",
+          "ref_id": "FSP-021",
+          "name": "Screen any recurring subscriptions or trials",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nRecurring subscriptions were not established in this source review. If offered, assess ROSCA disclosure, informed consent and cancellation requirements plus applicable state renewal rules. No vacated or proposed click-to-cancel rule is assumed operative.\nBasis: LAW. Jurisdiction: US and other confirmed subscription markets.\nProposed review actions:\n- Confirm whether any product renews or charges after a trial.\n- If yes, test billing consent, renewal disclosures, cancellation and refunds end to end and obtain state-specific review.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/settlement/payments.js#L90 (checked 2026-10-05)\nhttps://www.ftc.gov/legal-library/browse/statutes/restore-online-shoppers-confidence-act (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-022",
+          "ref_id": "FSP-022",
+          "name": "Review user-content rights and takedown handling",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nVideo uploads need an evidence-based rights review. Section 512 safe harbors are conditional protections with specific requirements, not an automatic platform entitlement.\nBasis: LAW. Jurisdiction: US and content markets.\nProposed review actions:\n- Review upload licenses, music/third-party rights, participant and guardian publicity permissions, creator contracts and permitted reuse.\n- If relying on a US safe harbor, assess eligibility, designated agent, notice/counter-notice and repeat-infringer process; retain implementation evidence.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0627-showtakechallenge.js#L182 (checked 2026-10-05)\nhttps://www.copyright.gov/what-is-copyright/ (checked 2026-10-05)\nhttps://www.copyright.gov/512/ (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-023",
+          "ref_id": "FSP-023",
+          "name": "Review child access, reporting and moderation duties",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nIf FSP is an in-scope UK user-to-user service likely accessed by children, Ofcom describes access/risk assessments, protections and review records. Source report handlers alone do not establish effective moderation.\nBasis: LAW. Jurisdiction: UK, conditional; other markets require separate review.\nProposed review actions:\n- Determine scope and actual UK links, then assess child access and service/content risks where required.\n- Test reporting, blocking, escalation, response and appeal; separately obtain jurisdiction-specific child-safety and mandatory-reporting advice.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/users.js#L265 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0434-script-s53-69-browse-arenas-55.js#L31 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0627-showtakechallenge.js#L182 (checked 2026-10-05)\nhttps://www.ofcom.org.uk/online-safety/protecting-children/protection-of-children-duties-under-the-online-safety-act (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-024",
+          "ref_id": "FSP-024",
+          "name": "Review physical challenge safety and waivers",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nProposed safety review for sports challenges and filming. This is a risk-management control, not a claim that one universal waiver or statutory safety standard applies.\nBasis: ASSURANCE. Jurisdiction: Competition and venue locations.\nProposed review actions:\n- Assess injury-prone challenges, age suitability, filming/location safety, escalation and emergency contacts.\n- Review venue/coach responsibilities, insurance, guardian permissions and local waiver enforceability; do not treat a waiver as proof of safe design.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0627-showtakechallenge.js#L182 (checked 2026-10-05)\nhttps://www.ofcom.org.uk/online-safety/protecting-children/protection-of-children-duties-under-the-online-safety-act (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-025",
+          "ref_id": "FSP-025",
+          "name": "Assess accessibility and verify critical journeys",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nDOJ guidance addresses accessible websites for covered entities. Legal scope and the applicable standard require review; public-sector technical rules are not automatically the rule for every private app.\nBasis: LAW. Jurisdiction: US and other served markets.\nProposed review actions:\n- Review applicable accessibility obligations and contractual promises.\n- Test signup, guardian, challenge/video, payments, privacy rights and support with keyboard and assistive technology; record fixes and acceptance evidence.\nSources:\nhttps://app.futureofsports.io (checked 2026-10-05)\nhttps://www.ada.gov/resources/web-guidance/ (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-026",
+          "ref_id": "FSP-026",
+          "name": "Adopt and test a security baseline",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nNIST CSF 2.0 is a voluntary baseline published on 26 February 2024. Adoption is proposed; this row does not declare SOC 2, ISO 27001 or NIST legally mandatory, certified or implemented.\nBasis: ASSURANCE. Jurisdiction: FSP platform and supporting systems.\nProposed review actions:\n- Select a proportionate baseline for identity/access, secrets, secure changes, vulnerability remediation, logs, vendors and backup recovery.\n- Attach current evidence and accountable owners, then test access revocation and restoration before marking controls verified.\nSources:\nhttps://app.futureofsports.io (checked 2026-10-05)\nhttps://www.nist.gov/news-events/news/2024/02/nist-releases-version-20-landmark-cybersecurity-framework (checked 2026-10-05)\nhttps://www.ftc.gov/business-guidance/resources/protecting-personal-information-guide-business (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-027",
+          "ref_id": "FSP-027",
+          "name": "Build and test incident response and notification",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nDelaware Chapter 12B includes reasonable-security and conditional breach-notice duties. Notice assessment must use actual affected data, residence and discovery facts; this feed alleges no breach.\nBasis: LAW. Jurisdiction: US-DE and affected resident jurisdictions.\nProposed review actions:\n- Document detection, containment, evidence preservation, legal escalation and vendor coordination.\n- Build a jurisdiction-specific notice matrix and tabletop the workflow; preserve real incident deadlines separately from this proposed review date.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/users.js#L265 (checked 2026-10-05)\nhttps://www.ftc.gov/business-guidance/resources/complying-ftcs-health-breach-notification-rule-0 (checked 2026-10-05)\nhttps://delcode.delaware.gov/title6/c012b/index.html (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-028",
+          "ref_id": "FSP-028",
+          "name": "Review marketing consent and sponsored claims",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nUS commercial email requires a CAN-SPAM assessment, and material endorsement connections require review under FTC guidance. Other countries and SMS/calling channels need separate rules.\nBasis: LAW. Jurisdiction: US and campaign recipient markets.\nProposed review actions:\n- Inventory campaigns and distinguish transactional messages from promotion; verify sender identity, address, unsubscribe and suppression behavior.\n- Review paid/rewarded creators and athlete endorsements for clear disclosures and substantiated claims; approve age/location targeting.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/payouts.js#L392 (checked 2026-10-05)\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0002w-fsp-analytics.js#L1 (checked 2026-10-05)\nhttps://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business (checked 2026-10-05)\nhttps://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-029",
+          "ref_id": "FSP-029",
+          "name": "Review workforce and creator classification",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nEmployee/contractor labels alone do not determine tax or labor status. Creator/captain payout code supplies no complete employment facts. Federal rulemaking and state tests must be checked for the actual decision date.\nBasis: LAW. Jurisdiction: Worker and payer jurisdictions.\nProposed review actions:\n- Collect work locations, actual control, duties and economics; obtain appropriate tax/labor classification advice.\n- Review employment/contractor agreements, IP assignment, confidentiality, payroll and required local registrations without extending app-user compliance assumptions to employees.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/cloud/lib/handlers/payouts.js#L392 (checked 2026-10-05)\nhttps://www.irs.gov/businesses/small-businesses-self-employed/independent-contractor-self-employed-or-employee (checked 2026-10-05)\nhttps://www.dol.gov/agencies/whd/flsa/misclassification/small-entity-compliance-guide (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        },
+        {
+          "urn": "urn:legalos:risk:req_node:fsp-initial-20261006:fsp-030",
+          "ref_id": "FSP-030",
+          "name": "Prepare for Delaware privacy amendments effective 2027",
+          "description": "INITIAL REVIEW INVENTORY. No human applicability approval. Control implementation is not assessed.\nThe official statute publishes changed scope, rights, duties and third-party provisions effective 1 January 2027. This is a preparation item; future text must not be applied as an existing obligation on 6 October 2026.\nBasis: LAW. Jurisdiction: US-DE, conditional and future.\nProposed review actions:\n- Compare the current and future versions against actual processing, profiling and contracts.\n- Record a dated legal impact assessment and implementation plan if affected, including model/scoring use where relevant.\nSources:\nhttps://github.com/FutureOfSports/d_zero/blob/967d14f004fa5d090f409f24546c72ebf7b1b54d/packages/designer-spa/src/fsp-core/controllers/0627-showtakechallenge.js#L182 (checked 2026-10-05)\nhttps://delcode.delaware.gov/title6/c012d/index.html (checked 2026-10-05)",
+          "assessable": true,
+          "depth": 1
+        }
+      ]
+    }
+  }
+}

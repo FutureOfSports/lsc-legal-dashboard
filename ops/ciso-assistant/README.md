@@ -1,8 +1,11 @@
 # CISO Assistant Community integration proof
 
-This directory owns CPL-02's reproducible, synthetic compatibility proof. It is
-not a production deployment or an approved FSP compliance assessment. There are
-no production users, obligations, documents, credentials or connected providers.
+The original files here record CPL-02's reproducible synthetic compatibility
+proof. Those historical receipts contain no production users, obligations,
+documents or credentials. The subsequent private US deployment is documented
+separately in [production/README.md](production/README.md) and
+[its live receipt](production/live-receipt.json). Neither compatibility proof
+nor catalogue publication constitutes an approved FSP compliance assessment.
 
 ## Executed evidence, 5 October 2026
 

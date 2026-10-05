@@ -1,0 +1,12 @@
+steps:
+- name: gcr.io/google.com/cloudsdktool/google-cloud-cli:slim
+  entrypoint: python3
+  args:
+  - -c
+  - |
+    import subprocess,os,json,base64
+    token=subprocess.check_output(['gcloud','auth','print-access-token'],text=True).strip()
+    os.makedirs('/builder/home/.docker',exist_ok=True)
+    with open('/builder/home/.docker/config.json','w') as f: json.dump({'auths':{'us-central1-docker.pkg.dev':{'auth':base64.b64encode(('oauth2accesstoken:'+token).encode()).decode()}}},f)
+- name: gcr.io/go-containerregistry/crane:debug
+  args: ['copy','ghcr.io/intuitem/ciso-assistant-community/backend@sha256:4d46462f5eba69940546d70aa8064d9e5d043527504c3829535473bb935b10fc','us-central1-docker.pkg.dev/fsp-us-prod-499705/legal-os/ciso-assistant:v4.1.0-amd64']

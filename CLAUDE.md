@@ -34,7 +34,7 @@ Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()
 - **Drag & Drop**: @dnd-kit/core
 - **Icons**: lucide-react
 - **Auth**: Custom cookie-based HMAC sessions
-- **Deploy**: GCP Cloud Run `lsc-legal-dashboard`, project `fsp-legal-esign`, region `asia-southeast1`; GitHub source
+- **Deploy**: primary GCP Cloud Run `lsc-legal-dashboard` in `fsp-us-prod-499705` / `us-central1`; original `fsp-legal-esign` / `asia-southeast1` URL remains compatible. Existing Neon data, document bucket and signing URLs are retained.
 
 ## Key Rules
 1. **Read Next.js 16 docs first**: Check `node_modules/next/dist/docs/` before writing any code. `params` and `searchParams` are Promises in page components — always `await` them.
@@ -91,4 +91,5 @@ Assistant Community metadata outbox. The initial feed is for legal review, not
 a certification. Human-requested delivery starts an isolated worker; recurring
 Codex CLI review automation is deferred. No API-based AI review is activated.
 See `docs/compliance-integration/PLAN.md` and
-`docs/compliance-integration/implementation-cpl02.md` before extending it.
+`docs/compliance-integration/deployment-20261006.md` before extending it.
+The historical isolated API proof is in `implementation-cpl02.md`.

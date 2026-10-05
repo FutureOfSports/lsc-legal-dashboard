@@ -21,9 +21,11 @@ v2 integrations retain their own acceptance records.
   review decisions, with three-valued evaluation and explicit effective dates.
 - [x] CPL-04: Implement the selected Legal OS view and connect policy/evidence
   workflows without weakening existing access or generation boundaries.
-- [ ] CPL-05: Complete isolated release verification, independent review, initial
+- [x] CPL-05: Complete isolated release verification, independent review, initial
   source-backed publication with unresolved facts, private GCP installation and
   live acceptance. Recurring Codex CLI reviews are expressly deferred.
+  Executed evidence: [local verification](verification-20261006.md) and
+  [production deployment](deployment-20261006.md).
 
 Complete all remaining authorized implementation and deployment work together.
 A code scan is not a deployment test or legal sign-off. No task is complete

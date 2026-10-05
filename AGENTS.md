@@ -55,9 +55,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
   Scheduler requests returned `BILLING_DISABLED` despite that flag. Require
   successful destination service operations before calling billing healthy.
 - CLI access as `anuj@futureofsports.io` to `fsp-us-prod-499705` is verified.
-  Source object reads still fail because its owning billing account is delinquent;
-  destination write/read success does not clear that source dependency. Supplying
-  the destination billing project also failed. Restore source billing before copy.
+  Source object reads were billing-blocked on 30 September. On 6 October 2026,
+  source listing and byte reads succeeded again. Destination write/read success
+  alone never proves that a source billing dependency is clear.
 - Source Scheduler management can be billing-blocked while existing jobs still
   dispatch. Verify and pause old dispatchers before enabling destination schedules.
 - Enable `GCS_MIGRATED_BUCKET_ALIASES` only after all source objects are copied and
@@ -68,8 +68,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - OpenSign has pending signer links on its old IP-bound hostname. Preserve that
   hostname and state when migrating; a regional IP cannot move to a US region.
 - See `ops/us-prod-migration.md` for created resources, verification and remaining
-  permissions. Current deployment instructions remain the source environment
-  until a verified cutover. Use CLI operations; Anuj requested no browser use.
+  permissions and historical stages. Primary application hosting is now US; see
+  `docs/compliance-integration/deployment-20261006.md`. Full storage/signing
+  migration remains separate. Use CLI operations; Anuj requested no browser use.
 
 ## Repository ownership handoff, 5 October 2026
 
@@ -98,3 +99,36 @@ This version has breaking changes — APIs, conventions, and file structure may 
   metadata snapshot to retain its link, or fail before any provider mutation.
 - CISO's production feature flag stays disabled until the applicability,
   approval linkage and live operational gates in the compliance PLAN pass.
+
+## FSP compliance release gotchas, 6 October 2026
+
+- FSP statutory triggers use verified business scope, never source-code capability
+  as an exemption condition. An absent feature does not prove a law inapplicable.
+- Feed and review dates use UTC dates. A check performed on 6 October in India
+  was 5 October UTC; validation correctly rejects a future checked-at date.
+- Private CISO requests carry the Google identity token in
+  `X-Serverless-Authorization` and the scoped CISO PAT in `Authorization`.
+  Token acquisition failure must occur before any HTTP mutation dispatch.
+- Manual delivery requires the exact `CISO_ASSISTANT_SYNC_JOB` resource and
+  service-specific invoker permission. No request may supply job overrides.
+  Queue persistence precedes launch and is retained when launch fails.
+- Recheck actor entitlement and the immutable legal approval hash after remote
+  lookup and immediately before a CISO write. A delivered receipt is not proof
+  that the control is implemented or that the company is compliant.
+- Cloud Build's Docker unpacker rejected a pinned upstream CISO layer. A
+  registry-to-registry copy preserved the exact image digest. Do not replace a
+  reviewed image with a floating tag to work around extraction failures.
+- US application hosting retains the existing Neon data, document bucket and
+  signing URLs in this release. Do not claim complete US data residency.
+
+- CISO's first migration also initializes optional bundled libraries. Schema
+  completion alone is not initializer completion. Keep one migration writer;
+  an empty optional-library mount can preserve a curated integration without
+  modifying upstream source or edition checks.
+- Upstream CISO rejects deactivation of its sole administrator. Revoke the
+  temporary bootstrap PAT and verify an unusable password instead of bypassing
+  that guard. Keep the scoped integration account non-superuser.
+- A measured CISO cold request took 35.74 seconds against the adapter's bounded
+  15-second timeout. Production keeps one private CISO instance warm.
+- Take a recovery snapshot after credential cleanup. Inspect its token rows;
+  a pre-revocation archive can resurrect a removed temporary credential.

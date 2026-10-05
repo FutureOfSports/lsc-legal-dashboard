@@ -208,3 +208,12 @@ the existing Neon database, original document bucket and signing URLs to avoid
 breaking existing records or callbacks. Update the original dashboard URL as a
 compatibility entry point. This is US application hosting, not a claim that every
 stored file, database or signing service has moved to the US.
+
+
+Deployment completed with US revision `lsc-legal-dashboard-00001-dg4` and source
+compatibility revision `lsc-legal-dashboard-00034-xim`, both using runtime source
+`932f044`. The CISO private service uses one warm instance because its measured
+35.74-second cold start exceeds the bounded adapter timeout. The manual worker
+launch and empty queue execution passed from the real application identity.
+The first feed still has no human approvals. Exact evidence, backup boundaries
+and deferred work are in [the release receipt](compliance-integration/deployment-20261006.md).
