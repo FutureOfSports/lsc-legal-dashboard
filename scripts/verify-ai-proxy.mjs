@@ -58,11 +58,41 @@ try {
     const request = await body(req)
     assert.equal(request.model, MODEL); assert.equal(request.store, false); assert.equal(request.stream, false)
     assert.deepEqual(request.tools, []); assert.equal(request.tool_choice, 'none')
-    assert.equal(request.instructions, input.system); assert.equal(request.input[0].content[0].text, input.user)
+    assert.equal(request.instructions, input.system)
+    assert.ok(request.input[0].content[0].text.startsWith(input.user))
+    assert.match(request.input[0].content[0].text, /\bJSON\b/, 'JSON mode must mention JSON in input, not only instructions')
     assert.equal(request.text.format.type, 'json_object')
     json(res, good)
   }
   assert.deepEqual(JSON.parse(JSON.stringify(await api.callProxyAI(input))), { text: '{"ready":true}', model: MODEL, responseId: 'resp_synthetic_1' })
+  groups++
+
+  // Reproduce the observed Codex gate: JSON in instructions does not satisfy JSON input mode.
+  let requestBytes = 0
+  handler = async (req, res) => {
+    const chunks = []
+    for await (const chunk of req) chunks.push(chunk)
+    const raw = Buffer.concat(chunks)
+    requestBytes = raw.byteLength
+    assert.ok(requestBytes <= 524288)
+    const request = JSON.parse(raw.toString('utf8'))
+    const inputText = request.input.flatMap(item => item.content.map(part => part.text)).join('\n')
+    if (request.text?.format.type === 'json_object' && !/json/i.test(inputText)) {
+      return json(res, { error: 'Response input messages must contain the word json for json_object.' }, 400)
+    }
+    if (!request.text) assert.equal(inputText, input.user, 'Plain text input is unchanged')
+    json(res, good)
+  }
+  assert.ok(/json/i.test(input.system) && !/json/i.test(input.user))
+  await api.callProxyAI(input)
+  await api.callProxyAI({ ...input, expectJson: false })
+  await api.callProxyAI({ ...input, user: 'x' })
+  const exactLimitUser = 'x'.repeat(524288 - requestBytes + 1)
+  await api.callProxyAI({ ...input, user: exactLimitUser })
+  assert.equal(requestBytes, 524288, 'JSON mode instruction participates in the complete request byte bound')
+  const beforeLimit = calls
+  await fails(api, () => api.callProxyAI({ ...input, user: `${exactLimitUser}x` }), 'invalid_input')
+  assert.equal(calls, beforeLimit, 'Over-limit augmented JSON input never reaches the proxy')
   groups++
 
   const beforeConfig = calls
@@ -125,6 +155,7 @@ try {
     if (req.url === '/v1/models') { assert.equal(req.method, 'GET'); return json(res, { object: 'list', data: [{ id: MODEL }] }) }
     const request = await body(req)
     assert.deepEqual(request.text.format, { type: 'json_schema', name: 'synthetic_check', strict: true, schema: { type: 'object' } })
+    assert.equal(request.input[0].content[0].text, input.user, 'Explicit schema input is unchanged')
     json(res, good)
   }
   assert.equal((await api.checkProxyAIReady()).model, MODEL)

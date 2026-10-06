@@ -11,6 +11,18 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Treat `.claude/skills/prisma-schema.md` and `.claude/skills/finance-integration.md` as historical references; confirm current truth in `prisma/schema.prisma` and `src/lib/finance-webhook.ts`.
 - Do not commit `.env*` or `.vercel`; production secrets belong in GCP runtime configuration or Secret Manager, never the source upload.
 
+## Authenticated proxy verification, 6 October 2026
+
+- Codex JSON-object mode requires the word JSON in an input message. A system
+  instruction alone does not satisfy the upstream validator. The adapter adds
+  that instruction to the input and includes its bytes in the request limit.
+- Test generation actions through the built Next server. Importing their route
+  directly under `react-server` can load `next/navigation` outside its framework
+  runtime and fail on React context initialization before exercising the route.
+- The real proxy verifier uses an empty `legal_os_v2_verify_` database and
+  synthetic diagnostic sessions. It proves actual action/worker/review behavior
+  and altered-save denial, not human approval or a saved production document.
+
 ## Deployment and verification gotchas, 21 September 2026
 
 - Always pass the intended `--project` explicitly. Source production is

@@ -192,9 +192,11 @@ export async function callProxyAI(input: ProxyAIInput): Promise<ProxyAIResult> {
   if (!Number.isSafeInteger(maxTokens) || maxTokens < 1 || maxTokens > 32768) throw new ProxyAIError('invalid_input')
   if (input.jsonSchema && (!/^[A-Za-z0-9_-]{1,64}$/.test(input.jsonSchema.name)
     || !input.jsonSchema.schema || typeof input.jsonSchema.schema !== 'object' || Array.isArray(input.jsonSchema.schema))) throw new ProxyAIError('invalid_input')
+  // Codex JSON mode requires "json" in input messages; instructions alone do not qualify.
+  const user = input.expectJson && !input.jsonSchema ? `${input.user}\n\nReturn only a JSON object.` : input.user
   // Upstream Codex may discard max_output_tokens; byte and time limits remain enforced here.
   const body = JSON.stringify({ model: config.model, instructions: input.system,
-    input: [{ role: 'user', content: [{ type: 'input_text', text: input.user }] }],
+    input: [{ role: 'user', content: [{ type: 'input_text', text: user }] }],
     stream: false, store: false, tools: [], tool_choice: 'none', max_output_tokens: maxTokens,
     ...(input.jsonSchema ? { text: { format: { type: 'json_schema', name: input.jsonSchema.name, strict: true, schema: input.jsonSchema.schema } } }
       : input.expectJson ? { text: { format: { type: 'json_object' } } } : {}) })
