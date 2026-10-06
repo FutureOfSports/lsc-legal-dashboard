@@ -16,6 +16,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Codex JSON-object mode requires the word JSON in an input message. A system
   instruction alone does not satisfy the upstream validator. The adapter adds
   that instruction to the input and includes its bytes in the request limit.
+- Codex strict schemas require an explicit primitive `type` even on `const` and
+  `enum` leaves. Readiness and review schemas must retain those types; a locally
+  valid JSON Schema is not sufficient evidence of provider acceptance.
 - Test generation actions through the built Next server. Importing their route
   directly under `react-server` can load `next/navigation` outside its framework
   runtime and fail on React context initialization before exercising the route.

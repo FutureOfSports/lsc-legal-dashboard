@@ -14,6 +14,21 @@ let modelChecks = 0, inferences = 0, noJob = false, inventoryAvailable = true
 let authRevision = 'a'.repeat(64)
 let key = 'synthetic-proxy-key-0001', wrongModel = false, duplicateIds = false, cancel = false, cancelledRequest = false
 let actions = [], heartbeat, completion
+let readinessRequest, reviewRequest
+// Model the provider's strict JSON-schema boundary on the actual HTTP payload.
+// A const/enum does not infer its primitive type for the subscription provider.
+function validateProviderSchema(schema) {
+  assert.ok(schema && typeof schema === 'object' && !Array.isArray(schema))
+  assert.ok(['object', 'array', 'string', 'boolean'].includes(schema.type), 'Every schema node needs an explicit supported type')
+  if (schema.type === 'object') {
+    assert.equal(schema.additionalProperties, false)
+    assert.ok(schema.properties && typeof schema.properties === 'object')
+    assert.deepEqual([...schema.required].sort(), Object.keys(schema.properties).sort())
+    for (const property of Object.values(schema.properties)) validateProviderSchema(property)
+  } else if (schema.type === 'array') validateProviderSchema(schema.items)
+  if ('const' in schema) assert.equal(typeof schema.const, schema.type)
+  if ('enum' in schema) for (const value of schema.enum) assert.equal(typeof value, schema.type)
+}
 const proxy = createServer(async (request, response) => {
   assert.equal(request.headers.authorization, `Bearer ${key}`)
   response.setHeader('content-type', 'application/json')
@@ -25,7 +40,6 @@ const proxy = createServer(async (request, response) => {
   assert.equal(request.url, '/v1/responses')
   let raw = ''; for await (const chunk of request) raw += chunk
   const body = JSON.parse(raw)
-  inferences++
   assert.equal(body.model, model)
   assert.equal(body.store, false)
   assert.deepEqual(body.tools, [])
@@ -34,6 +48,10 @@ const proxy = createServer(async (request, response) => {
   assert.equal(body.text.format.strict, true)
   const input = JSON.parse(body.input[0].content[0].text)
   const schema = body.text.format.schema
+  try { validateProviderSchema(schema) } catch { response.writeHead(400); response.end('{"error":{"code":"invalid_json_schema"}}'); return }
+  inferences++
+  if (schema.properties.ready) readinessRequest = structuredClone(body)
+  if (schema.properties.findings) reviewRequest = structuredClone(body)
   if (cancel && schema.properties.draft) { response.once('close', () => { cancelledRequest = true }); return }
   const result = schema.properties.ready ? { ready: true, skillVersion: input.skillVersion }
     : schema.properties.draft ? { draft: 'Each party protects confidential information.' }
@@ -87,6 +105,17 @@ try {
   assert.equal(completion.configIdentity, heartbeat.configIdentity)
   assert.equal(new Set(completion.sessionIds).size, 3)
   assert.equal(inferences, 4)
+  for (const [request, removeType] of [
+    [readinessRequest, schema => { delete schema.properties.ready.type }],
+    [readinessRequest, schema => { delete schema.properties.skillVersion.type }],
+    [reviewRequest, schema => { delete schema.properties.findings.items.properties.severity.type }],
+  ]) {
+    const invalid = structuredClone(request)
+    removeType(invalid.text.format.schema)
+    const rejected = await fetch(`${proxyOrigin}/v1/responses`, { method: 'POST', headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' }, body: JSON.stringify(invalid) })
+    assert.equal(rejected.status, 400, 'Provider boundary must reject missing primitive types in const/enum leaves')
+  }
+  assert.equal(inferences, 4, 'Invalid schemas cannot count as completed inference')
   noJob = true; actions = []
   assert.equal((await run()).code, 0)
   assert.equal(inferences, 4, 'Idle poll must reuse the actual cached inference proof')
@@ -125,7 +154,7 @@ try {
   assert.equal(cancelled.code, 1, cancelled.output)
   assert.deepEqual(actions.filter(action => action !== 'progress'), ['heartbeat', 'claim', 'fail'])
   assert.equal(cancelledRequest, true, 'Cancellation must abort the in-flight HTTP response before completion')
-  console.log('Private proxy generation wrapper passed: explicit transport provenance, exact model, authenticated inventory, four initial inferences, three distinct review receipts, daily/config-bound readiness, no CLI/provider fallback, model mismatch and duplicate-ID rejection, and actual HTTP cancellation. Synthetic local proof only.')
+  console.log('Private proxy generation wrapper passed: typed strict schemas and three missing-type HTTP denials, explicit transport provenance, exact model, authenticated inventory, four initial inferences, three distinct review receipts, daily/config-bound readiness, no CLI/provider fallback, model mismatch and duplicate-ID rejection, and actual HTTP cancellation. Synthetic local proof only.')
 } finally {
   await Promise.all([proxy, app].map(server => new Promise(resolve => { server.close(resolve); server.closeAllConnections() })))
   await rm(sandbox, { recursive: true, force: true })

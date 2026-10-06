@@ -12,7 +12,7 @@ const reviewSchema = {
   required: ["draftHash", "pass", "findings"],
   properties: {
     draftHash: { type: "string" }, pass: { type: "boolean" },
-    findings: { type: "array", items: { type: "object", additionalProperties: false, required: ["severity", "issue", "excerpt"], properties: { severity: { enum: ["blocker", "warning"] }, issue: { type: "string" }, excerpt: { type: "string" } } } },
+    findings: { type: "array", items: { type: "object", additionalProperties: false, required: ["severity", "issue", "excerpt"], properties: { severity: { type: "string", enum: ["blocker", "warning"] }, issue: { type: "string" }, excerpt: { type: "string" } } } },
   },
 }
 
@@ -182,7 +182,7 @@ async function main() {
       if (isRecord(previous) && previous.provider === provider && previous.configIdentity === configIdentity && previous.day === day && previous.ownerEmail === ownerEmail && previous.cliVersion === cliVersion && previous.model === model && previous.skillHash === GENERATION_SKILL_HASH && typeof previous.verificationRunId === "string" && typeof previous.verifiedAt === "string") receipt = previous
     } catch { /* Missing or invalid local evidence requires a new synthetic proof. */ }
     if (!receipt) {
-      const check = await infer(cwd, skillPaths[0], { task: "Synthetic readiness check. Return ready true and the supplied skillVersion. No contract or real data.", skillVersion: GENERATION_SKILL_VERSION }, { type: "object", additionalProperties: false, required: ["ready", "skillVersion"], properties: { ready: { const: true }, skillVersion: { const: GENERATION_SKILL_VERSION } } })
+      const check = await infer(cwd, skillPaths[0], { task: "Synthetic readiness check. Return ready true and the supplied skillVersion. No contract or real data.", skillVersion: GENERATION_SKILL_VERSION }, { type: "object", additionalProperties: false, required: ["ready", "skillVersion"], properties: { ready: { type: "boolean", const: true }, skillVersion: { type: "string", const: GENERATION_SKILL_VERSION } } })
       if (check.output.ready !== true || check.output.skillVersion !== GENERATION_SKILL_VERSION) throw new Error("Generation readiness inference failed")
       receipt = { day, ownerEmail, provider, authMethod, configIdentity, cliVersion, model, skillHash: GENERATION_SKILL_HASH, verificationRunId: check.sessionId, verifiedAt: new Date().toISOString() }
       await writeFile(receiptPath, JSON.stringify(receipt), { mode: 0o600 })
