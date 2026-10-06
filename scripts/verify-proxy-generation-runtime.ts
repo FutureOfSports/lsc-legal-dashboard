@@ -3,7 +3,8 @@ import assert from 'node:assert/strict'
 import { createHmac, randomBytes, randomUUID } from 'node:crypto'
 import { spawn, type ChildProcess } from 'node:child_process'
 import { createServer } from 'node:http'
-import { mkdtemp, rm, readFile } from 'node:fs/promises'
+import { createRequire } from 'node:module'
+import { mkdtemp, rm, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
@@ -75,32 +76,126 @@ async function actionBindings() {
   return bindings
 }
 
-function actionResult(text: string): unknown {
-  const chunks = new Map<string, unknown>()
-  for (const line of text.split('\n')) {
-    const match = /^([0-9a-f]+):(.*)$/.exec(line)
-    if (!match || !/^[\[{]/.test(match[2])) continue
-    try { chunks.set(match[1], JSON.parse(match[2])) } catch { /* Ignore non-result transport chunks. */ }
+async function actionResult(response: Response): Promise<unknown> {
+  assert.ok(response.body && response.headers.get('content-type')?.startsWith('text/x-component'), 'Expected a real Next Flight response.')
+  const decoder = createRequire(import.meta.url)('next/dist/compiled/react-server-dom-turbopack/client.node') as {
+    createFromFetch(response: Promise<Response>, options: { serverConsumerManifest: { moduleMap: Record<string, never>; serverModuleMap: Record<string, never>; moduleLoading: null } }): PromiseLike<unknown>
   }
-  const root = chunks.get('0')
-  assert.ok(root && typeof root === 'object' && 'a' in root, 'Actual Next response must contain a server-action result.')
-  if (typeof root.a === 'string' && /^\$@?[0-9a-f]+$/.test(root.a)) return chunks.get(root.a.replace(/^\$@?/, ''))
-  return root.a
+  const controller = new AbortController()
+  let bytes = 0, timer: ReturnType<typeof setTimeout> | undefined
+  const bounded = response.body.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({ transform(part, stream) {
+    bytes += part.byteLength
+    if (bytes > 2_097_152) throw new Error('Next Flight verification response exceeds its byte limit.')
+    stream.enqueue(part)
+  } }), { signal: controller.signal })
+  try {
+    const decoded = (async () => {
+      const root = await decoder.createFromFetch(Promise.resolve(new Response(bounded, { headers: { 'Content-Type': 'text/x-component' } })),
+        { serverConsumerManifest: { moduleMap: {}, serverModuleMap: {}, moduleLoading: null } })
+      assert.ok(root && typeof root === 'object' && 'a' in root, 'Actual Next response must contain a server-action result.')
+      return await root.a
+    })()
+    return await Promise.race([decoded, new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error('Next Flight verification decoding timed out.')), 5000)
+    })])
+  } finally {
+    if (timer) clearTimeout(timer)
+    controller.abort()
+  }
 }
+
+/** Emit bounded diagnostics only; never echo an environment or a provider payload. */
+function redactDiagnostic(text: string, secrets: string[]) {
+  let safe = text
+  for (const secret of secrets.filter(value => value.length >= 8).sort((left, right) => right.length - left.length)) safe = safe.split(secret).join('[REDACTED]')
+  return safe.replace(/Bearer\s+\S+/gi, 'Bearer [REDACTED]')
+    .replace(/postgres(?:ql)?:\/\/[^\s'"<>]+/gi, '[REDACTED_DATABASE_URL]')
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').slice(-8192)
+}
+
+// This module exists only inside the disposable verification runtime. It observes
+// synthetic request/response shapes and returns the original response unchanged.
+const syntheticTraceModule = String.raw`
+import { createHash } from 'node:crypto'
+const database = new URL(process.env.DATABASE_URL || '')
+if (!/^legal_os_v2_verify_[a-zA-Z0-9_]+$/.test(database.pathname.slice(1))
+  || !/^owner-[a-f0-9-]+@example\.invalid$/.test(process.env.LEGAL_GENERATION_OWNER_EMAIL || '')
+  || !/^http:\/\/127\.0\.0\.1:\d+$/.test(process.env.LEGAL_APP_ORIGIN || '')) throw new Error('Synthetic trace isolation is missing')
+const nativeFetch = globalThis.fetch
+const proxyOrigin = new URL(process.env.CLIPROXY_BASE_URL).origin
+const appOrigin = new URL(process.env.LEGAL_APP_ORIGIN).origin
+const record = value => value && typeof value === 'object' && !Array.isArray(value)
+const hash = value => typeof value === 'string' ? createHash('sha256').update(value, 'utf8').digest('hex') : null
+const identifier = value => typeof value === 'string' && /^[A-Za-z0-9_-]{1,200}$/.test(value) ? value : null
+const hex = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value) ? value : null
+function review(value, draft) {
+  if (!record(value)) return null
+  return { suppliedHash: hex(value.draftHash), pass: typeof value.pass === 'boolean' ? value.pass : null,
+    findingsCount: Array.isArray(value.findings) ? value.findings.length : null,
+    findings: Array.isArray(value.findings) ? value.findings.slice(0, 100).map(item => ({
+      validSeverity: record(item) && ['blocker','warning'].includes(item.severity),
+      issueCharacters: record(item) && typeof item.issue === 'string' ? item.issue.length : null,
+      excerptCharacters: record(item) && typeof item.excerpt === 'string' ? item.excerpt.length : null,
+      excerptInDraft: record(item) && typeof item.excerpt === 'string' && typeof draft === 'string' && draft.includes(item.excerpt)
+    })) : null }
+}
+async function boundedJson(response) {
+  if (!response.body) return null
+  const reader = response.body.getReader(), chunks = []
+  let length = 0
+  try {
+    for (;;) { const part = await reader.read(); if (part.done) break; length += part.value.byteLength;
+      if (length > 1048576) return null; chunks.push(part.value) }
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'))
+  } finally { void reader.cancel().catch(() => {}); reader.releaseLock() }
+}
+globalThis.fetch = async function(input, init) {
+  const response = await nativeFetch(input, init)
+  try {
+    const url = new URL(input instanceof Request ? input.url : input)
+    if (![proxyOrigin, appOrigin].includes(url.origin) || typeof init?.body !== 'string') return response
+    const request = JSON.parse(init.body), value = await boundedJson(response.clone())
+    if (url.origin === proxyOrigin && url.pathname.endsWith('/responses')) {
+      const schema = request.text?.format?.schema
+      const kind = schema?.properties?.ready ? 'readiness' : schema?.properties?.draft ? 'draft' : 'review'
+      let prompt = null, output = null
+      try { prompt = JSON.parse(request.input[0].content[0].text) } catch {}
+      const outputs = Array.isArray(value?.output) ? value.output : []
+      const text = outputs.filter(item => item.type === 'message').flatMap(item => Array.isArray(item.content) ? item.content.filter(part => part.type === 'output_text').map(part => part.text) : []).join('\n').trim()
+      try { output = JSON.parse(text) } catch {}
+      console.log(JSON.stringify({ event: 'runtime_synthetic_inference_trace', kind, httpStatus: response.status,
+        responseId: identifier(value?.id), completed: value?.status === 'completed', exactModel: value?.model === 'gpt-6.1-sol',
+        outputTypes: outputs.map(item => identifier(item.type)), jsonObject: !!record(output),
+        draftCharacters: typeof output?.draft === 'string' ? output.draft.length : null, computedDraftHash: hash(output?.draft),
+        expectedReviewHash: hex(prompt?.draftHash), review: kind === 'review' ? review(output, prompt?.draft) : null }))
+    } else if (url.origin === appOrigin && url.pathname === '/api/webhooks/generation-worker' && request.action !== 'progress') {
+      console.log(JSON.stringify({ event: 'runtime_synthetic_webhook_trace', action: identifier(request.action), httpStatus: response.status,
+        accepted: value?.accepted === true, ready: value?.ready === true, hasJob: !!record(value?.job),
+        completion: record(request.result) ? { computedDraftHash: hash(request.result.draft), suppliedHash: hex(request.result.draftHash),
+          responseIds: Array.isArray(request.result.sessionIds) ? request.result.sessionIds.map(identifier) : null,
+          substantive: review(request.result.substantive, request.result.draft), references: review(request.result.references, request.result.draft) } : null }))
+    }
+  } catch { console.log(JSON.stringify({ event: 'runtime_synthetic_trace_unavailable' })) }
+  return response
+}
+`
 
 async function main() {
   const databaseName = isolatedDatabase()
   assert.equal(process.env.GENERATION_ENABLED, '1', 'Explicitly activate only this disposable verification runtime.')
-  const { generationProvider, hashDraft, parseGenerationResult, GENERATION_SKILL_HASH } = await import('../src/lib/contract-generation-protocol')
+  const { generationProvider, hashDraft, isRecord, parseGenerationResult, GENERATION_SKILL_HASH } = await import('../src/lib/contract-generation-protocol')
   assert.equal(generationProvider(), 'cliproxyapi')
   const { getProxyAIConfigIdentity } = await import('../src/lib/ai-proxy')
   const configIdentity = getProxyAIConfigIdentity()
   const { prisma } = await import('../src/lib/prisma')
   const bindings = await actionBindings()
   const state = await mkdtemp(join(tmpdir(), 'legal-proxy-runtime-'))
+  const tracePath = join(state, 'synthetic-worker-trace.mjs')
+  await writeFile(tracePath, syntheticTraceModule, { mode: 0o600 })
   const runId = randomUUID(), workerId = `runtime-${runId}`, workerToken = randomBytes(32).toString('hex'), sessionSecret = randomBytes(32).toString('hex')
   const prefix = `Synthetic proxy runtime ${runId}`, createdUsers: string[] = []
-  let templateId: string | null = null, next: ChildProcess | null = null
+  const secrets = [workerToken, sessionSecret, ...Object.entries(process.env).filter(([name]) => /KEY|TOKEN|SECRET|PASSWORD|DATABASE_URL|SERVICE_ACCOUNT/i.test(name)).flatMap(([, value]) => value ? [value] : [])]
+  let templateId: string | null = null, queuedJobId: string | null = null, next: ChildProcess | null = null
   try {
     verificationStage = 'isolated_database_identity'
     const identity = await prisma.$queryRaw<{ name: string }[]>`SELECT current_database() AS name`
@@ -152,19 +247,33 @@ async function main() {
       const redirect = response.headers.get('x-action-redirect') ?? response.headers.get('location')
       if (redirect) return { denied: true as const, redirect, value: null }
       assert.equal(response.status, 200, `Actual ${name} action did not return HTTP 200.`)
-      return { denied: false as const, redirect: null, value: actionResult(await response.text()) }
+      return { denied: false as const, redirect: null, value: await actionResult(response) }
     }
     async function runWorker() {
       await new Promise<void>((resolve, reject) => {
-        const running = spawn(process.execPath, ['--conditions=react-server', '--import', 'tsx', 'ops/generation-worker/run.ts'], { env: runtimeEnv, stdio: 'ignore', detached: process.platform !== 'win32' })
+        const running = spawn(process.execPath, ['--conditions=react-server', '--import', 'tsx', '--import', tracePath, 'ops/generation-worker/run.ts'], { env: runtimeEnv, stdio: ['ignore', 'pipe', 'pipe'], detached: process.platform !== 'win32' })
         let failed = false, timedOut = false
+        let stdout = '', stderr = ''
+        let stdoutSuppressed = false, stderrSuppressed = false
+        running.stdout.on('data', (part: Buffer) => {
+          if (stdoutSuppressed) return
+          stdout += part.toString('utf8')
+          if (stdout.length > 16_384) { stdout = '[worker stdout omitted: output limit exceeded]'; stdoutSuppressed = true }
+        })
+        running.stderr.on('data', (part: Buffer) => {
+          if (stderrSuppressed) return
+          stderr += part.toString('utf8')
+          if (stderr.length > 16_384) { stderr = '[worker stderr omitted: output limit exceeded]'; stderrSuppressed = true }
+        })
         let escalation: ReturnType<typeof setTimeout> | undefined
         const timeout = setTimeout(() => { timedOut = true; terminate(running, 'SIGTERM'); escalation = setTimeout(() => terminate(running, 'SIGKILL'), 5000) }, 600_000)
         running.once('error', () => { failed = true })
-        running.once('close', code => {
+        running.once('close', (code, signal) => {
           clearTimeout(timeout)
           if (escalation) clearTimeout(escalation)
           if (timedOut) terminate(running, 'SIGKILL')
+          console.log(JSON.stringify({ event: 'runtime_worker_exit', stage: verificationStage, code, signal, failedToStart: failed, timedOut,
+            stdout: redactDiagnostic(stdout, secrets), stderr: redactDiagnostic(stderr, secrets) }))
           if (code !== 0 || failed || timedOut) reject(new Error('Actual worker failed; no alternate provider or synthetic success is accepted.'))
           else resolve()
         })
@@ -185,10 +294,15 @@ async function main() {
     const queued = await action('generateContract', args, cookie)
     assert.ok(queued.value && typeof queued.value === 'object' && 'success' in queued.value && queued.value.success === true && 'jobId' in queued.value && typeof queued.value.jobId === 'string', 'Actual generation action must return a queued job.')
     const jobId = queued.value.jobId
+    queuedJobId = jobId
     verificationStage = 'real_draft_and_independent_reviews'
     await runWorker()
+    verificationStage = 'fetch_completed_job_action'
     const fetched = await action('getGenerationJob', [jobId], cookie, jobId)
+    console.log(JSON.stringify({ event: 'runtime_job_action_shape', denied: fetched.denied, valueType: typeof fetched.value,
+      hasJobId: isRecord(fetched.value) && typeof fetched.value.id === 'string', matchesJobId: isRecord(fetched.value) && fetched.value.id === jobId }))
     assert.ok(fetched.value && typeof fetched.value === 'object' && 'id' in fetched.value && fetched.value.id === jobId)
+    verificationStage = 'read_completed_job_database'
     const finished = await prisma.contractGenerationJob.findUniqueOrThrow({ where: { id: jobId } })
     assert.ok(finished.output_text)
     const result = parseGenerationResult(finished.reviews)
@@ -224,6 +338,23 @@ async function main() {
       diagnosticSyntheticSession: true, humanApprovalPerformed: false, documentSaved: false }))
   } finally {
     await stop(next)
+    if (queuedJobId) {
+      try {
+        const row = await prisma.contractGenerationJob.findUnique({ where: { id: queuedJobId } })
+        const reviews = row && isRecord(row.reviews) ? row.reviews : null
+        const summary = (value: unknown) => isRecord(value) ? { pass: value.pass === true, draftHash: typeof value.draftHash === 'string' && /^[a-f0-9]{64}$/.test(value.draftHash) ? value.draftHash : null,
+          findingsCount: Array.isArray(value.findings) ? value.findings.length : null,
+          blockers: Array.isArray(value.findings) ? value.findings.filter(item => isRecord(item) && item.severity === 'blocker').length : null } : null
+        console.log(JSON.stringify({ event: 'runtime_synthetic_job_before_cleanup', stage: verificationStage, id: queuedJobId, found: !!row,
+          status: row?.status, error: row?.error ? redactDiagnostic(row.error, secrets) : null, outputCharacters: row?.output_text?.length ?? 0,
+          outputHash: row?.output_hash, completedAt: row?.completed_at, leaseExpiresAt: row?.lease_expires_at,
+          documentSaved: !!row?.document_id, humanApproved: !!row?.human_approved_by,
+          reviews: reviews ? { provider: reviews.provider === 'cliproxyapi' ? 'cliproxyapi' : 'unexpected', modelMatches: reviews.model === 'gpt-6.1-sol',
+            configMatches: reviews.configIdentity === configIdentity, skillMatches: reviews.skillHash === GENERATION_SKILL_HASH,
+            responseIds: Array.isArray(reviews.sessionIds) ? reviews.sessionIds.map(id => typeof id === 'string' && /^[A-Za-z0-9_-]{1,120}$/.test(id) ? id : '<invalid>') : null,
+            substantive: summary(reviews.substantive), references: summary(reviews.references) } : null }))
+      } catch { console.error(JSON.stringify({ event: 'runtime_synthetic_job_diagnostic_unavailable', stage: verificationStage })) }
+    }
     if (createdUsers.length) {
       await prisma.contractGenerationJob.deleteMany({ where: { actor_user_id: { in: createdUsers } } })
       await prisma.contractGenerationWorker.deleteMany({ where: { id: workerId } })
