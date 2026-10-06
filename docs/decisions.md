@@ -217,3 +217,36 @@ compatibility revision `lsc-legal-dashboard-00034-xim`, both using runtime sourc
 launch and empty queue execution passed from the real application identity.
 The first feed still has no human approvals. Exact evidence, backup boundaries
 and deferred work are in [the release receipt](compliance-integration/deployment-20261006.md).
+
+## 6 October 2026: private CLIProxyAPI intelligence with Codex 6.1 Sol
+
+Anuj selected `router-for-me/CLIProxyAPI`, requested authentication and named
+Codex 6.1 Sol as the platform intelligence layer. He authorized a new isolated
+instance. The implemented target is pinned CLIProxyAPI v8.0.16, native Codex
+OAuth, and exact `gpt-6.1-sol` through a private Cloud Run service. No aliases,
+provider substitution or account rotation are allowed. Existing analysis and
+template entrypoints use the shared transport; generation retains its durable
+worker, independent reviews and human approval.
+
+Authentication uses the proxy's fresh device flow, not copied desktop tokens.
+Native Postgres storage uses a dedicated isolated database and role; its
+`config_store` is authoritative and its refresh credentials remain outside Legal
+OS and the generation worker. One active proxy consumer owns refreshes. Disable
+management, request body capture, image injection and plugins. App callers use
+both service-specific Cloud Run identity and a separate secret client key.
+
+The user reported signing in, but native login completion and deployed
+exact-model inference are pending acceptance at this decision. Model listing,
+a browser session and controlled tests do not establish runtime success. Keep
+activation tied to real redacted receipts and the complete generation workflow.
+The adapter enforces request/response byte limits and a full-request timeout;
+Codex strips output-token caps, so they cannot be represented as enforced limits.
+
+Worker ownership does not expand the four legal principals. Fresh requester
+entitlement, exact connection/skill identity, three distinct inference receipts,
+draft-bound reviews and human approval remain mandatory. Background processing
+serves explicitly queued generation requests. It does not create the deferred
+recurring FSP compliance AI review or change CISO approval requirements.
+See [the proxy runbook](../ops/cli-proxy-api/README.md) and
+[the generation runbook](../ops/generation-worker/README.md). Deployment status and
+actual acceptance belong in the release evidence, not this architectural decision.

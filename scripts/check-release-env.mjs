@@ -24,6 +24,17 @@ const requiredEnv = [
   "FINANCE_WEBHOOK_SECRET",
 ]
 
+const aiProvider = (process.env.AI_PROVIDER ?? "cliproxyapi").toLowerCase()
+if (aiProvider === "cliproxyapi") {
+  requiredEnv.push("CLIPROXY_BASE_URL", "CLIPROXY_API_KEY", "CLIPROXY_MODEL", "CLIPROXY_AUTH_REVISION")
+} else if (aiProvider === "gemini") {
+  requiredEnv.push("GEMINI_API_KEY")
+} else if (aiProvider === "anthropic") {
+  requiredEnv.push("ANTHROPIC_API_KEY")
+} else {
+  throw new Error("Unsupported AI_PROVIDER")
+}
+
 if (process.env.OPENSIGN_SIGNING_ENABLED === "1") {
   requiredEnv.push(
     "OPENSIGN_BASE_URL",

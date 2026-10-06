@@ -12,7 +12,7 @@ function load(path, imports, env = {}, fetch = () => { throw new Error('Unexpect
   runInNewContext(compiled.outputText, { module: moduleRecord, exports: moduleRecord.exports, Buffer, Headers, URL, AbortSignal, FormData, console, process: { env }, fetch, require(name) { assert.ok(Object.hasOwn(imports, name), `Unapproved import ${path}: ${name}`); return imports[name] } }, { filename: path, timeout: 1000 })
   return moduleRecord.exports
 }
-const protocol = load('src/lib/contract-generation-protocol.ts', { 'node:crypto': crypto })
+const protocol = load('src/lib/contract-generation-protocol.ts', { 'node:crypto': crypto }, { AI_PROVIDER: 'codex' })
 const content = '1. Each party protects the other party’s confidential information.'
 const hash = protocol.hashDraft(content)
 const result = { draft: content, draftHash: hash, substantive: { draftHash: hash, pass: true, findings: [] }, references: { draftHash: hash, pass: true, findings: [] }, model: 'synthetic', sessionIds: ['draft-session', 'review-session', 'reference-session'], skillHash: protocol.GENERATION_SKILL_HASH }
@@ -50,7 +50,7 @@ const prisma = {
   },
 }
 function queue(enabled = true) {
-  return load('src/lib/contract-generation-queue.ts', { 'node:crypto': crypto, '@/lib/prisma': { prisma }, '@/lib/document-access': access, './contract-generation': { CONTRACT_GENERATION_PAUSED: !enabled, CONTRACT_GENERATION_PAUSED_MESSAGE: 'Paused' }, './contract-generation-protocol': protocol, '@/generated/prisma/client': { Entity: { FSP: 'FSP' } } }, { LEGAL_GENERATION_WORKERS: JSON.stringify({ worker: { token: 'a'.repeat(40), ownerEmail: actor.email, actorEmails: [actor.email] } }) })
+  return load('src/lib/contract-generation-queue.ts', { 'node:crypto': crypto, '@/lib/prisma': { prisma }, '@/lib/document-access': access, './ai-proxy': { getProxyAIConfigIdentity() { throw new Error('Proxy must not be selected by legacy provider configuration') } }, './contract-generation': { CONTRACT_GENERATION_PAUSED: !enabled, CONTRACT_GENERATION_PAUSED_MESSAGE: 'Paused' }, './contract-generation-protocol': protocol, '@/generated/prisma/client': { Entity: { FSP: 'FSP' } } }, { AI_PROVIDER: 'codex', LEGAL_GENERATION_WORKERS: JSON.stringify({ worker: { token: 'a'.repeat(40), ownerEmail: actor.email, actorEmails: [actor.email] } }) })
 }
 const q = queue()
 assert.equal(q.authenticateGenerationWorker(new Headers({ 'x-legal-worker-id': 'worker', authorization: `Bearer ${'a'.repeat(40)}` })).id, 'worker')

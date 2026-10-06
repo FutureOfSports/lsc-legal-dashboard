@@ -1,6 +1,6 @@
 /**
- * Deployment kill switch for CLI drafting. Enabling it still requires a fresh,
- * authenticated authorized worker; it can never select an API provider.
+ * Deployment kill switch for drafting. Enabling it still requires a fresh,
+ * authenticated worker for the explicitly selected provider and configuration.
  */
 export const CONTRACT_GENERATION_PAUSED = process.env.GENERATION_ENABLED !== '1'
 

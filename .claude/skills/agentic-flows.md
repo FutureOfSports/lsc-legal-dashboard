@@ -23,12 +23,20 @@ until they have a class, trigger, tests, and observable output.
 
 - `src/actions/generate.ts`
   - Central access and role checks precede durable generation queue access.
-  - Codex CLI runs on the dedicated worker with ChatGPT authentication, not API
-    drafting. See `ops/generation-worker/README.md` for owner/requester separation.
-  - Fresh verified worker availability and exact draft/review hashes gate use.
+  - `AI_PROVIDER=cliproxyapi` selects the private proxy transport and exact
+    `gpt-6.1-sol`. Native Codex OAuth belongs to the isolated proxy. Explicit
+    legacy settings retain the earlier CLI transport; errors never trigger it.
+    See `ops/generation-worker/README.md` for owner/requester separation.
+  - Fresh verified worker availability, connection identity and exact draft/review
+    hashes gate use. Model inventory alone is not a successful inference receipt.
   - Deterministic MNDA sends and existing analysis agents remain separate.
-  - `verify-generation-pause.mjs`, `verify-v2-generation-slack.mjs` and
-    `verify-generation-worker.mjs` exercise provider boundaries and reviews.
+  - The background service wrapper maintains readiness and processes explicitly
+    queued generation requests. It does not schedule compliance AI reviews.
+  - `verify-generation-pause.mjs`, `verify-v2-generation-slack.mjs`,
+    `verify-generation-worker.mjs`, `verify-ai-proxy.mjs`,
+    `verify-ai-provider-routing.mjs`, `verify-proxy-generation.mjs` and
+    `verify-proxy-generation-queue.mjs` exercise transport, authorization and review
+    boundaries. Production acceptance requires separate deployed receipts.
 
 - `src/actions/documents.ts`
   - New upload with extracted text: schedules `agreement-analyzer` with `after()`.
@@ -88,7 +96,13 @@ Production configuration belongs to GCP Cloud Run and the isolated worker, never
 
 - Auth/database: `AUTH_SESSION_SECRET`, `AUTH_ALLOWED_EMAILS`, `DATABASE_URL`, `DIRECT_DATABASE_URL`
 - Cron: `CRON_SECRET`
-- AI: `AI_PROVIDER=gemini`, `GEMINI_API_KEY`, optional `ANTHROPIC_API_KEY` fallback
+- AI: `AI_PROVIDER=cliproxyapi`, `CLIPROXY_BASE_URL`, `CLIPROXY_MODEL=gpt-6.1-sol`,
+  secret `CLIPROXY_API_KEY`, and `CLIPROXY_ID_TOKEN_AUDIENCE` equal to the private
+  Cloud Run origin. The identity token uses `X-Serverless-Authorization`; the
+  proxy client key uses `Authorization`. Legacy Gemini/Anthropic providers require
+  explicit selection and are never a proxy fallback.
+- Generation: `GENERATION_ENABLED`, secret `LEGAL_GENERATION_WORKERS` and matching
+  worker identity, token and owner configuration. See the generation runbook.
 - GCS via S3 interop: `GCS_BUCKET_NAME`, `GCS_HMAC_ACCESS_ID`, `GCS_HMAC_SECRET`; the former AWS storage account is retired.
 - OpenSign: `OPENSIGN_BASE_URL`, `OPENSIGN_PUBLIC_URL`, `OPENSIGN_APP_ID`, `OPENSIGN_MASTER_KEY`, `OPENSIGN_USER_EMAIL`, `OPENSIGN_WEBHOOK_SECRET`, `OPENSIGN_WEBHOOK_URL`
 - Dropbox Sign legacy-readable only: `HELLOSIGN_API_KEY`, `HELLOSIGN_CLIENT_ID`, `HELLOSIGN_TEST_MODE`
@@ -128,8 +142,15 @@ Deployment invariants after the 21 September 2026 v2 implementation:
 
 - OpenSign is hosted on the separate `opensign-vm`. Do not reuse that signing VM for generation. Its recovery is separate from Legal document exports.
 - AI extraction source of truth is `DocumentAnalysis`, keyed to Legal documents, versions, KYC documents, or litigation documents. Do not depend on analyzer log JSON except as legacy fallback.
-- Gemini is the primary AI provider for agents. If Anthropic is configured, it is
-  only a fallback for provider/quota/rate-limit failures.
+- The proxy integration is implemented; complete native login and real
+  exact-model deployed inference before declaring it live. Proxy errors contain
+  safe categories, never upstream bodies, prompts or credentials. The 120-second
+  request deadline covers identity acquisition, headers and response reading;
+  request and response byte limits are enforced. Codex strips output-token caps,
+  so `max_output_tokens` is not a cost or generation-length guarantee.
+- The private proxy must use one credential consumer, a dedicated Postgres role
+  and database, disabled management, disabled request capture and no aliases or
+  provider fallback. See `ops/cli-proxy-api/README.md` before changing it.
 - Run `node scripts/check-agent-hygiene.mjs` when changing agents, agent UI,
   Finance retry routing, or required runtime tables.
 - `.claude/skills/prisma-schema.md` and `.claude/skills/finance-integration.md` are historical references; verify against `prisma/schema.prisma` and current webhook code before relying on them.

@@ -74,6 +74,7 @@ function createFixture(provider) {
   const protocol = load("src/lib/contract-generation-protocol.ts", { "node:crypto": crypto })
   const access = { requireGlobalDocumentAccess: () => rejectEffect("database") }
   const queue = load("src/lib/contract-generation-queue.ts", {
+    "./ai-proxy": { getProxyAIConfigIdentity: () => rejectEffect("provider") },
     "node:crypto": crypto,
     "@/lib/prisma": { prisma },
     "@/lib/document-access": access,
@@ -154,7 +155,7 @@ function flattenChildren(value) {
 let authorizedCalls = 0
 let deniedCalls = 0
 
-for (const provider of ["gemini", "anthropic"]) {
+for (const provider of ["gemini", "anthropic", "cliproxyapi"]) {
   const fixture = createFixture(provider)
   const calls = [
     () => fixture.actions.generateContract("synthetic-template", {}, "FSP", "Synthetic test"),
@@ -206,4 +207,4 @@ for (const provider of ["gemini", "anthropic"]) {
   fixture.assertNoEffects()
 }
 
-console.log(`Generation pause checks passed: ${authorizedCalls} authorized calls, ${deniedCalls} auth denials and paused-page checks across both providers; no provider construction, provider calls, document database, network or cache activity; only fresh authorization reads allowed.`)
+console.log(`Generation pause checks passed: ${authorizedCalls} authorized calls, ${deniedCalls} auth denials and paused-page checks across three providers; no provider construction, provider calls, document database, network or cache activity; only fresh authorization reads allowed.`)

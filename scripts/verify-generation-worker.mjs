@@ -61,7 +61,7 @@ const origin = `http://127.0.0.1:${address.port}`
 async function run(model = 'synthetic-model') {
   return await new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [resolvePath('node_modules/tsx/dist/cli.mjs'), resolvePath('ops/generation-worker/run.ts')], {
-      cwd: resolvePath('.'), env: { PATH: process.env.PATH, HOME: sandbox, TMPDIR: sandbox, NODE_ENV: 'test', LEGAL_APP_ORIGIN: origin, LEGAL_GENERATION_WORKER_ID: 'synthetic-worker', LEGAL_GENERATION_WORKER_TOKEN: 'synthetic-app-token', LEGAL_GENERATION_OWNER_EMAIL: 'synthetic@example.invalid', LEGAL_GENERATION_MODEL: model, CODEX_BIN: executable, OPENAI_API_KEY: 'must-be-stripped', CODEX_API_KEY: 'must-be-stripped', CODEX_ACCESS_TOKEN: 'must-be-stripped', ANTHROPIC_API_KEY: 'must-be-stripped', GOOGLE_API_KEY: 'must-be-stripped' }, stdio: ['ignore', 'pipe', 'pipe'],
+      cwd: resolvePath('.'), env: { PATH: process.env.PATH, HOME: sandbox, TMPDIR: sandbox, NODE_ENV: 'test', AI_PROVIDER: 'codex', LEGAL_APP_ORIGIN: origin, LEGAL_GENERATION_WORKER_ID: 'synthetic-worker', LEGAL_GENERATION_WORKER_TOKEN: 'synthetic-app-token', LEGAL_GENERATION_OWNER_EMAIL: 'synthetic@example.invalid', LEGAL_GENERATION_MODEL: model, CODEX_BIN: executable, OPENAI_API_KEY: 'must-be-stripped', CODEX_API_KEY: 'must-be-stripped', CODEX_ACCESS_TOKEN: 'must-be-stripped', ANTHROPIC_API_KEY: 'must-be-stripped', GOOGLE_API_KEY: 'must-be-stripped' }, stdio: ['ignore', 'pipe', 'pipe'],
     })
     let output = ''; child.stdout.on('data', data => output += data); child.stderr.on('data', data => output += data)
     const timeout = setTimeout(() => { child.kill('SIGKILL'); reject(new Error('Synthetic worker timed out')) }, 30000)

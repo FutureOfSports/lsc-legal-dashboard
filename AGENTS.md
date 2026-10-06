@@ -132,3 +132,20 @@ This version has breaking changes — APIs, conventions, and file structure may 
   15-second timeout. Production keeps one private CISO instance warm.
 - Take a recovery snapshot after credential cleanup. Inspect its token rows;
   a pre-revocation archive can resurrect a removed temporary credential.
+
+## Private intelligence transport, 6 October 2026
+
+- CLIProxyAPI uses the explicitly requested `gpt-6.1-sol`; never substitute a
+  model or silently fall back after a proxy error. Account login, model inventory,
+  actual inference and legal approval remain separate acceptance states.
+- Native Postgres store mode ignores `--config`; its `config_store` row is
+  authoritative. OAuth credentials belong in the isolated store, never copied
+  from a personal browser or desktop profile. Keep one refresh consumer.
+- In upstream v8.0.16, `request-log: false` still permits failed-body logging.
+  Require `server.commercial-mode: true` and disable management, image injection,
+  plugins and discovery in the private runtime.
+- Upstream strips output-token limits for Codex. Enforce application byte/time
+  limits, and do not describe the requested token count as a guaranteed cap.
+- Change `CLIPROXY_AUTH_REVISION` on upstream account configuration changes so
+  worker readiness cannot reuse proof for a replaced account. `/healthz` proves
+  process health only; actual inference readiness is a separately bound receipt.

@@ -99,3 +99,22 @@ delivery. The runtime source is `932f044`; receipts and tested limitations are i
 [the release record](docs/compliance-integration/deployment-20261006.md).
 Recurring Codex CLI review remains deferred. The separate v2 acceptance items
 above are not silently marked complete by this release.
+
+## Private intelligence provider, 6 October 2026
+
+Anuj selected CLIProxyAPI with `gpt-6.1-sol` and authorized a new private instance
+in FSP US production. The shared provider transport covers existing analysis,
+template analysis and the isolated drafting worker. Keep human approval and
+exact review hashes; do not add recurring compliance reviews in this change.
+
+- [x] Implement exact-model transport, private-service authentication, account
+  configuration binding and focused cancellation/access/review verification.
+- [x] Deploy the pinned private proxy with an isolated credential store and
+  scoped service identities. Anonymous requests return 403; missing proxy
+  credentials return 401 after cloud authentication.
+- [ ] Confirm native ChatGPT device authentication and actual model inference,
+  then activate and verify both dashboard entry points plus the drafting worker.
+
+The current proxy is deployed without confirmed upstream authentication. Existing
+production dashboard AI settings and its drafting pause remain unchanged until
+the live acceptance gate passes.
