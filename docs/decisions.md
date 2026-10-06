@@ -235,10 +235,10 @@ OS and the generation worker. One active proxy consumer owns refreshes. Disable
 management, request body capture, image injection and plugins. App callers use
 both service-specific Cloud Run identity and a separate secret client key.
 
-The user reported signing in, but native login completion and deployed
-exact-model inference are pending acceptance at this decision. Model listing,
-a browser session and controlled tests do not establish runtime success. Keep
-activation tied to real redacted receipts and the complete generation workflow.
+Native login completed and exact-model inference from the deployed application
+identity was verified on 6 October 2026. Model listing and a browser session
+alone do not establish runtime success. Activation remains tied to redacted
+receipts for the application and complete generation workflow.
 The adapter enforces request/response byte limits and a full-request timeout;
 Codex strips output-token caps, so they cannot be represented as enforced limits.
 

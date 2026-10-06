@@ -22,6 +22,12 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Test generation actions through the built Next server. Importing their route
   directly under `react-server` can load `next/navigation` outside its framework
   runtime and fail on React context initialization before exercising the route.
+- Diagnostic read-only database startup options require the matching Neon
+  direct endpoint; its pooled endpoint rejects those options with SQLSTATE
+  08P01. Do not remove read-only protection to work around the pooler.
+- Decode actual server-action responses with the installed React Flight client.
+  Manual line-by-line JSON decoding misses referenced and text chunks. Template
+  preview `variablesText` is newline-separated keys, not a JSON array.
 - The real proxy verifier uses an empty `legal_os_v2_verify_` database and
   synthetic diagnostic sessions. It proves actual action/worker/review behavior
   and altered-save denial, not human approval or a saved production document.

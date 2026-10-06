@@ -1,0 +1,33 @@
+{
+  "execution": "legal-proxy-acceptance-20261006-zrn5s",
+  "status": {
+    "completionTime": "2026-10-06T14:02:58.619202Z",
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-10-06T14:02:58.619202Z",
+        "message": "Execution completed successfully in 4m30.74s.",
+        "status": "True",
+        "type": "Completed"
+      },
+      {
+        "lastTransitionTime": "2026-10-06T13:58:11.887933Z",
+        "message": "Provisioned imported containers.",
+        "status": "True",
+        "type": "ResourcesAvailable"
+      },
+      {
+        "lastTransitionTime": "2026-10-06T14:01:14.214136Z",
+        "message": "Started deployed execution in 3m2.32s.",
+        "status": "True",
+        "type": "Started"
+      },
+      {
+        "lastTransitionTime": "2026-10-06T13:58:11.781391Z",
+        "message": "Imported container image.",
+        "status": "True",
+        "type": "ContainerReady"
+      }
+    ],
+    "succeededCount": 1
+  }
+}

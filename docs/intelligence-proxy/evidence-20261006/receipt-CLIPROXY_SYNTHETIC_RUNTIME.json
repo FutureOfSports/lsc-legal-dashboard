@@ -1,0 +1,14 @@
+{
+  "check": "CLIPROXY_SYNTHETIC_RUNTIME",
+  "configIdentity": "8a613db0032811336f59f89b4fa1b8bb247724ef5973782dec6c648e98b6f0b4",
+  "draftHash": "88f28b3ae201250e497fac70684235327cc8d93a045d11c2bc2adc7e2de07efd",
+  "legalApprovalCreated": false,
+  "model": "gpt-6.1-sol",
+  "passed": true,
+  "productionDataSent": false,
+  "responseIds": [
+    "resp_01ff06f4af1b7366016ac4fae6976487d280dae55a0bf8b67d",
+    "resp_0ad497f2e71b384c016ac4faea358487d2aa1d6b3d92aed273",
+    "resp_03add33fee24b2d1016ac4faea31c487d2aba720fc39cd65a5"
+  ]
+}

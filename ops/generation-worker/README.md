@@ -6,10 +6,9 @@ private proxy transport in `src/lib/ai-proxy.ts`. The worker continues to own th
 durable job protocol, independent reviews and provenance checks. Native Codex
 OAuth credentials belong only to the proxy, not the app or generation worker.
 
-Implementation is complete. Native proxy login, successful exact-model inference
-and deployed end-to-end acceptance remain pending release evidence. Anuj approved
-a new isolated proxy instance and reported signing in; those statements do not
-establish completion of the pending native device flow. See
+Native proxy login and exact-model inference, including the typed readiness
+schema, were verified on 6 October 2026. Deployed drafting, review and activation
+status is recorded in `docs/intelligence-proxy/verification-20261006.md`. See
 [the proxy runbook](../cli-proxy-api/README.md).
 
 ## Authorization and readiness

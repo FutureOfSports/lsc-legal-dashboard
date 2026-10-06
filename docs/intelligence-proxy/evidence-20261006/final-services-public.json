@@ -1,0 +1,142 @@
+{
+  "us": {
+    "project": "fsp-us-prod-499705",
+    "region": "us-central1",
+    "service": "lsc-legal-dashboard",
+    "readyRevision": "lsc-legal-dashboard-00005-vic",
+    "traffic": [
+      {
+        "revisionName": "lsc-legal-dashboard-00003-gon",
+        "tag": "proxy-preview",
+        "url": "https://proxy-preview---lsc-legal-dashboard-2feiiv4i4a-uc.a.run.app"
+      },
+      {
+        "percent": 100,
+        "revisionName": "lsc-legal-dashboard-00005-vic",
+        "tag": "generation-preview",
+        "url": "https://generation-preview---lsc-legal-dashboard-2feiiv4i4a-uc.a.run.app"
+      }
+    ],
+    "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/legal-os/dashboard@sha256:74ce84ffe30e8edf6b7c7e7af031b670513d11051e01e32e504cd6628919375b",
+    "serviceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
+    "revisionAnnotations": {
+      "autoscaling.knative.dev/maxScale": "4",
+      "run.googleapis.com/cpu-throttling": "false"
+    },
+    "serviceScaling": {
+      "run.googleapis.com/maxScale": "100"
+    },
+    "configuration": {
+      "AI_PROVIDER": "cliproxyapi",
+      "AUTH_APP_URL": "https://lsc-legal-dashboard-344863505916.us-central1.run.app",
+      "GENERATION_ENABLED": "1",
+      "LEGAL_RELEASE_SHA": "45cdb4a",
+      "CLIPROXY_MODEL": "gpt-6.1-sol",
+      "CLIPROXY_BASE_URL": "https://legal-os-proxy-2feiiv4i4a-uc.a.run.app",
+      "CLIPROXY_ID_TOKEN_AUDIENCE": "https://legal-os-proxy-2feiiv4i4a-uc.a.run.app",
+      "CLIPROXY_AUTH_REVISION": "323e730a0a19ddbc47e3a51513680b7803bb6deed326981b2a4c9bee3bb203dd"
+    }
+  },
+  "original": {
+    "project": "fsp-legal-esign",
+    "region": "asia-southeast1",
+    "service": "lsc-legal-dashboard",
+    "readyRevision": "lsc-legal-dashboard-00038-mad",
+    "traffic": [
+      {
+        "revisionName": "lsc-legal-dashboard-00032-civ",
+        "tag": "v2-review",
+        "url": "https://v2-review---lsc-legal-dashboard-goxxm577xq-as.a.run.app"
+      },
+      {
+        "revisionName": "lsc-legal-dashboard-00034-xim",
+        "tag": "compliance-v1",
+        "url": "https://compliance-v1---lsc-legal-dashboard-goxxm577xq-as.a.run.app"
+      },
+      {
+        "revisionName": "lsc-legal-dashboard-00036-hiz",
+        "tag": "proxy-preview",
+        "url": "https://proxy-preview---lsc-legal-dashboard-goxxm577xq-as.a.run.app"
+      },
+      {
+        "percent": 100,
+        "revisionName": "lsc-legal-dashboard-00038-mad",
+        "tag": "generation-preview",
+        "url": "https://generation-preview---lsc-legal-dashboard-goxxm577xq-as.a.run.app"
+      }
+    ],
+    "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/legal-os/dashboard@sha256:74ce84ffe30e8edf6b7c7e7af031b670513d11051e01e32e504cd6628919375b",
+    "serviceAccount": "221817683102-compute@developer.gserviceaccount.com",
+    "revisionAnnotations": {
+      "autoscaling.knative.dev/maxScale": "4",
+      "run.googleapis.com/cpu-throttling": "false"
+    },
+    "serviceScaling": {
+      "run.googleapis.com/maxScale": "20"
+    },
+    "configuration": {
+      "AI_PROVIDER": "cliproxyapi",
+      "AUTH_APP_URL": "https://lsc-legal-dashboard-344863505916.us-central1.run.app",
+      "GENERATION_ENABLED": "1",
+      "LEGAL_RELEASE_SHA": "45cdb4a",
+      "CLIPROXY_MODEL": "gpt-6.1-sol",
+      "CLIPROXY_BASE_URL": "https://legal-os-proxy-2feiiv4i4a-uc.a.run.app",
+      "CLIPROXY_ID_TOKEN_AUDIENCE": "https://legal-os-proxy-2feiiv4i4a-uc.a.run.app",
+      "CLIPROXY_AUTH_REVISION": "323e730a0a19ddbc47e3a51513680b7803bb6deed326981b2a4c9bee3bb203dd"
+    }
+  },
+  "proxy": {
+    "project": "fsp-us-prod-499705",
+    "region": "us-central1",
+    "service": "legal-os-proxy",
+    "readyRevision": "legal-os-proxy-00002-cnt",
+    "traffic": [
+      {
+        "latestRevision": true,
+        "percent": 100,
+        "revisionName": "legal-os-proxy-00002-cnt"
+      }
+    ],
+    "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/legal-os/cliproxyapi@sha256:d8097209f93bf01bbe7db0b876caef9510a3a9b43bdbae1e73e38b57ef5b1f2c",
+    "serviceAccount": "legal-os-proxy@fsp-us-prod-499705.iam.gserviceaccount.com",
+    "revisionAnnotations": {
+      "autoscaling.knative.dev/maxScale": "100",
+      "run.googleapis.com/cpu-throttling": "false"
+    },
+    "serviceScaling": {
+      "run.googleapis.com/maxScale": "1",
+      "run.googleapis.com/minScale": "1"
+    },
+    "configuration": {}
+  },
+  "generation": {
+    "project": "fsp-us-prod-499705",
+    "region": "us-central1",
+    "service": "legal-os-generation",
+    "readyRevision": "legal-os-generation-00001-dcr",
+    "traffic": [
+      {
+        "latestRevision": true,
+        "percent": 100,
+        "revisionName": "legal-os-generation-00001-dcr"
+      }
+    ],
+    "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/legal-os/dashboard@sha256:74ce84ffe30e8edf6b7c7e7af031b670513d11051e01e32e504cd6628919375b",
+    "serviceAccount": "legal-os-generation@fsp-us-prod-499705.iam.gserviceaccount.com",
+    "revisionAnnotations": {
+      "run.googleapis.com/cpu-throttling": "false"
+    },
+    "serviceScaling": {
+      "run.googleapis.com/maxScale": "1",
+      "run.googleapis.com/minScale": "1"
+    },
+    "configuration": {
+      "AI_PROVIDER": "cliproxyapi",
+      "CLIPROXY_MODEL": "gpt-6.1-sol",
+      "CLIPROXY_BASE_URL": "https://legal-os-proxy-2feiiv4i4a-uc.a.run.app",
+      "CLIPROXY_ID_TOKEN_AUDIENCE": "https://legal-os-proxy-2feiiv4i4a-uc.a.run.app",
+      "CLIPROXY_AUTH_REVISION": "323e730a0a19ddbc47e3a51513680b7803bb6deed326981b2a4c9bee3bb203dd",
+      "LEGAL_APP_ORIGIN": "https://lsc-legal-dashboard-344863505916.us-central1.run.app"
+    }
+  }
+}

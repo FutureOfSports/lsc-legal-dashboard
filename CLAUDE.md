@@ -13,8 +13,9 @@ analysis agents, template analysis and the generation worker through the private
 Responses adapter. Authentication uses a fresh native Codex OAuth login owned by
 the proxy, never copied desktop credentials. No proxy failure changes provider or
 model. Explicit legacy settings preserve the earlier transports for rollback.
-Implementation is complete; native login, exact-model inference and deployed
-acceptance remain release gates. A reported browser sign-in is not that proof.
+Native login and synthetic exact-model inference were verified on 6 October 2026.
+Application and worker activation require their separate deployed acceptance
+receipts in `docs/intelligence-proxy/verification-20261006.md`.
 
 App requesters remain separate from the generation worker owner.
 `GENERATION_ENABLED=1` alone is insufficient: the owner, requester, live heartbeat,
@@ -38,7 +39,7 @@ Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()
 - **Database**: NeonDB (PostgreSQL) via Prisma 7.6.0
 - **UI**: shadcn/ui + Tailwind CSS v4 (dark mode primary)
 - **Charts**: Recharts
-- **AI**: CLIProxyAPI v8.0.16 with native Codex OAuth and exact `gpt-6.1-sol`; private Responses transport, isolated generation worker and human approval. Production acceptance pending for this change.
+- **AI**: CLIProxyAPI v8.0.16 with verified native Codex OAuth and exact `gpt-6.1-sol`; private Responses transport, isolated generation worker and human approval. See the dated intelligence verification receipt for activation status.
 - **Drag & Drop**: @dnd-kit/core
 - **Icons**: lucide-react
 - **Auth**: Custom cookie-based HMAC sessions

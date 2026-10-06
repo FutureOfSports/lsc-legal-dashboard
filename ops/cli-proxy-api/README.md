@@ -2,10 +2,10 @@
 
 Anuj selected CLIProxyAPI with **`gpt-6.1-sol`** on 6 October 2026 and authorized a
 new isolated instance. This runbook describes the implemented integration and its
-activation requirements. Native device authentication and production inference
-acceptance remain pending. A browser sign-in or the user's report of signing in
-is not a completed proxy login receipt. Do not label the intelligence layer live
-until the deployed checks below succeed.
+activation requirements. Native device authentication and actual plain-text,
+JSON-object and typed strict-schema inference were verified on 6 October 2026.
+Application and worker acceptance are separate checks, recorded in
+`docs/intelligence-proxy/verification-20261006.md`.
 
 The proxy supplies inference to existing analysis agents, template analysis and
 the isolated generation worker. It does not approve applicability, verify a
@@ -172,6 +172,11 @@ single response object. Success requires `object=response`, `status=completed`,
 the exact model and response ID, complete assistant text, and valid JSON when
 requested. Refusals, tool-only replies, malformed JSON, incomplete responses and
 model substitutions fail. There is no provider or model fallback.
+
+JSON-object mode requires an explicit JSON instruction in an input message;
+system instructions alone do not satisfy the upstream validator. Strict schemas
+also require primitive types on `const` and `enum` leaves. Both requirements were
+confirmed with real rejected requests and corrected successful requests.
 
 The adapter enforces a 524,288-byte request limit, a 1,048,576-byte response limit
 and a 120-second deadline covering identity acquisition, headers and body reads.
