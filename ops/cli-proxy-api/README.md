@@ -26,7 +26,7 @@ queued requests. Future recurring compliance review automation remains deferred.
   Do not replace the reviewed binary with `latest` during troubleshooting.
 
 The Dockerfile packages the verified upstream Linux binary as a non-root service.
-Its build context contains only the Dockerfile, binary and safe example config.
+Its build context contains only the Dockerfile, binary, upstream license and safe example config.
 No auth files, application source, secrets or local configuration enter the image.
 The `--local-model` option uses the embedded catalog unless an explicit catalog
 source overrides it. Do not introduce a remote alias or catalog substitution.
