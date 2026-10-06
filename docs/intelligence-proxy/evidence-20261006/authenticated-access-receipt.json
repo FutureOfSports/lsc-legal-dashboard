@@ -1,0 +1,6 @@
+{
+  "anonymousStatus": 403,
+  "missingClientKeyStatus": 401,
+  "missingCloudIdentityStatus": 401,
+  "dualAuthenticationStatus": 200
+}

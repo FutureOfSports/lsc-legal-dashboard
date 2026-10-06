@@ -11,6 +11,27 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Treat `.claude/skills/prisma-schema.md` and `.claude/skills/finance-integration.md` as historical references; confirm current truth in `prisma/schema.prisma` and `src/lib/finance-webhook.ts`.
 - Do not commit `.env*` or `.vercel`; production secrets belong in GCP runtime configuration or Secret Manager, never the source upload.
 
+## Authenticated proxy verification, 6 October 2026
+
+- Codex JSON-object mode requires the word JSON in an input message. A system
+  instruction alone does not satisfy the upstream validator. The adapter adds
+  that instruction to the input and includes its bytes in the request limit.
+- Codex strict schemas require an explicit primitive `type` even on `const` and
+  `enum` leaves. Readiness and review schemas must retain those types; a locally
+  valid JSON Schema is not sufficient evidence of provider acceptance.
+- Test generation actions through the built Next server. Importing their route
+  directly under `react-server` can load `next/navigation` outside its framework
+  runtime and fail on React context initialization before exercising the route.
+- Diagnostic read-only database startup options require the matching Neon
+  direct endpoint; its pooled endpoint rejects those options with SQLSTATE
+  08P01. Do not remove read-only protection to work around the pooler.
+- Decode actual server-action responses with the installed React Flight client.
+  Manual line-by-line JSON decoding misses referenced and text chunks. Template
+  preview `variablesText` is newline-separated keys, not a JSON array.
+- The real proxy verifier uses an empty `legal_os_v2_verify_` database and
+  synthetic diagnostic sessions. It proves actual action/worker/review behavior
+  and altered-save denial, not human approval or a saved production document.
+
 ## Deployment and verification gotchas, 21 September 2026
 
 - Always pass the intended `--project` explicitly. Source production is
@@ -132,3 +153,20 @@ This version has breaking changes — APIs, conventions, and file structure may 
   15-second timeout. Production keeps one private CISO instance warm.
 - Take a recovery snapshot after credential cleanup. Inspect its token rows;
   a pre-revocation archive can resurrect a removed temporary credential.
+
+## Private intelligence transport, 6 October 2026
+
+- CLIProxyAPI uses the explicitly requested `gpt-6.1-sol`; never substitute a
+  model or silently fall back after a proxy error. Account login, model inventory,
+  actual inference and legal approval remain separate acceptance states.
+- Native Postgres store mode ignores `--config`; its `config_store` row is
+  authoritative. OAuth credentials belong in the isolated store, never copied
+  from a personal browser or desktop profile. Keep one refresh consumer.
+- In upstream v8.0.16, `request-log: false` still permits failed-body logging.
+  Require `server.commercial-mode: true` and disable management, image injection,
+  plugins and discovery in the private runtime.
+- Upstream strips output-token limits for Codex. Enforce application byte/time
+  limits, and do not describe the requested token count as a guaranteed cap.
+- Change `CLIPROXY_AUTH_REVISION` on upstream account configuration changes so
+  worker readiness cannot reuse proof for a replaced account. `/healthz` proves
+  process health only; actual inference readiness is a separately bound receipt.

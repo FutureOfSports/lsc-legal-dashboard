@@ -1,0 +1,32 @@
+{
+  "alteredSaveRejectedBeforeStorage": true,
+  "configIdentity": "8a613db0032811336f59f89b4fa1b8bb247724ef5973782dec6c648e98b6f0b4",
+  "database": "legal_os_v2_verify_proxy_20261006",
+  "diagnosticSyntheticSession": true,
+  "documentSaved": false,
+  "draftHash": "92323f653d4d72d0a2dca9e455f645062d558a8039c5e763e5a105043800f203",
+  "event": "PROXY_GENERATION_RUNTIME_ACCEPTANCE",
+  "fifthUserRejected": true,
+  "humanApprovalPerformed": false,
+  "jobId": "9995afd6-dfa3-4a8a-8580-715290596f9b",
+  "model": "gpt-6.1-sol",
+  "passed": true,
+  "provider": "cliproxyapi",
+  "readinessResponseId": "resp_0eb010d1742a8d44016ac4ff41de9887d29dc25875dd3f2a38",
+  "realBuiltNext": true,
+  "realDatabase": true,
+  "realProxy": true,
+  "realServerActions": true,
+  "realWebhook": true,
+  "realWorker": true,
+  "referencePass": true,
+  "responseIds": [
+    "resp_0a5e1c0ddef4a6cd016ac4ff5ab35087d2ba61b7653b20361e",
+    "resp_07ce981ea3b68b49016ac4ff65517c87d297dc395b5ab1318f",
+    "resp_02910e83a49e0c59016ac4ff6471ac87d2a8af963b2c645d26"
+  ],
+  "revokedUserRejected": true,
+  "skillHash": "9de5c2916b89121ef9f360caf104c08ea8fcda73d29dfc2cc12c97a0c9057744",
+  "substantivePass": true,
+  "workerId": "runtime-c26c6e75-40f1-45a6-b154-b38949193eb3"
+}

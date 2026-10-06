@@ -7,14 +7,23 @@ Module 2 of the LSC Operations Platform. Full legal operations platform: complia
 
 ## Agent Architecture
 
-Contract generation uses an isolated Codex CLI worker authenticated with Anuj's
-ChatGPT account, as explicitly requested on 21 September 2026. App requesters are
-separate from the worker owner. `GENERATION_ENABLED=1` alone is insufficient:
-the owner, requester, live heartbeat, synthetic inference proof and exact skill
-hash must all pass. Drafts require independent fairness and cross-reference
-reviews bound to their content hash plus a fresh human approval before saving.
-No API drafting fallback. See `ops/generation-worker/README.md`.
-Existing analysis agents and deterministic MNDA sending are separate workflows.
+On 6 October 2026 Anuj selected CLIProxyAPI with the exact `gpt-6.1-sol` model as
+the intelligence layer. The implemented default, `AI_PROVIDER=cliproxyapi`, routes
+analysis agents, template analysis and the generation worker through the private
+Responses adapter. Authentication uses a fresh native Codex OAuth login owned by
+the proxy, never copied desktop credentials. No proxy failure changes provider or
+model. Explicit legacy settings preserve the earlier transports for rollback.
+Native login and synthetic exact-model inference were verified on 6 October 2026.
+Application and worker activation require their separate deployed acceptance
+receipts in `docs/intelligence-proxy/verification-20261006.md`.
+
+App requesters remain separate from the generation worker owner.
+`GENERATION_ENABLED=1` alone is insufficient: the owner, requester, live heartbeat,
+synthetic inference proof, exact connection identity and skill hash must pass.
+Drafts require independent fairness and cross-reference reviews bound to their
+content hash plus a fresh human approval before saving. See
+`ops/generation-worker/README.md` and `ops/cli-proxy-api/README.md`.
+Deterministic MNDA sending and FSP legal-review decisions remain separate.
 
 Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()`.
 
@@ -30,7 +39,7 @@ Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()
 - **Database**: NeonDB (PostgreSQL) via Prisma 7.6.0
 - **UI**: shadcn/ui + Tailwind CSS v4 (dark mode primary)
 - **Charts**: Recharts
-- **AI**: Codex CLI with ChatGPT for drafting; existing Gemini/Anthropic analysis agents
+- **AI**: CLIProxyAPI v8.0.16 with verified native Codex OAuth and exact `gpt-6.1-sol`; private Responses transport, isolated generation worker and human approval. See the dated intelligence verification receipt for activation status.
 - **Drag & Drop**: @dnd-kit/core
 - **Icons**: lucide-react
 - **Auth**: Custom cookie-based HMAC sessions
@@ -89,7 +98,9 @@ FSP compliance uses immutable source snapshots, three-valued applicability,
 source and fact review, append-only legal decisions, and a restricted CISO
 Assistant Community metadata outbox. The initial feed is for legal review, not
 a certification. Human-requested delivery starts an isolated worker; recurring
-Codex CLI review automation is deferred. No API-based AI review is activated.
+Codex CLI review automation is deferred. The proxy intelligence integration does
+not schedule FSP applicability reviews, approve legal decisions or deliver CISO
+controls on its own. The generation service processes explicitly queued jobs.
 See `docs/compliance-integration/PLAN.md` and
 `docs/compliance-integration/deployment-20261006.md` before extending it.
 The historical isolated API proof is in `implementation-cpl02.md`.

@@ -7,6 +7,8 @@ import ts from 'typescript'
 const actor = { userId: 'synthetic', email: 'legal@futureofsports.io', role: 'LEGAL_ADMIN' }
 let state, fail, key = 0
 const background = []
+let intelligenceCalls = 0
+function denyIntelligence() { intelligenceCalls++; throw new Error('Upload persistence must not invoke AI') }
 function database(records) {
   return {
     legalDocument: {
@@ -39,6 +41,7 @@ async function notifyChange(_id, reference, transaction) {
   transaction.reviews.push(reference)
 }
 const modules = {
+  '@/lib/ai-proxy': { callProxyAI: denyIntelligence, getProxyConfig: denyIntelligence },
   '@/lib/document-access': { requireGlobalDocumentAccess: async () => actor },
   '@/lib/auth': { requireSession: async () => actor, requireRole: async () => actor },
   '@/lib/document-artifacts': { recordArtifact: async (input, transaction) => {
@@ -97,4 +100,5 @@ for (const action of [files.uploadDocumentFile, files.uploadVersionFile]) {
     for (const work of background) await work()
   }
 }
+assert.equal(intelligenceCalls, 0, 'Upload persistence must remain independent of AI configuration and inference')
 console.log('PASS upload atomicity: injected artifact/version/lifecycle/review failures roll back together; post-save extraction or scheduling failures preserve honest success. Actual actions, no live network/database.')

@@ -1,0 +1,23 @@
+{
+  "check": "VERIFICATION_RESOURCE_CLEANUP",
+  "checkedAt": "2026-10-06T14:08:52.102Z",
+  "mode": "execute",
+  "database": "legal_os_v2_verify_proxy_20261006",
+  "role": "legal_os_proxy_verify_20261006",
+  "success": true,
+  "databaseDropped": true,
+  "roleDropped": true,
+  "temporaryMembershipGranted": true,
+  "temporaryMembershipRevoked": true,
+  "productionTablesWritten": false,
+  "forcedDisconnects": false,
+  "fixtureTablesChecked": 69,
+  "requiredFixtureTablesChecked": 5,
+  "allFixtureTablesEmpty": true,
+  "activeConnections": 0,
+  "preparedTransactions": 0,
+  "temporaryMembershipNeeded": true,
+  "temporaryCloudRunJobDeleted": true,
+  "temporarySecretDeleted": true,
+  "oneOffLocalOAuthMirrorRemoved": true
+}

@@ -1,21 +1,33 @@
-/** Durable per-user CLI jobs. Only hash-bound reviewed output can become a saved draft. */
+/** Durable per-user jobs. Provider-bound readiness and reviewed hashes gate saved drafts. */
 import { randomUUID, timingSafeEqual } from "node:crypto"
 import { prisma } from "@/lib/prisma"
 import type { SessionPayload } from "@/lib/session"
 import { requireGlobalDocumentAccess } from "@/lib/document-access"
 import { CONTRACT_GENERATION_PAUSED, CONTRACT_GENERATION_PAUSED_MESSAGE } from "./contract-generation"
-import { GENERATION_SKILL_HASH, GENERATION_LEASE_MS, WORKER_FRESHNESS_MS, boundedText, isRecord, parseGenerationResult, resultPassesReviews, hashDraft } from "./contract-generation-protocol"
+import { GENERATION_SKILL_HASH, GENERATION_LEASE_MS, WORKER_FRESHNESS_MS, PROXY_GENERATION_MODEL, generationProvider, boundedText, isRecord, parseGenerationResult, resultPassesReviews, hashDraft } from "./contract-generation-protocol"
+import { getProxyAIConfigIdentity } from "./ai-proxy"
 import { Entity, type Prisma } from "@/generated/prisma/client"
 
 const TERMINAL_STATUSES = ["READY", "REVIEW_REQUIRED", "FAILED", "CANCELLED"]
 
+/** Proxy configuration changes invalidate readiness without rewriting historical receipts. */
+function runtimeBinding() {
+  if (generationProvider() !== "cliproxyapi") return { provider: "codex" as const }
+  const configIdentity = getProxyAIConfigIdentity()
+  return { provider: "cliproxyapi" as const, model: PROXY_GENERATION_MODEL, cli_version: `cliproxyapi:${configIdentity}` }
+}
+
+function freshWorkerWhere() {
+  return { ...runtimeBinding(), status: "READY", skill_hash: GENERATION_SKILL_HASH, verified_at: { gte: new Date(Date.now() - 86_400_000), lte: new Date(Date.now() + 60_000) }, last_seen_at: { gte: new Date(Date.now() - WORKER_FRESHNESS_MS) } }
+}
+
 export async function generationAvailability(actor: SessionPayload) {
   if (CONTRACT_GENERATION_PAUSED) return { ready: false, message: CONTRACT_GENERATION_PAUSED_MESSAGE }
   actor = await requireGlobalDocumentAccess(actor)
-  const worker = await prisma.contractGenerationWorker.findFirst({
-    where: { allowed_actor_emails: { has: actor.email.toLowerCase() }, provider: "codex", status: "READY", skill_hash: GENERATION_SKILL_HASH, verified_at: { not: null }, last_seen_at: { gte: new Date(Date.now() - WORKER_FRESHNESS_MS) } },
-  })
-  return worker ? { ready: true, message: "Your Codex worker is ready." } : { ready: false, message: "AI drafting is paused until the authorized Codex worker is authenticated and verified." }
+  let binding: ReturnType<typeof freshWorkerWhere>
+  try { binding = freshWorkerWhere() } catch { return { ready: false, message: "AI drafting is paused until the private proxy configuration is verified." } }
+  const worker = await prisma.contractGenerationWorker.findFirst({ where: { ...binding, allowed_actor_emails: { has: actor.email.toLowerCase() } } })
+  return worker ? { ready: true, message: "Your authorized generation worker is ready." } : { ready: false, message: "AI drafting is paused until the authorized generation worker is authenticated and verified." }
 }
 
 export async function queueGeneration(actor: SessionPayload, kind: "DRAFT" | "REFINE", input: Prisma.InputJsonObject, requestKey: string) {
@@ -60,7 +72,7 @@ export async function requireReviewedGeneration(actor: SessionPayload, id: strin
 
 export type WorkerIdentity = { id: string; ownerEmail: string; actorEmails: string[] }
 
-/** App-issued worker secrets are distinct from the login credentials retained on the worker VM. */
+/** App-issued worker secrets are distinct from the provider credentials retained by its private runtime. */
 export function authenticateGenerationWorker(headers: Headers): WorkerIdentity | null {
   const id = headers.get("x-legal-worker-id")
   const presented = headers.get("authorization")?.replace(/^Bearer /, "")
@@ -94,16 +106,20 @@ export async function handleGenerationWorker(identity: WorkerIdentity, payload: 
   const actors = await workerRequesters(identity)
   const actorIds = actors.map(actor => actor.userId)
   if (payload.action === "heartbeat") {
-    if (payload.ownerEmail !== identity.ownerEmail || payload.authMethod !== "chatgpt" || payload.provider !== "codex" || payload.skillHash !== GENERATION_SKILL_HASH || !boundedText(payload.verificationRunId, 120) || !boundedText(payload.cliVersion, 120) || !boundedText(payload.model, 120)) throw new Error("Worker authentication or skill verification is missing")
+    const binding = runtimeBinding()
+    const correctProvider = binding.provider === "cliproxyapi"
+      ? payload.provider === "cliproxyapi" && payload.authMethod === "codex_oauth_proxy" && payload.model === binding.model && payload.cliVersion === binding.cli_version && payload.configIdentity === getProxyAIConfigIdentity()
+      : payload.provider === "codex" && payload.authMethod === "chatgpt" && payload.configIdentity === undefined
+    if (payload.ownerEmail !== identity.ownerEmail || !correctProvider || payload.skillHash !== GENERATION_SKILL_HASH || !boundedText(payload.verificationRunId, 120) || !boundedText(payload.cliVersion, 120) || !boundedText(payload.model, 120)) throw new Error("Worker authentication or skill verification is missing")
     const verifiedAt = typeof payload.verifiedAt === "string" ? new Date(payload.verifiedAt) : new Date(NaN)
     if (!Number.isFinite(verifiedAt.getTime()) || Date.now() - verifiedAt.getTime() > 86_400_000 || verifiedAt.getTime() > Date.now() + 60_000) throw new Error("Synthetic readiness proof is stale")
-    const evidence = { actor_user_id: owner.id, actor_email: owner.email, allowed_actor_emails: actors.map(actor => actor.email.toLowerCase()), provider: "codex", status: "READY", skill_hash: GENERATION_SKILL_HASH, verified_at: verifiedAt, last_seen_at: new Date(), verification_run_id: payload.verificationRunId, cli_version: payload.cliVersion, model: payload.model }
+    const evidence = { actor_user_id: owner.id, actor_email: owner.email, allowed_actor_emails: actors.map(actor => actor.email.toLowerCase()), provider: binding.provider, status: "READY", skill_hash: GENERATION_SKILL_HASH, verified_at: verifiedAt, last_seen_at: new Date(), verification_run_id: payload.verificationRunId, cli_version: payload.cliVersion, model: payload.model }
     await prisma.contractGenerationWorker.upsert({ where: { id: identity.id }, create: { id: identity.id, ...evidence }, update: evidence })
     return { ready: !CONTRACT_GENERATION_PAUSED }
   }
   if (payload.action === "claim") {
     if (CONTRACT_GENERATION_PAUSED) return { job: null }
-    const ready = await prisma.contractGenerationWorker.findFirst({ where: { id: identity.id, actor_user_id: owner.id, provider: "codex", status: "READY", skill_hash: GENERATION_SKILL_HASH, verified_at: { not: null }, last_seen_at: { gte: new Date(Date.now() - WORKER_FRESHNESS_MS) } } })
+    const ready = await prisma.contractGenerationWorker.findFirst({ where: { ...freshWorkerWhere(), id: identity.id, actor_user_id: owner.id } })
     if (!ready) return { job: null }
     await prisma.contractGenerationJob.updateMany({ where: { actor_user_id: { in: actorIds }, status: "RUNNING", lease_expires_at: { lt: new Date() } }, data: { status: "FAILED", error: "Worker lease expired. Start a new job to retry.", completed_at: new Date(), lease_token: null } })
     const job = await prisma.contractGenerationJob.findFirst({ where: { actor_user_id: { in: actorIds }, status: "QUEUED", skill_hash: GENERATION_SKILL_HASH }, orderBy: { created_at: "asc" } })
@@ -119,12 +135,19 @@ export async function handleGenerationWorker(identity: WorkerIdentity, payload: 
     return { active: Boolean(await prisma.contractGenerationJob.findFirst({ where, select: { id: true } })) }
   }
   if (payload.action === "fail") {
-    const changed = await prisma.contractGenerationJob.updateMany({ where, data: { status: "FAILED", error: "Codex worker failed. Check its authentication, limits and operator logs.", completed_at: new Date(), lease_token: null } })
+    const changed = await prisma.contractGenerationJob.updateMany({ where, data: { status: "FAILED", error: "Generation worker failed. Check its authentication, limits and operator logs.", completed_at: new Date(), lease_token: null } })
     return { accepted: changed.count === 1 }
   }
   if (payload.action === "complete") {
     if (CONTRACT_GENERATION_PAUSED) return { accepted: false }
     const result = parseGenerationResult(payload.result)
+    if (generationProvider() === "cliproxyapi") {
+      if (result.provider !== "cliproxyapi" || result.configIdentity !== getProxyAIConfigIdentity()) throw new Error("Generation provider configuration changed")
+      // Review work may outlive the heartbeat window, but not its daily inference proof.
+      const binding = freshWorkerWhere()
+      const ready = await prisma.contractGenerationWorker.findFirst({ where: { ...binding, last_seen_at: undefined, id: identity.id, actor_user_id: owner.id } })
+      if (!ready) return { accepted: false }
+    } else if (result.provider === "cliproxyapi") throw new Error("Generation provider configuration changed")
     const changed = await prisma.contractGenerationJob.updateMany({ where, data: { status: resultPassesReviews(result) ? "READY" : "REVIEW_REQUIRED", output_text: result.draft, output_hash: result.draftHash, reviews: result, completed_at: new Date(), lease_token: null, lease_expires_at: null } })
     return { accepted: changed.count === 1 }
   }

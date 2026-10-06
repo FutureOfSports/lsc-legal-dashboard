@@ -3,6 +3,7 @@
 import { requireGlobalDocumentAccess } from "@/lib/document-access"
 import { revalidatePath } from "next/cache"
 import Anthropic from "@anthropic-ai/sdk"
+import { callProxyAI, getProxyConfig } from "@/lib/ai-proxy"
 import { recordArtifact } from "@/lib/document-artifacts"
 import { uploadBufferToS3, getS3Key } from "@/lib/s3"
 import { prisma } from "@/lib/prisma"
@@ -25,7 +26,6 @@ type TemplateAnalysisFields = {
   content: string
 }
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY ?? "" })
 const TEMPLATE_ANALYSIS_MODEL =
   process.env.TEMPLATE_ANALYSIS_MODEL ?? "claude-haiku-4-5-20251001"
 
@@ -163,7 +163,7 @@ function extractJsonObject(text: string) {
   const start = trimmed.indexOf("{")
   const end = trimmed.lastIndexOf("}")
   if (start === -1 || end === -1 || end <= start) {
-    throw new Error("Claude did not return a JSON object")
+    throw new Error("AI analysis did not return a JSON object")
   }
   return JSON.parse(trimmed.slice(start, end + 1)) as Record<string, unknown>
 }
@@ -234,7 +234,10 @@ File name: ${file.name}
 Agreement text:
 ${extractedText}`
 
-  const message = await anthropic.messages.create({
+  const provider = (process.env.AI_PROVIDER ?? 'cliproxyapi').trim().toLowerCase()
+  if (provider === 'cliproxyapi') return callProxyAI({ system, user, maxTokens: 16384, expectJson: true })
+  if (provider !== 'gemini' && provider !== 'anthropic') throw new Error('AI provider configuration is invalid')
+  const message = await new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY ?? '' }).messages.create({
     model: TEMPLATE_ANALYSIS_MODEL,
     max_tokens: 4096,
     temperature: 0,
@@ -243,7 +246,7 @@ ${extractedText}`
   })
 
   const block = message.content[0]
-  return block && block.type === "text" ? block.text : ""
+  return { text: block && block.type === "text" ? block.text : "", model: TEMPLATE_ANALYSIS_MODEL, responseId: message.id }
 }
 
 export async function analyzeTemplateUpload(formData: FormData): Promise<
@@ -253,8 +256,11 @@ export async function analyzeTemplateUpload(formData: FormData): Promise<
   await requireRole(["PLATFORM_ADMIN", "LEGAL_ADMIN"])
   await requireGlobalDocumentAccess()
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return { success: false, error: "ANTHROPIC_API_KEY is not configured" }
+  const provider = (process.env.AI_PROVIDER ?? 'cliproxyapi').trim().toLowerCase()
+  if (provider === 'cliproxyapi') {
+    try { getProxyConfig() } catch { return { success: false, error: 'AI proxy is not configured.' } }
+  } else if (!['gemini', 'anthropic'].includes(provider) || !process.env.ANTHROPIC_API_KEY) {
+    return { success: false, error: 'Template analysis provider is not configured.' }
   }
 
   const uploadedFile = uploadedTemplateFile(formData)
@@ -271,12 +277,12 @@ export async function analyzeTemplateUpload(formData: FormData): Promise<
   }
 
   try {
-    const text = await analyzeAgreementForTemplate(uploadedFile, extractedText)
-    const raw = extractJsonObject(text)
+    const result = await analyzeAgreementForTemplate(uploadedFile, extractedText)
+    const raw = extractJsonObject(result.text)
     return {
       success: true,
       fields: normalizeTemplateAnalysis(raw, uploadedFile, extractedText),
-      model: TEMPLATE_ANALYSIS_MODEL,
+      model: result.model,
       extractedChars: extractedText.length,
     }
   } catch (error) {

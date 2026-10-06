@@ -67,12 +67,28 @@ if (!financeRoute.includes('"invoice_detected"')) {
   errors.push("Finance resync does not retry invoice_detected events")
 }
 
-const aiProvider = (process.env.AI_PROVIDER ?? "gemini").toLowerCase()
-if (aiProvider !== "gemini") {
-  errors.push(`AI_PROVIDER should be gemini for this rollout, got ${aiProvider}`)
-}
-if (!process.env.GEMINI_API_KEY) {
-  errors.push("GEMINI_API_KEY is required for Gemini-first agent execution")
+const aiProvider = (process.env.AI_PROVIDER ?? "cliproxyapi").trim().toLowerCase()
+if (aiProvider === "cliproxyapi") {
+  for (const name of ["CLIPROXY_BASE_URL", "CLIPROXY_API_KEY", "CLIPROXY_MODEL", "CLIPROXY_AUTH_REVISION"]) {
+    if (!process.env[name]) errors.push(`${name} is required for CLIProxyAPI execution`)
+  }
+  if (process.env.CLIPROXY_MODEL !== "gpt-6.1-sol") errors.push("CLIPROXY_MODEL must be gpt-6.1-sol")
+  if (!/^[a-f0-9]{64}$/.test(process.env.CLIPROXY_AUTH_REVISION ?? "")) errors.push("CLIPROXY_AUTH_REVISION must identify the verified upstream account configuration")
+  try {
+    const base = new URL(process.env.CLIPROXY_BASE_URL)
+    const loopback = ["localhost", "127.0.0.1", "[::1]"].includes(base.hostname)
+    const allowedHttp = base.protocol === "http:" && loopback && process.env.CLIPROXY_ALLOW_LOOPBACK_HTTP === "1"
+    if ((base.protocol !== "https:" && !allowedHttp) || base.username || base.password || base.search || base.hash
+      || !["/", "/v1", "/v1/"].includes(base.pathname)) throw new Error()
+    const audience = process.env.CLIPROXY_ID_TOKEN_AUDIENCE?.trim()
+    if (audience && (base.protocol !== "https:" || audience !== base.origin || !base.hostname.endsWith(".run.app"))) throw new Error()
+  } catch { errors.push("CLIProxyAPI endpoint or identity audience is invalid") }
+  if (!/^[\x21-\x7e]{16,512}$/.test(process.env.CLIPROXY_API_KEY ?? '')) errors.push("CLIProxyAPI credential is invalid")
+} else if (aiProvider === "gemini" || aiProvider === "anthropic") {
+  const key = aiProvider === "gemini" ? "GEMINI_API_KEY" : "ANTHROPIC_API_KEY"
+  if (!process.env[key]) errors.push(`${key} is required for the selected legacy AI provider`)
+} else {
+  errors.push("AI_PROVIDER must be cliproxyapi, gemini, or anthropic")
 }
 
 if (process.env.OPENSIGN_SIGNING_ENABLED === "1") {

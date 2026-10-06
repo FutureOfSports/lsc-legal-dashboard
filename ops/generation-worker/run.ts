@@ -1,18 +1,18 @@
-/** Authorized pull worker. Uses the official CLI login; never reads or forwards its credentials. */
+/** Authorized pull worker. Explicit CLI or private proxy transport, independent hash-bound reviews. */
 import { randomUUID } from "node:crypto"
 import { spawn } from "node:child_process"
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { setTimeout as delay } from "node:timers/promises"
-import { GENERATION_SKILL_HASH, GENERATION_SKILL_VERSION, hashDraft, isRecord, parseGenerationResult } from "../../src/lib/contract-generation-protocol"
+import { GENERATION_SKILL_HASH, GENERATION_SKILL_VERSION, PROXY_GENERATION_MODEL, generationProvider, hashDraft, isRecord, parseGenerationResult } from "../../src/lib/contract-generation-protocol"
 
 const reviewSchema = {
   type: "object", additionalProperties: false,
   required: ["draftHash", "pass", "findings"],
   properties: {
     draftHash: { type: "string" }, pass: { type: "boolean" },
-    findings: { type: "array", items: { type: "object", additionalProperties: false, required: ["severity", "issue", "excerpt"], properties: { severity: { enum: ["blocker", "warning"] }, issue: { type: "string" }, excerpt: { type: "string" } } } },
+    findings: { type: "array", items: { type: "object", additionalProperties: false, required: ["severity", "issue", "excerpt"], properties: { severity: { type: "string", enum: ["blocker", "warning"] }, issue: { type: "string" }, excerpt: { type: "string" } } } },
   },
 }
 
@@ -28,8 +28,9 @@ const workerId = required("LEGAL_GENERATION_WORKER_ID")
 if (!/^[A-Za-z0-9_-]{1,100}$/.test(workerId)) throw new Error("Invalid worker identifier")
 const workerToken = required("LEGAL_GENERATION_WORKER_TOKEN")
 const ownerEmail = required("LEGAL_GENERATION_OWNER_EMAIL").toLowerCase()
+const provider = generationProvider()
 const configuredModel = process.env.LEGAL_GENERATION_MODEL?.trim()
-const model = configuredModel || "CLI_DEFAULT"
+const model = provider === "cliproxyapi" ? PROXY_GENERATION_MODEL : configuredModel || "CLI_DEFAULT"
 const executable = process.env.CODEX_BIN || "codex"
 
 // Pass only runtime necessities. Inherited API keys, cloud providers, MCP settings,
@@ -100,7 +101,20 @@ function runCli(args: string[], cwd: string, input = "", signal?: AbortSignal, c
   })
 }
 
-async function infer(cwd: string, skillFile: string, prompt: object, schema: object, signal?: AbortSignal) {
+async function infer(cwd: string, skillFile: string, prompt: object, schema: Record<string, unknown>, signal?: AbortSignal) {
+  if (provider === "cliproxyapi") {
+    const { callProxyAI } = await import("../../src/lib/ai-proxy")
+    const response = await callProxyAI({
+      system: `${await readFile(skillFile, "utf8")}\nReturn only JSON matching this schema: ${JSON.stringify(schema)}`,
+      user: JSON.stringify(prompt), expectJson: true, maxTokens: 16_000,
+      jsonSchema: { name: "legal_generation", schema },
+      signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(240_000)]) : AbortSignal.timeout(240_000),
+    })
+    if (response.model !== model || !response.responseId) throw new Error("Private proxy returned unexpected model or missing inference provenance")
+    const output: unknown = JSON.parse(response.text)
+    if (!isRecord(output)) throw new Error("Private proxy returned an unstructured result")
+    return { output, sessionId: response.responseId }
+  }
   const id = randomUUID()
   const schemaPath = join(cwd, `${id}-schema.json`)
   const outputPath = join(cwd, `${id}-output.json`)
@@ -141,9 +155,21 @@ async function main() {
   try {
     const skillPaths = skillNames.map((name) => join(cwd, name))
     await Promise.all(skills.map((content, index) => writeFile(skillPaths[index], content, { mode: 0o600 })))
-    const cliVersion = await runCli(["--version"], cwd)
-    const authStatus = await runCli(["login", "status"], cwd, "", undefined, true)
-    if (!/logged in using chatgpt/i.test(authStatus)) throw new Error("Log in to the official Codex CLI with ChatGPT; API and token fallbacks are disabled")
+    let cliVersion: string
+    let configIdentity: string | undefined
+    const authMethod = provider === "cliproxyapi" ? "codex_oauth_proxy" : "chatgpt"
+    if (provider === "cliproxyapi") {
+      const { checkProxyAIReady } = await import("../../src/lib/ai-proxy")
+      const connection = await checkProxyAIReady()
+      if (connection.model !== model) throw new Error("The required Codex model is not available on the private proxy")
+      configIdentity = connection.configIdentity
+      // This is an explicit transport receipt, never an official CLI login claim.
+      cliVersion = `cliproxyapi:${configIdentity}`
+    } else {
+      cliVersion = await runCli(["--version"], cwd)
+      const authStatus = await runCli(["login", "status"], cwd, "", undefined, true)
+      if (!/logged in using chatgpt/i.test(authStatus)) throw new Error("Log in to the official Codex CLI with ChatGPT; API and token fallbacks are disabled")
+    }
     // Recheck account authentication on every run, but spend subscription quota on
     // a synthetic inference only once per UTC date/configuration, never every poll.
     const stateDirectory = process.env.LEGAL_GENERATION_STATE_DIR || join(required("HOME"), ".legal-generation-worker")
@@ -153,15 +179,15 @@ async function main() {
     let receipt: Record<string, unknown> | null = null
     try {
       const previous: unknown = JSON.parse(await readFile(receiptPath, "utf8"))
-      if (isRecord(previous) && previous.day === day && previous.ownerEmail === ownerEmail && previous.cliVersion === cliVersion && previous.model === model && previous.skillHash === GENERATION_SKILL_HASH && typeof previous.verificationRunId === "string" && typeof previous.verifiedAt === "string") receipt = previous
+      if (isRecord(previous) && previous.provider === provider && previous.configIdentity === configIdentity && previous.day === day && previous.ownerEmail === ownerEmail && previous.cliVersion === cliVersion && previous.model === model && previous.skillHash === GENERATION_SKILL_HASH && typeof previous.verificationRunId === "string" && typeof previous.verifiedAt === "string") receipt = previous
     } catch { /* Missing or invalid local evidence requires a new synthetic proof. */ }
     if (!receipt) {
-      const check = await infer(cwd, skillPaths[0], { task: "Synthetic readiness check. Return ready true and the supplied skillVersion. No contract or real data.", skillVersion: GENERATION_SKILL_VERSION }, { type: "object", additionalProperties: false, required: ["ready", "skillVersion"], properties: { ready: { const: true }, skillVersion: { const: GENERATION_SKILL_VERSION } } })
-      if (check.output.ready !== true || check.output.skillVersion !== GENERATION_SKILL_VERSION) throw new Error("Codex readiness test failed")
-      receipt = { day, ownerEmail, cliVersion, model, skillHash: GENERATION_SKILL_HASH, verificationRunId: check.sessionId, verifiedAt: new Date().toISOString() }
+      const check = await infer(cwd, skillPaths[0], { task: "Synthetic readiness check. Return ready true and the supplied skillVersion. No contract or real data.", skillVersion: GENERATION_SKILL_VERSION }, { type: "object", additionalProperties: false, required: ["ready", "skillVersion"], properties: { ready: { type: "boolean", const: true }, skillVersion: { type: "string", const: GENERATION_SKILL_VERSION } } })
+      if (check.output.ready !== true || check.output.skillVersion !== GENERATION_SKILL_VERSION) throw new Error("Generation readiness inference failed")
+      receipt = { day, ownerEmail, provider, authMethod, configIdentity, cliVersion, model, skillHash: GENERATION_SKILL_HASH, verificationRunId: check.sessionId, verifiedAt: new Date().toISOString() }
       await writeFile(receiptPath, JSON.stringify(receipt), { mode: 0o600 })
     }
-    await exchange({ action: "heartbeat", ownerEmail, authMethod: "chatgpt", provider: "codex", cliVersion, model, skillHash: GENERATION_SKILL_HASH, verificationRunId: receipt.verificationRunId, verifiedAt: receipt.verifiedAt })
+    await exchange({ action: "heartbeat", ownerEmail, authMethod, provider, configIdentity, cliVersion, model, skillHash: GENERATION_SKILL_HASH, verificationRunId: receipt.verificationRunId, verifiedAt: receipt.verifiedAt })
     const claimed = await exchange({ action: "claim" })
     if (!isRecord(claimed.job)) { console.log("Worker authenticated; no eligible queued job."); return }
     const job = claimed.job
@@ -189,13 +215,13 @@ async function main() {
       ].map(review => review.catch(error => { controller.abort(); throw error })))
       if (reviews[0].status !== "fulfilled" || reviews[1].status !== "fulfilled") throw new Error("Independent review failed")
       const [substantive, references] = [reviews[0].value, reviews[1].value]
-      const result = parseGenerationResult({ draft: draft.output.draft, draftHash, substantive: substantive.output, references: references.output, model, sessionIds: [draft.sessionId, substantive.sessionId, references.sessionId], skillHash: GENERATION_SKILL_HASH })
+      const result = parseGenerationResult({ draft: draft.output.draft, draftHash, substantive: substantive.output, references: references.output, model, provider, authMethod, configIdentity, sessionIds: [draft.sessionId, substantive.sessionId, references.sessionId], skillHash: GENERATION_SKILL_HASH })
       const completion = await exchange({ action: "complete", jobId: job.id, leaseToken: job.leaseToken, result })
       if (completion.accepted !== true) throw new Error("Job completion was rejected or cancelled")
       console.log(`Completed job ${job.id}; result and reviews recorded.`)
     } catch {
       await exchange({ action: "fail", jobId: job.id, leaseToken: job.leaseToken }).catch(() => {})
-      throw new Error("Generation failed; no API fallback was attempted")
+      throw new Error(provider === "cliproxyapi" ? "Generation failed; no alternate provider or model fallback was attempted" : "Generation failed; no API fallback was attempted")
     } finally {
       finished = true
       controller.abort()

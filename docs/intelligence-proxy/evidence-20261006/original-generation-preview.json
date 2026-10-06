@@ -1,0 +1,100 @@
+{
+  "check": "LIVE_GENERATION_PAGE_ACCEPTANCE",
+  "origin": "https://generation-preview---lsc-legal-dashboard-goxxm577xq-as.a.run.app",
+  "target": "original",
+  "checkedAt": "2026-10-06T14:04:18.633Z",
+  "diagnosticSession": true,
+  "actualUserLoginVerified": false,
+  "productionWrites": false,
+  "sessionPersisted": false,
+  "inferencePerformed": false,
+  "serverActionsCalled": false,
+  "documentSaved": false,
+  "checks": [
+    {
+      "actor": "anonymous",
+      "path": "/legal/generate",
+      "status": 307,
+      "deniedTo": "/login"
+    },
+    {
+      "actor": "legal",
+      "path": "/legal/generate",
+      "status": 200,
+      "markers": {
+        "headingVerified": true,
+        "introductionVerified": true,
+        "pausedVisible": false,
+        "configurationSectionsVerified": true,
+        "templateSelectorVerified": true,
+        "entitySelectorVerified": true,
+        "referenceInputVerified": true,
+        "initialVariablePromptVerified": true,
+        "generateDraftButtonVerified": true,
+        "initiallyRequiresSelections": true
+      },
+      "passed": true
+    },
+    {
+      "actor": "ak",
+      "path": "/legal/generate",
+      "status": 200,
+      "markers": {
+        "headingVerified": true,
+        "introductionVerified": true,
+        "pausedVisible": false,
+        "configurationSectionsVerified": true,
+        "templateSelectorVerified": true,
+        "entitySelectorVerified": true,
+        "referenceInputVerified": true,
+        "initialVariablePromptVerified": true,
+        "generateDraftButtonVerified": true,
+        "initiallyRequiresSelections": true
+      },
+      "passed": true
+    },
+    {
+      "actor": "arvind",
+      "path": "/legal/generate",
+      "status": 200,
+      "markers": {
+        "headingVerified": true,
+        "introductionVerified": true,
+        "pausedVisible": false,
+        "configurationSectionsVerified": true,
+        "templateSelectorVerified": true,
+        "entitySelectorVerified": true,
+        "referenceInputVerified": true,
+        "initialVariablePromptVerified": true,
+        "generateDraftButtonVerified": true,
+        "initiallyRequiresSelections": true
+      },
+      "passed": true
+    },
+    {
+      "actor": "adi",
+      "path": "/legal/generate",
+      "status": 200,
+      "markers": {
+        "headingVerified": true,
+        "introductionVerified": true,
+        "pausedVisible": false,
+        "configurationSectionsVerified": true,
+        "templateSelectorVerified": true,
+        "entitySelectorVerified": true,
+        "referenceInputVerified": true,
+        "initialVariablePromptVerified": true,
+        "generateDraftButtonVerified": true,
+        "initiallyRequiresSelections": true
+      },
+      "passed": true
+    },
+    {
+      "actor": "fifth_user",
+      "path": "/legal/generate",
+      "status": 307,
+      "deniedTo": "/legal/access"
+    }
+  ],
+  "success": true
+}

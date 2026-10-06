@@ -1,11 +1,10 @@
 import { prisma } from '@/lib/prisma'
 import Anthropic from '@anthropic-ai/sdk'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { callProxyAI, CLIPROXY_MODEL, ProxyAIError } from '@/lib/ai-proxy'
 import type { AgentId, AgentMessagePayload, AgentResult, AgentMessagePriority } from './types'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY ?? '' })
-const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '')
-const DEFAULT_PROVIDER = 'gemini'
+const DEFAULT_PROVIDER = 'cliproxyapi'
 
 export type AICallOptions = {
   system: string
@@ -61,8 +60,8 @@ export abstract class BaseAgent {
   }
 
   /**
-   * Provider-agnostic AI call. Gemini is primary for this platform; Anthropic
-   * remains an optional fallback when configured and available.
+   * Proxy calls never fall back or change model. Legacy provider routing requires
+   * an explicit legacy AI_PROVIDER setting.
    */
   async callAI(opts: AICallOptions | string, legacyUser?: string): Promise<string> {
     // Backwards-compat: old two-arg form `callAI(system, user)`
@@ -71,8 +70,23 @@ export abstract class BaseAgent {
         ? { system: opts, user: legacyUser ?? '' }
         : opts
 
+    const configured = (process.env.AI_PROVIDER ?? DEFAULT_PROVIDER).trim().toLowerCase()
+    if (configured === 'cliproxyapi') {
+      const started = Date.now()
+      try {
+        const result = await callProxyAI(normalized)
+        await this.log('ai_call_succeeded', { provider: configured, model: result.model,
+          responseId: result.responseId, durationMs: Date.now() - started, fallbackUsed: false })
+        return result.text
+      } catch (error) {
+        await this.log('ai_provider_failed', { provider: configured, model: CLIPROXY_MODEL,
+          durationMs: Date.now() - started, category: error instanceof ProxyAIError ? error.code : 'provider_error' })
+        throw error instanceof ProxyAIError ? error : new ProxyAIError('upstream')
+      }
+    }
+    if (configured !== 'gemini' && configured !== 'anthropic') throw new ProxyAIError('configuration')
     const trimmed = normalized.user.slice(0, 8000)
-    const providers = getProviderOrder()
+    const providers = getProviderOrder(configured)
     const failures: { provider: string; category: string; error: string }[] = []
 
     for (const provider of providers) {
@@ -119,9 +133,7 @@ export abstract class BaseAgent {
   abstract run(input?: unknown): Promise<AgentResult>
 }
 
-function getProviderOrder(): ('gemini' | 'anthropic')[] {
-  const configured = (process.env.AI_PROVIDER ?? DEFAULT_PROVIDER).toLowerCase()
-  const primary: 'gemini' | 'anthropic' = configured === 'anthropic' ? 'anthropic' : 'gemini'
+function getProviderOrder(primary: 'gemini' | 'anthropic'): ('gemini' | 'anthropic')[] {
   const order: ('gemini' | 'anthropic')[] = []
 
   if (primary === 'gemini' && process.env.GEMINI_API_KEY) order.push('gemini')
@@ -140,7 +152,7 @@ function getModelName(provider: 'gemini' | 'anthropic', model?: 'haiku' | 'sonne
 }
 
 async function callGemini(modelName: string, system: string, user: string): Promise<string> {
-  const model = gemini.getGenerativeModel({
+  const model = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '').getGenerativeModel({
     model: modelName,
     systemInstruction: system,
   })
@@ -157,7 +169,7 @@ async function callAnthropic(
     messages.push({ role: 'assistant', content: '{' })
   }
 
-  const res = await anthropic.messages.create({
+  const res = await new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY ?? '' }).messages.create({
     model: modelName,
     max_tokens: normalized.maxTokens ?? 1024,
     temperature: 0,

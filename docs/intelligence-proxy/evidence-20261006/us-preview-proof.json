@@ -1,0 +1,130 @@
+{
+  "origin": "https://proxy-preview---lsc-legal-dashboard-2feiiv4i4a-uc.a.run.app",
+  "target": "us",
+  "checkedAt": "2026-10-06T13:52:11.257Z",
+  "diagnosticSession": true,
+  "actualUserLoginVerified": false,
+  "productionWrites": false,
+  "syntheticInputOnly": true,
+  "documentSaved": false,
+  "checks": [
+    {
+      "actor": "anonymous",
+      "path": "/legal/templates",
+      "status": 307,
+      "deniedTo": "/login"
+    },
+    {
+      "actor": "anonymous",
+      "path": "/legal/compliance/fsp",
+      "status": 307,
+      "deniedTo": "/login"
+    },
+    {
+      "actor": "anonymous",
+      "path": "/api/webhooks/generation-worker",
+      "status": 401
+    },
+    {
+      "actor": "legal",
+      "path": "/legal/templates",
+      "status": 200,
+      "headingVerified": true
+    },
+    {
+      "actor": "legal",
+      "path": "/legal/compliance/fsp",
+      "status": 200,
+      "headingVerified": true
+    },
+    {
+      "actor": "ak",
+      "path": "/legal/templates",
+      "status": 200,
+      "headingVerified": true
+    },
+    {
+      "actor": "ak",
+      "path": "/legal/compliance/fsp",
+      "status": 200,
+      "headingVerified": true
+    },
+    {
+      "actor": "arvind",
+      "path": "/legal/templates",
+      "status": 200,
+      "headingVerified": true
+    },
+    {
+      "actor": "arvind",
+      "path": "/legal/compliance/fsp",
+      "status": 200,
+      "headingVerified": true
+    },
+    {
+      "actor": "adi",
+      "path": "/legal/templates",
+      "status": 200,
+      "headingVerified": true
+    },
+    {
+      "actor": "adi",
+      "path": "/legal/compliance/fsp",
+      "status": 200,
+      "headingVerified": true
+    },
+    {
+      "actor": "fifth_existing_user",
+      "path": "/legal/templates",
+      "status": 307,
+      "deniedTo": "/legal/access"
+    },
+    {
+      "actor": "fifth_existing_user",
+      "path": "/legal/compliance/fsp",
+      "status": 307,
+      "deniedTo": "/legal/access"
+    },
+    {
+      "actor": "fifth_existing_user",
+      "action": "analyzeTemplateUpload",
+      "status": 200,
+      "deniedTo": "/legal/access"
+    },
+    {
+      "actor": "legal",
+      "action": "analyzeTemplateUpload",
+      "status": 200,
+      "actualServerAction": true,
+      "model": "gpt-6.1-sol",
+      "requiredFieldsNonempty": true,
+      "extractedChars": 563,
+      "variablesFormat": "newline_keys",
+      "variablesCount": 3,
+      "responseIdExposed": false,
+      "syntheticInputOnly": true,
+      "saved": false
+    }
+  ],
+  "success": true,
+  "previewActionId": "404fbd47eb78d63e29499d6572882675b53ad7afd5",
+  "previewMetadata": {
+    "successFlag": true,
+    "exactModelVerified": true,
+    "extractedChars": 563,
+    "extractionLengthMatches": true,
+    "fieldsObject": true,
+    "fieldTypes": {
+      "name": "string",
+      "category": "string",
+      "variablesText": "string",
+      "content": "string",
+      "entity": "string"
+    },
+    "requiredFieldsNonempty": true,
+    "contentChars": 563,
+    "variablesChars": 36,
+    "variablesCount": 3,
+    "variablesAreNormalizedUniqueKeys": true
+  }
+}
