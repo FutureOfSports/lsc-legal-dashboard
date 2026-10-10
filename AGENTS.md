@@ -18,6 +18,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
   D-bot binds requester and channel from a fenced admitted execution. Record
   answers are ephemeral, never public bot replies. Human-only approvals stay
   in the authenticated dashboard. A duplicate write receipt requires inspection.
+  Keep the D-bot write key independent of execution ID, which changes on resume.
 
 - Read `CLAUDE.md` for the product, stack, roles, and skill references before making non-trivial changes.
 - For agent, cron, webhook, Dropbox Sign, Gmail, or Legal -> Finance sync work, read `.claude/skills/agentic-flows.md` first.

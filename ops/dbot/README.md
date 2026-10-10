@@ -41,8 +41,10 @@ that every dashboard mutation can be executed by a bot.
 Record answers go to the requester's ephemeral Slack response, not the whole
 channel or the model's answer. The model gets only an operation/delivery receipt.
 Large answers explicitly indicate preview truncation and link the full record.
-Legal write receipt keys bind Slack requester, execution and request ID; even a
-changed payload with the same key is refused. An uncertain delivery never
+Legal write receipt keys bind Slack requester and stable operation request ID.
+The execution is audited but is not in the key: resumed tasks get new execution
+IDs and must still be unable to repeat an uncertain write. Changed payloads with
+the same key are refused. An uncertain delivery never
 authorizes replay. No record text or credential is saved in the integration log.
 
 Human-only steps: applicability and verified-control decisions, draft approval

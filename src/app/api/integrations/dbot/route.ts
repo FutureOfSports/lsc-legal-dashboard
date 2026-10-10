@@ -28,7 +28,9 @@ export async function POST(request: Request) {
   if (!actor) return answer({ error: 'access_denied' }, 403)
   if (command === 'platform') return answer({ catalog: dbotCatalog() })
   const fingerprint = digest(JSON.stringify({ command, text }))
-  const key = digest(JSON.stringify({ slackUserId, jobId, requestId }))
+  // A resumed D-bot task receives a new execution ID. Keep the operation key
+  // stable across that transition so an uncertain write can never be replayed.
+  const key = digest(JSON.stringify({ slackUserId, requestId }))
   let receiptId: string | undefined
   try {
     if (!DBOT_READ_COMMANDS.has(command)) {

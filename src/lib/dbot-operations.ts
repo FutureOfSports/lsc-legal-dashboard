@@ -1,6 +1,6 @@
 /** D-bot uses application services; legal decisions and final approvals stay with people. */
 import { buildAppUrl } from '@/lib/app-url'
-import { executeSlackOperation, SLACK_OPERATION_INVENTORY } from '@/lib/slack-operations'
+import { executeSlackOperation, SLACK_OPERATION_INVENTORY, SLACK_HELP, formHelp } from '@/lib/slack-operations'
 import { agreementLookup, legalStatusSummary, signaturesInFlight } from '@/lib/slack-legal-queries'
 import { requireGlobalDocumentAccess } from '@/lib/document-access'
 import { getFspComplianceDashboard } from '@/lib/fsp-compliance/service'
@@ -42,6 +42,7 @@ const modules = [
 
 export function dbotCatalog() {
   return { version: 1, commands: DBOT_COMMANDS, operations: SLACK_OPERATION_INVENTORY,
+    syntax: SLACK_HELP, commandFields: Object.fromEntries(Object.entries(formHelp).filter(([command]) => DBOT_COMMANDS.some(value => value === command))),
     modules: modules.map(([name, path]) => ({ name, url: buildAppUrl(path) })),
     humanApproval: ['Applicability decisions and verified controls', 'Generated document approval and save',
       'Access grants and revocation', 'Final naming approval, finalization and publication', 'Signature sending', 'Mailbox administration'],

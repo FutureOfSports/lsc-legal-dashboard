@@ -57,9 +57,10 @@ assert.equal((await route.POST(request({ ...input, command: 'name-approve' }))).
 const answers = await Promise.all([route.POST(request(input)), route.POST(request(input))])
 assert.deepEqual(answers.map(row => row.status).sort(), [200, 409]); assert.equal(executions, 1)
 assert.equal((await route.POST(request({ ...input, text: 'changed' }))).status, 409); assert.equal(executions, 1)
+assert.equal((await route.POST(request({ ...input, jobId: 'b'.repeat(36) }))).status, 409); assert.equal(executions, 1)
 fail = true
 const rejected = await route.POST(request({ ...input, requestId: 'failure' }))
 assert.equal(rejected.status, 403); assert.ok(!(await rejected.text()).includes('private connection'))
 assert.equal((await route.POST(request({ ...input, requestId: 'failure' }))).status, 409)
 assert.equal([...receipts.values()][1].processing_status, 'failed')
-console.log('D-bot bridge passed: two-person policy, signed adapter, inactive actor, untrusted fields, human-only approval, concurrent replay and sanitized failure.')
+console.log('D-bot bridge passed: two-person policy, signed adapter, inactive actor, untrusted fields, human-only approval, concurrent and resumed-execution replay, sanitized failure.')
