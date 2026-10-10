@@ -137,10 +137,10 @@ async function main() {
   const originalOrigin = process.env.AUTH_APP_URL
   process.env.CISO_ASSISTANT_ENABLED = '1'
   process.env.AUTH_APP_URL = 'https://legal.example.test'
-  const existing = await prisma.appUser.findUnique({ where: { email: 'legal@futureofsports.io' } })
+  const existing = await prisma.appUser.findUnique({ where: { email: 'ak@futureofsports.io' } })
   const legal = await prisma.appUser.upsert({
-    where: { email: 'legal@futureofsports.io' },
-    create: { email: 'legal@futureofsports.io', full_name: run, password_hash: '!offline-verification-only', role: 'LEGAL_ADMIN', is_active: true },
+    where: { email: 'ak@futureofsports.io' },
+    create: { email: 'ak@futureofsports.io', full_name: run, password_hash: '!offline-verification-only', role: 'LEGAL_ADMIN', is_active: true },
     update: { role: 'LEGAL_ADMIN', is_active: true },
   })
   const fifth = await prisma.appUser.create({ data: {

@@ -25,9 +25,9 @@ async function main() {
     && ['not_found', 'forbidden', 'scope_mismatch'].includes(error.code))
   console.log('PASS actual CISO allowlisted shared framework read and foreign-domain control denial')
   const run = `ciso-live-${randomUUID()}`
-  const previous = await prisma.appUser.findUnique({ where: { email: 'legal@futureofsports.io' } })
-  const actor = await prisma.appUser.upsert({ where: { email: 'legal@futureofsports.io' },
-    create: { email: 'legal@futureofsports.io', full_name: run, password_hash: '!synthetic-only', role: 'LEGAL_ADMIN', is_active: true },
+  const previous = await prisma.appUser.findUnique({ where: { email: 'ak@futureofsports.io' } })
+  const actor = await prisma.appUser.upsert({ where: { email: 'ak@futureofsports.io' },
+    create: { email: 'ak@futureofsports.io', full_name: run, password_hash: '!synthetic-only', role: 'LEGAL_ADMIN', is_active: true },
     update: { role: 'LEGAL_ADMIN', is_active: true } })
   const session: SessionPayload = { userId: actor.id, email: actor.email, fullName: actor.full_name,
     role: actor.role, exp: Date.now() + 3_600_000 }

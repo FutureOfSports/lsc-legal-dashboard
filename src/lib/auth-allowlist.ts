@@ -1,8 +1,4 @@
-const DEFAULT_ALLOWED_EMAILS = [
-  "anuj@futureofsports.io",
-  "ak@futureofsports.io",
-  "adi@futureofsports.io",
-]
+import { GLOBAL_DOCUMENT_EMAILS } from './document-principals'
 
 export function normalizeLoginEmail(email: string): string {
   return email.trim().toLowerCase()
@@ -10,13 +6,13 @@ export function normalizeLoginEmail(email: string): string {
 
 export function getAllowedLoginEmails(): string[] {
   const configured = process.env.AUTH_ALLOWED_EMAILS
-  const source = configured?.trim() ? configured.split(",") : DEFAULT_ALLOWED_EMAILS
+  const source = configured?.trim() ? configured.split(",") : GLOBAL_DOCUMENT_EMAILS
 
   return Array.from(
     new Set(
       source
         .map((email) => normalizeLoginEmail(email))
-        .filter(Boolean)
+        .filter(email => GLOBAL_DOCUMENT_EMAILS.some(allowed => allowed === email))
     )
   )
 }

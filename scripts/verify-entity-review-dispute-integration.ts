@@ -20,7 +20,7 @@ async function main() {
   assert.equal(new URL(process.env.DATABASE_URL ?? '').pathname, '/legal_os_v2_verify_20260921', 'Refusing non-verification database')
   assert.equal(process.env.FINANCE_WEBHOOK_URL, undefined, 'No external Finance receiver may be configured')
   const tag = `SYNTHETIC-V2-${randomUUID()}`
-  const user = await prisma.appUser.upsert({ where: { email: 'arvind@futureofsports.io' }, update: {}, create: { email: 'arvind@futureofsports.io', full_name: 'Synthetic verification actor', role: 'LEGAL_ADMIN', password_hash: 'unusable-synthetic-test-hash' } })
+  const user = await prisma.appUser.upsert({ where: { email: 'ak@futureofsports.io' }, update: {}, create: { email: 'ak@futureofsports.io', full_name: 'Synthetic verification actor', role: 'LEGAL_ADMIN', password_hash: 'unusable-synthetic-test-hash' } })
   const session: SessionPayload = { userId: user.id, email: user.email, role: user.role, fullName: user.full_name, exp: Date.now() + 60000 }
   const createdCases: string[] = [], createdSchedules: string[] = [], createdProfiles: string[] = [], createdDocuments: string[] = [], createdKyc: string[] = [], createdPolicies: string[] = []
   try {

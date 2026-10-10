@@ -250,3 +250,29 @@ recurring FSP compliance AI review or change CISO approval requirements.
 See [the proxy runbook](../ops/cli-proxy-api/README.md) and
 [the generation runbook](../ops/generation-worker/README.md). Deployment status and
 actual acceptance belong in the release evidence, not this architectural decision.
+
+
+## 10 October 2026: D-bot platform connection and temporary access restriction
+
+The owner requested the whole Legal OS platform connected to the existing
+d_bot_3 Legal specialist. An authenticated control-service bridge reuses the
+application services and current Slack/AppUser identity. Legal records are
+delivered privately to the requester; public task answers carry delivery status.
+The directory covers every application section; human approvals use authenticated
+dashboard destinations. The supported command catalog states the executable
+scope without claiming every dashboard mutation is a bot operation.
+
+The owner then restricted all Legal OS work to Adi and AK only. This supersedes
+the earlier four-principal policy and includes administrator accounts, existing
+sessions, scoped grants, Slack access and generation requester lists. Other
+accounts are suspended with attributed access events; no accounts or documents
+are deleted. The subscription worker owner's active record is retained for
+authenticated readiness only, with interactive access denied by the allowlist.
+Worker ownership remains separate from requester access.
+D-bot's infrastructure operator policy is unchanged. Its canonical publisher and
+platform skill writer still require their authenticated eligible operator.
+
+Applicability decisions, verified controls, final document approval/publication,
+access grants and signature sends retain human approval. No recurring compliance
+review is enabled. See ops/dbot/README.md and the dated deployment receipt for
+implemented, deployed and pending boundaries.

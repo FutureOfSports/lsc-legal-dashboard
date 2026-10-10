@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 import { runInNewContext } from 'node:vm'
 import ts from 'typescript'
 
-const actor = { userId: 'synthetic', email: 'legal@futureofsports.io', role: 'LEGAL_ADMIN' }
+const actor = { userId: 'synthetic', email: 'ak@futureofsports.io', role: 'LEGAL_ADMIN' }
 let state, fail, key = 0
 const background = []
 let intelligenceCalls = 0

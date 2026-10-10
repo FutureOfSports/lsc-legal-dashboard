@@ -6,6 +6,19 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Project-Specific Agent Rules
 
+- On 10 October 2026 the owner restricted Legal OS to `adi@futureofsports.io`
+  and `ak@futureofsports.io` only. This supersedes the earlier four-principal
+  policy. Login, existing sessions, scoped grants, Slack and generation must
+  deny everyone else. Worker ownership remains separate from requester access.
+  The subscription owner's AppUser stays active for authenticated worker
+  readiness; the central allowlist still denies that owner's interactive access.
+  Suspending that service-owner row stops the existing generation worker.
+- D-bot requests use `/api/integrations/dbot`, signed Google ID tokens from
+  the configured control service, then current Slack/AppUser identity checks.
+  D-bot binds requester and channel from a fenced admitted execution. Record
+  answers are ephemeral, never public bot replies. Human-only approvals stay
+  in the authenticated dashboard. A duplicate write receipt requires inspection.
+
 - Read `CLAUDE.md` for the product, stack, roles, and skill references before making non-trivial changes.
 - For agent, cron, webhook, Dropbox Sign, Gmail, or Legal -> Finance sync work, read `.claude/skills/agentic-flows.md` first.
 - Treat `.claude/skills/prisma-schema.md` and `.claude/skills/finance-integration.md` as historical references; confirm current truth in `prisma/schema.prisma` and `src/lib/finance-webhook.ts`.

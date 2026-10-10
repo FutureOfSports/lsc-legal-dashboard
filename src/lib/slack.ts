@@ -16,6 +16,7 @@
  */
 import { createHmac, timingSafeEqual } from "node:crypto"
 import { prisma } from "./prisma"
+import { isEmailAllowedToLogin } from './auth-allowlist'
 import type { UserRole } from "@/generated/prisma/client"
 import type { SessionPayload } from "@/lib/session"
 
@@ -96,6 +97,7 @@ export async function resolveSlackActor(slackUserId: string): Promise<SlackActor
       if (link.verifiedEmail !== verifiedEmail || typeof link.appEmail !== "string") return null
       email = link.appEmail.trim().toLowerCase()
     }
+    if (!isEmailAllowedToLogin(email)) return null
     const user = await prisma.appUser.findUnique({ where: { email }, select: { id: true, email: true, full_name: true, is_active: true, role: true } })
     if (!user?.is_active) return null
     return { userId: user.id, email: user.email, display: user.full_name, role: user.role }

@@ -78,7 +78,7 @@ Platform Admin (AK) | Finance Admin (Anuj) | Legal Admin (Arvind) | Ops Admin (A
 ## Legal OS v2 invariants
 
 - The central document policy in `src/lib/document-access.ts` limits global access
-  to the four confirmed futureofsports.io principals. Platform role alone does
+  to Adi and AK only, per the owner's temporary restriction on 10 October 2026. Platform role alone does
   not bypass it. Fresh AppUser state controls sessions and individual grants.
 - Artifact bytes and provenance are immutable. Signed lineage binds to the exact
   populated artifact sent to the provider, never the current attachment.

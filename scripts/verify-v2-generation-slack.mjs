@@ -88,7 +88,7 @@ let active = true
 let profileCalls = 0
 const slackPrisma = { appUser: { async findUnique(query) { return query.where.email === actor.email ? { id: actor.userId, email: actor.email, full_name: actor.fullName, role: actor.role, is_active: active } : null } } }
 function slack(links = {}) {
-  return load('src/lib/slack.ts', { 'node:crypto': crypto, './prisma': { prisma: slackPrisma } }, { SLACK_BOT_TOKEN: 'synthetic-token', SLACK_LEGAL_ADMINS: JSON.stringify({ UTEST: actor.email }), SLACK_LEGAL_IDENTITY_LINKS: JSON.stringify(links) }, async () => { profileCalls++; return { ok: true, async json() { return { ok: true, user: { id: 'UTEST', profile: { email: slackEmail } } } } } })
+  return load('src/lib/slack.ts', { 'node:crypto': crypto, './prisma': { prisma: slackPrisma }, './auth-allowlist': { isEmailAllowedToLogin: email => email === actor.email } }, { SLACK_BOT_TOKEN: 'synthetic-token', SLACK_LEGAL_ADMINS: JSON.stringify({ UTEST: actor.email }), SLACK_LEGAL_IDENTITY_LINKS: JSON.stringify(links) }, async () => { profileCalls++; return { ok: true, async json() { return { ok: true, user: { id: 'UTEST', profile: { email: slackEmail } } } } } })
 }
 assert.equal(await slack().resolveSlackActor('UTEST'), null, 'Legacy admin mapping cannot impersonate an email')
 slackEmail = actor.email
