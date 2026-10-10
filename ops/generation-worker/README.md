@@ -15,8 +15,12 @@ status is recorded in `docs/intelligence-proxy/verification-20261006.md`. See
 
 The worker owner and job requester are distinct audit fields. Only currently
 active app users allowed by the central document policy and the worker's explicit
-requester list can submit jobs. Ownership does not add a fifth global legal
-principal. Role checks remain in the application's generation actions.
+requester list can submit jobs. On 10 October 2026 the requester list and login
+policy were restricted to Adi and AK. Anuj's subscription-owner AppUser remains
+active for worker readiness, but the central allowlist denies Anuj interactive
+access. Ownership grants no document or requester authority. Suspending the
+owner's service record also disables the worker. Role checks remain in the
+application's generation actions.
 
 The app's secret `LEGAL_GENERATION_WORKERS` is keyed by worker ID. Each entry has
 `token`, `ownerEmail` and `actorEmails`. Do not commit populated secrets.

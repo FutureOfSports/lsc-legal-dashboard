@@ -73,7 +73,7 @@ function parts(text: string) {
   return { args: (delimiter < 0 ? text : text.slice(0, delimiter)).trim().split(/\s+/).filter(Boolean), detail: delimiter < 0 ? '' : text.slice(delimiter + 4).trim() }
 }
 
-const formHelp: Record<string, string> = {
+export const formHelp: Record<string, string> = {
   'entity-save': 'legal_name, jurisdiction, source_reference; optional id, legacy_entity, registration_number, incorporation_date, registered_agent_name, registered_agent_contact, registered_office, notes',
   'filing-save': 'entity_profile_id, filing_type (REGISTRATION|ANNUAL_REPORT|AGENT_APPOINTMENT|OFFICE_AGREEMENT), source_reference; optional id, reporting_period, due_date, filed_date, notes',
   'ownership-save': 'owned_entity_id, source_reference, either owner_entity_id or owner_name; optional id, percentage (decimal string), effective_date',

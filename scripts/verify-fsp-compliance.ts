@@ -76,9 +76,9 @@ async function main() {
   const target = new URL(process.env.DATABASE_URL ?? '')
   assert.ok(['127.0.0.1', 'localhost', '[::1]'].includes(target.hostname) && target.pathname.slice(1).startsWith('legal_os_v2_verify_'), 'Refusing non-isolated database fixtures.')
   assert.equal(await prisma.fspComplianceSnapshot.count(), 0, 'Use an empty isolated compliance schema for this verifier.')
-  const previous = await prisma.appUser.findUnique({ where: { email: 'legal@futureofsports.io' } })
-  const legal = await prisma.appUser.upsert({ where: { email: 'legal@futureofsports.io' }, update: { role: 'LEGAL_ADMIN', is_active: true },
-    create: { email: 'legal@futureofsports.io', full_name: run, password_hash: '!synthetic', role: 'LEGAL_ADMIN', is_active: true } })
+  const previous = await prisma.appUser.findUnique({ where: { email: 'ak@futureofsports.io' } })
+  const legal = await prisma.appUser.upsert({ where: { email: 'ak@futureofsports.io' }, update: { role: 'LEGAL_ADMIN', is_active: true },
+    create: { email: 'ak@futureofsports.io', full_name: run, password_hash: '!synthetic', role: 'LEGAL_ADMIN', is_active: true } })
   const outsider = await prisma.appUser.create({ data: { email: `${run}@example.test`, full_name: run, password_hash: '!synthetic', role: 'PLATFORM_ADMIN' } })
   const actor: SessionPayload = { userId: legal.id, email: legal.email, fullName: run, role: legal.role, exp: Date.now() + 3600000 }
   const fifth = { ...actor, userId: outsider.id, email: outsider.email, role: outsider.role }

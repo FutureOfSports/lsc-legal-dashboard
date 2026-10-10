@@ -25,6 +25,7 @@ const requiredEnv = [
 ]
 
 const aiProvider = (process.env.AI_PROVIDER ?? "cliproxyapi").toLowerCase()
+if (process.env.DBOT_ENABLED === '1') requiredEnv.push('DBOT_ID_TOKEN_AUDIENCE', 'DBOT_SERVICE_ACCOUNT')
 if (aiProvider === "cliproxyapi") {
   requiredEnv.push("CLIPROXY_BASE_URL", "CLIPROXY_API_KEY", "CLIPROXY_MODEL", "CLIPROXY_AUTH_REVISION")
 } else if (aiProvider === "gemini") {

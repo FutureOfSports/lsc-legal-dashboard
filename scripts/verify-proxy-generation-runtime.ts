@@ -203,7 +203,7 @@ async function main() {
     const existing = await Promise.all([prisma.appUser.count(), prisma.contractTemplate.count(), prisma.contractGenerationWorker.count(), prisma.contractGenerationJob.count(), prisma.legalDocument.count()])
     assert.ok(existing.every(count => count === 0), 'Use an empty disposable database; existing records will not be modified.')
     verificationStage = 'isolated_fixtures'
-    const legal = await prisma.appUser.create({ data: { email: 'legal@futureofsports.io', full_name: `${prefix} legal actor`, role: 'LEGAL_ADMIN', password_hash: '!synthetic-unusable' } })
+    const legal = await prisma.appUser.create({ data: { email: 'ak@futureofsports.io', full_name: `${prefix} legal actor`, role: 'LEGAL_ADMIN', password_hash: '!synthetic-unusable' } })
     createdUsers.push(legal.id)
     const owner = await prisma.appUser.create({ data: { email: `owner-${runId}@example.invalid`, full_name: `${prefix} worker owner`, role: 'FINANCE_ADMIN', password_hash: '!synthetic-unusable' } })
     createdUsers.push(owner.id)

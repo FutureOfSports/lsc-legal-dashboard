@@ -37,6 +37,9 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // D-bot's exact service endpoint verifies its Google ID token and live Slack identity.
+  if (pathname === "/api/integrations/dbot") return NextResponse.next()
+
   // Skip the magic-link callback; it authenticates with a single-use token in
   // the query string and is the request that creates the session. Without this,
   // the visitor arrives with no cookie, gets redirected to /login, and no magic

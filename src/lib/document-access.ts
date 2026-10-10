@@ -6,6 +6,7 @@ import type { SessionPayload } from '@/lib/session'
 import type { Prisma } from '@/generated/prisma/client'
 
 import { GLOBAL_DOCUMENT_EMAILS } from '@/lib/document-principals'
+import { isEmailAllowedToLogin } from '@/lib/auth-allowlist'
 export { GLOBAL_DOCUMENT_EMAILS } from '@/lib/document-principals'
 
 export class DocumentAccessDenied extends Error {
@@ -13,6 +14,7 @@ export class DocumentAccessDenied extends Error {
 }
 
 export async function isGlobalDocumentUser(session: SessionPayload): Promise<boolean> {
+  if (!isEmailAllowedToLogin(session.email) || !Number.isFinite(session.exp) || session.exp <= Date.now()) return false
   const user = await prisma.appUser.findUnique({ where: { id: session.userId }, select: { email: true, is_active: true } })
   return !!user?.is_active && user.email.toLowerCase() === session.email.toLowerCase()
     && GLOBAL_DOCUMENT_EMAILS.some(email => email === user.email.toLowerCase())
@@ -27,6 +29,7 @@ export async function requireGlobalDocumentAccess(session?: SessionPayload): Pro
 
 /** A revoked/expired grant immediately disappears across web, downloads and Slack. */
 export async function documentScope(session: SessionPayload): Promise<Prisma.LegalDocumentWhereInput> {
+  if (!isEmailAllowedToLogin(session.email) || !Number.isFinite(session.exp) || session.exp <= Date.now()) return { id: { in: [] } }
   if (await isGlobalDocumentUser(session)) return {}
   const user = await prisma.appUser.findUnique({ where: { id: session.userId }, select: { email: true, is_active: true } })
   if (!user?.is_active || user.email.toLowerCase() !== session.email.toLowerCase()) return { id: { in: [] } }
@@ -40,6 +43,7 @@ export async function requireDocumentAccess(session: SessionPayload, documentId:
 
 /** Requests accept a user-supplied reference without resolving titles or revealing existence. */
 export async function requestDocumentAccess(session: SessionPayload, reference: string, reason: string) {
+  if (!isEmailAllowedToLogin(session.email) || !Number.isFinite(session.exp) || session.exp <= Date.now()) throw new DocumentAccessDenied()
   const cleanReference = reference.trim(), cleanReason = reason.trim()
   if (!cleanReference || cleanReference.length > 500 || !cleanReason || cleanReason.length > 2000) throw new Error('Provide a document reference and a reason, up to 500 and 2000 characters.')
   const user = await prisma.appUser.findUnique({ where: { id: session.userId }, select: { email: true, is_active: true } })
