@@ -8,13 +8,13 @@ import { prisma } from "@/lib/prisma"
 import { uploadToS3, getS3Key } from "@/lib/s3"
 import { extractTextFromFile } from "@/lib/extract-text"
 import { runAgent } from "@/lib/agents/orchestrator"
-import { after } from "next/server"
+import { scheduleLegalTask } from "@/lib/background-task"
 import { revalidatePath } from "next/cache"
 
 /** Extraction and analysis are optional follow-up work, never the upload receipt. */
-function queueUploadAnalysis(documentId: string, file: File, versionId?: string) {
+async function queueUploadAnalysis(documentId: string, file: File, fileUrl: string, actorId: string, versionId?: string) {
   try {
-    after(async () => {
+    await scheduleLegalTask({ kind: "upload-analysis", documentId, fileUrl, name: file.name, mimeType: file.type || "application/octet-stream", ...(versionId ? { versionId } : {}) }, async () => {
       try {
         const extractedText = await extractTextFromFile(file)
         const doc = await prisma.legalDocument.findUnique({ where: { id: documentId }, select: { title: true, notes: true } })
@@ -26,7 +26,7 @@ function queueUploadAnalysis(documentId: string, file: File, versionId?: string)
           sourceLabel: file.name, content,
         })
       } catch (error) { console.error("Uploaded file analysis failed (non-blocking):", error) }
-    })
+    }, actorId)
   } catch (error) { console.error("Uploaded file analysis could not be scheduled (non-blocking):", error) }
 }
 
@@ -53,7 +53,7 @@ export async function uploadDocumentFile(formData: FormData) {
       await tx.legalDocument.update({ where: { id: documentId }, data: { file_url: url } })
       await notifyDocumentReviewChange(documentId, `file:${key}`, tx)
     })
-    queueUploadAnalysis(documentId, file)
+    await queueUploadAnalysis(documentId, file, url, session.userId)
 
     revalidatePath(`/legal/documents/${documentId}`)
     revalidatePath("/legal/documents")
@@ -89,7 +89,7 @@ export async function uploadVersionFile(formData: FormData) {
       await notifyDocumentReviewChange(documentId, `version:${created.id}`, tx)
       return created
     }, { isolationLevel: 'Serializable' })
-    queueUploadAnalysis(documentId, file, version.id)
+    await queueUploadAnalysis(documentId, file, url, session.userId, version.id)
 
     revalidatePath(`/legal/documents/${documentId}`)
     return { success: true, data: { url } }

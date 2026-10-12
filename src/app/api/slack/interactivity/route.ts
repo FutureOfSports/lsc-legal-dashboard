@@ -1,9 +1,9 @@
 import { NextRequest } from "next/server"
-import { after } from "next/server"
+import { scheduleLegalTask } from "@/lib/background-task"
+import { sendAndReport } from "@/lib/slack-mnda-background"
 import { prisma } from "@/lib/prisma"
-import { sendMnda, type MndaSendParams } from "@/lib/mnda"
-import { postSlackEphemeral, resolveSlackActor, verifySlackSignature, slackSession, type SlackActor } from "@/lib/slack"
-import { buildMndaFailureBlocks, buildMndaSuccessBlocks, type MndaOutcomeInput } from "@/lib/slack-blocks"
+import { type MndaSendParams } from "@/lib/mnda"
+import { resolveSlackActor, verifySlackSignature, slackSession } from "@/lib/slack"
 
 import { requireGlobalDocumentAccess } from "@/lib/document-access"
 import { Prisma } from "@/generated/prisma/client"
@@ -129,58 +129,6 @@ function parseMetadata(raw: string): ModalMetadata {
   }
 }
 
-/** Runs inside after(): performs the send and reports the outcome to Slack. Only ever console.errors. */
-async function sendAndReport(
-  params: MndaSendParams,
-  actor: SlackActor,
-  channelId: string,
-  slackUserId: string
-) {
-  try {
-    const outcome: MndaOutcomeInput = {
-      templateKind: params.templateKind,
-      counterpartyName: params.counterpartyName,
-      counterpartyEmail: params.counterpartyEmail,
-      counterpartyCompany: params.counterpartyCompany,
-      termYears: params.termYears,
-      effectiveDate: params.effectiveDate,
-      ccEmails: params.ccEmails,
-      sentBy: actor.display,
-    }
-
-    const current = await requireGlobalDocumentAccess(slackSession(actor))
-    if (!["PLATFORM_ADMIN", "LEGAL_ADMIN", "OPS_ADMIN"].includes(current.role)) throw new Error("MNDA editing access is required")
-    const result = await sendMnda(params, actor)
-    if (!result.success && !result.safe) {
-      console.error("[slack] MNDA send failed with internal error:", result.error)
-    }
-    const channelError = result.success
-      ? ""
-      : result.safe
-        ? result.error
-        : "MNDA sending could not be confirmed. Check the document and signing provider before retrying."
-    const blocks = result.success
-      ? buildMndaSuccessBlocks(outcome, result.documentId)
-      : buildMndaFailureBlocks(outcome, channelError)
-    const text = result.success
-      ? `MNDA sent to ${params.counterpartyEmail}`
-      : `MNDA send to ${params.counterpartyEmail} failed`
-
-    const channel = channelId || process.env.SLACK_LEGAL_CHANNEL_ID?.trim() || ""
-    if (!channel) {
-      console.error("[slack] no channel to report the MNDA outcome to; result:", text)
-      return { sent: result.success, delivered: false }
-    }
-
-    const posted = await postSlackEphemeral(channel, slackUserId, blocks, text)
-    if (!posted.ok) console.error("[slack] private outcome delivery failed")
-    return { sent: result.success, delivered: posted.ok }
-  } catch (error) {
-    console.error("[slack] MNDA send from Slack failed:", error instanceof Error ? error.name : "UnknownError")
-    return { sent: null, delivered: false }
-  }
-}
-
 export async function POST(request: NextRequest) {
   // Raw body FIRST; the signature covers the exact bytes Slack sent.
   const rawBody = await request.text()
@@ -236,10 +184,10 @@ export async function POST(request: NextRequest) {
 
     // Empty 200 closes the modal; the send itself must not eat into Slack's
     // 3 second budget.
-    after(async () => {
+    await scheduleLegalTask({ kind: "slack-mnda", params, slackUserId: payload.user?.id ?? "", channelId: metadata.channelId ?? "", claimId: claim.id }, async () => {
       const outcome = await sendAndReport(params, actor, metadata.channelId ?? "", payload.user?.id ?? "")
       await prisma.webhookEventLog.update({ where: { id: claim.id }, data: { processing_status: outcome.sent === null ? "uncertain" : outcome.sent ? "processed" : "failed", processed_at: new Date(), raw_payload: { actorId: actor.userId, sent: outcome.sent, delivered: outcome.delivered } } })
-    })
+    }, actor.userId)
 
     return new Response(null, { status: 200 })
   } catch (error) {

@@ -16,7 +16,7 @@
  *                           failure a missing-env error prevents
  */
 import { createHash } from "node:crypto"
-import { after } from "next/server"
+import { scheduleLegalTask } from "@/lib/background-task"
 import { prisma } from "@/lib/prisma"
 import { getS3Key, uploadBufferToS3 } from "@/lib/s3"
 import { createOpenSignDocument, type OpenSignFieldPlacement } from "@/lib/opensign"
@@ -527,7 +527,7 @@ export async function sendMnda(params: MndaSendParams, actor: MndaSendActor): Pr
     // scheduling failure must never convert a completed send into a reported
     // failure; it only costs the channel notice.
     try {
-      after(async () => {
+      await scheduleLegalTask({ kind: "tracker", event: "agreement.sent", message: trackerMessage, ref: { entityType: "LegalDocument", entityId: document.id } }, async () => {
       try {
         // The notifier reports delivery failure by return value, not by
         // throwing, so an unchecked result would be a silent miss.
@@ -544,7 +544,7 @@ export async function sendMnda(params: MndaSendParams, actor: MndaSendActor): Pr
       } catch (err) {
         console.error("Legal tracker notification failed (non-blocking):", err)
       }
-      })
+      }, actor.userId)
     } catch (err) {
       console.error("Could not schedule the tracker notification (non-blocking):", err)
     }

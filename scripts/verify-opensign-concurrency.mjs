@@ -43,7 +43,7 @@ const status = { objectId: 'request-A', isCompleted: true, isDeclined: false, si
 async function completion(replaceDuringDownload, failQueue = false, failDelivery = false) {
   const { state, prisma } = fixture()
   const modules = {
-    'next/server': { after() {} }, '@/lib/prisma': { prisma }, '@/lib/opensign': { fetchOpenSignDocument: async () => status },
+    'next/server': { after() {} }, '@/lib/background-task': { scheduleLegalTask: async () => {} }, '@/lib/prisma': { prisma }, '@/lib/opensign': { fetchOpenSignDocument: async () => status },
     '@/lib/s3': { getS3Key: () => 'signed/synthetic-A.pdf', uploadBufferToS3: async () => 'https://synthetic.test/stored-signed-A' },
     '@/lib/extract-text': { extractTextFromFile: async () => '' }, '@/lib/agents/orchestrator': { runAgent: async () => {} },
     '@/lib/finance-webhook': { queueFinanceEvent: async () => { if (failQueue) throw new Error('Synthetic outbox write failed'); const row = { id: 'finance-event' }; state.outbox.push(row); return row }, deliverFinanceEvent: async () => { state.finance++; if (failDelivery) throw new Error('Synthetic delivery failed'); return { ok: true } } }, '@/lib/review-service': { notifyDocumentReviewChange: async () => ({ created: 0 }) }, '@/lib/finance-payloads': { buildContractPayload: () => ({}) }, '@/lib/opensign-certificates': { preserveOpenSignCertificate: async () => ({ status: 'unavailable' }) },
@@ -106,7 +106,7 @@ if (!process.argv.includes('--expect-vulnerable')) {
       '@/lib/document-artifacts': { recordArtifact: async () => ({ id: 'source-captured' }) }, '@/lib/prisma': { prisma },
       '@/lib/legal-tracker': { emitLegalTrackerEvent: async () => ({ ok: true }) }, '@/lib/legal-tracker-payloads': { buildAgreementSentMessage: () => ({}) },
       '@/lib/opensign': { createOpenSignDocument: async () => { created++; reachedProvider(); await finish; if (uncertain) throw new Error('Synthetic connection lost after submission'); return { providerDocumentId: 'request-new', signingLinks: {} } } },
-      '@/lib/s3': { getPresignedUrl: async (url) => url, getS3KeyFromUrl: () => null }, 'next/cache': { revalidatePath() {} }, 'next/server': { after() {} },
+      '@/lib/s3': { getPresignedUrl: async (url) => url, getS3KeyFromUrl: () => null }, 'next/cache': { revalidatePath() {} }, 'next/server': { after() {} }, '@/lib/background-task': { scheduleLegalTask: async () => {} },
       'pdf-lib': { PDFDocument: { load: async () => ({ getPages: () => [{ getSize: () => ({ width: 600, height: 800 }), getCropBox: () => ({ width: 600, height: 800 }), getRotation: () => ({ angle: 0 }) }] }) } },
     }, { fetch: async () => new Response('synthetic PDF'), console: { ...console, error() {} } })
     const form = new FormData(); form.set('documentId', 'doc-1')

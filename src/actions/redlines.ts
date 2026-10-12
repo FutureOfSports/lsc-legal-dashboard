@@ -9,7 +9,7 @@ import { extractTextFromFile } from "@/lib/extract-text"
 import { emitLegalTrackerEvent } from "@/lib/legal-tracker"
 import { buildRedlineSentMessage } from "@/lib/legal-tracker-payloads"
 import { revalidatePath } from "next/cache"
-import { after } from "next/server"
+import { scheduleLegalTask } from "@/lib/background-task"
 import {
   RedlineChangeStatus,
   RedlineChangeType,
@@ -460,7 +460,7 @@ export async function transitionRedline(
     // Aditya watches the legal tracker channel for anything that leaves the
     // building, so ping it once the send is committed.
     if (toStatus === "SENT_TO_COUNTERPARTY") {
-      after(async () => {
+      await scheduleLegalTask({ kind: "tracker", event: "redline.sent", message: { ...buildRedlineSentMessage({ documentTitle: redline.document.title, redlineTitle: redline.title, round: redline.round, counterparty: redline.counterparty, sentBy: session.email, url: buildRedlineUrl(redlineId) }), mention: true }, ref: { entityType: "Redline", entityId: redlineId } }, async () => {
         try {
           const message = buildRedlineSentMessage({
             documentTitle: redline.document.title,
@@ -486,7 +486,7 @@ export async function transitionRedline(
         } catch (err) {
           console.error("Legal tracker notification failed (non-blocking):", err)
         }
-      })
+      }, session.userId)
     }
 
     return { success: true }

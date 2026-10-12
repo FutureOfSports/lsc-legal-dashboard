@@ -1,7 +1,5 @@
 /** Central document entitlement. Role alone never grants global document access. */
 import { prisma } from '@/lib/prisma'
-import { requireSession } from '@/lib/auth'
-import { redirect } from 'next/navigation'
 import type { SessionPayload } from '@/lib/session'
 import type { Prisma } from '@/generated/prisma/client'
 
@@ -21,8 +19,8 @@ export async function isGlobalDocumentUser(session: SessionPayload): Promise<boo
 }
 
 export async function requireGlobalDocumentAccess(session?: SessionPayload): Promise<SessionPayload> {
-  const actor = session ?? await requireSession()
-  if (!await isGlobalDocumentUser(actor)) redirect('/legal/access')
+  const actor = session ?? await (await import('@/lib/auth')).requireSession()
+  if (!await isGlobalDocumentUser(actor)) (await import('next/navigation')).redirect('/legal/access')
   const user = await prisma.appUser.findUniqueOrThrow({ where: { id: actor.userId }, select: { role: true, full_name: true } })
   return { ...actor, role: user.role, fullName: user.full_name }
 }

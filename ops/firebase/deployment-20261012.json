@@ -1,0 +1,1031 @@
+{
+  "capturedAt": "2026-10-12T14:13:10.819456+00:00",
+  "project": "fsp-us-prod-499705",
+  "region": "us-central1",
+  "codeCommits": [
+    "5ca43c1a63744e4543c02a0d03e14d7277dc7359",
+    "7dd2d87d747116e0d7acfa2af271d8819b66fb85",
+    "7d71d479bd437b602ae45eaf20485593d3cef30b"
+  ],
+  "pullRequest": "https://github.com/FutureOfSports/lsc-legal-dashboard/pull/10",
+  "dataVerification": {
+    "asOf": "2026-10-12T13:15:10.556Z",
+    "mode": "verify",
+    "project": "fsp-us-prod-499705",
+    "databaseId": "legal-os",
+    "schemaHash": "e3275ee5256aa18faea8e222d006daa30c52ffd791a103eaf3112347954d1ae7",
+    "models": [
+      {
+        "model": "AppUser",
+        "count": 18,
+        "sha256": "e847df0453e2544574e03f1fdf5c096a07408d7aacbd52c4c4c4ab59e179d65b",
+        "maxBytes": 354
+      },
+      {
+        "model": "AuthAccessEvent",
+        "count": 19,
+        "sha256": "e2770e0fdff520d927bd8b03c71fd3cb8d7758e7b42277176fd9716d14a0f195",
+        "maxBytes": 450
+      },
+      {
+        "model": "AuthMagicLinkToken",
+        "count": 4,
+        "sha256": "03903b2559dd38f9cca86d116ca419f6a4c0e40ea668cb4e1e7d56fd0a304d35",
+        "maxBytes": 729
+      },
+      {
+        "model": "LegalDocument",
+        "count": 296,
+        "sha256": "38f213d467185ffc3e63dec8059274a73e323d9d6a1a506cf9cb085cd83d42bb",
+        "maxBytes": 7094
+      },
+      {
+        "model": "DocumentVersion",
+        "count": 294,
+        "sha256": "2e1b74314b6934dfb89607b7091514d45a74f80855a34e43818fb7f71807bb0a",
+        "maxBytes": 498
+      },
+      {
+        "model": "DocumentAnalysis",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "LifecycleEvent",
+        "count": 340,
+        "sha256": "cedbc7750e2853f2bac09280c5a9a6a883e357df8497add2121f2fd298ae40b3",
+        "maxBytes": 403
+      },
+      {
+        "model": "SignatureRequest",
+        "count": 25,
+        "sha256": "57674ac443bd7ee2b6df5edf9909c9fa5d21e60f99bec0b09b8c4ae47fcf2d11",
+        "maxBytes": 575
+      },
+      {
+        "model": "WebhookEventLog",
+        "count": 1434,
+        "sha256": "7bf006139e2156bb6d4dd707686e1c88ebada046ae01c9787359539b0f9d3429",
+        "maxBytes": 699
+      },
+      {
+        "model": "Redline",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "RedlineChange",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "RedlineEvent",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "ContractTemplate",
+        "count": 121,
+        "sha256": "e2c34959643e02c88dcf98bdab9f3368a8c499abd411f87cc6c434190e077064",
+        "maxBytes": 12001
+      },
+      {
+        "model": "ComplianceDeadline",
+        "count": 24,
+        "sha256": "c509f6b852f99a528aa04e9d42da84483907c8982e44d379cff204cb934f76aa",
+        "maxBytes": 367
+      },
+      {
+        "model": "ComplianceRecord",
+        "count": 9,
+        "sha256": "298630cd8ad30573d51096087f050f24243430847b0f0567062e1caf078f1801",
+        "maxBytes": 495
+      },
+      {
+        "model": "ComplianceOfficer",
+        "count": 4,
+        "sha256": "5a983d8e1cde6eb05b5cce01b97eaf475c57115021e5571750a20bd13abd8a1d",
+        "maxBytes": 181
+      },
+      {
+        "model": "RegisteredOfficeAgreement",
+        "count": 8,
+        "sha256": "96025cab6b88b6b65bcd83a68c1371b1f3b7c723ca99126ca14d9162f71624a8",
+        "maxBytes": 425
+      },
+      {
+        "model": "CompanyEmail",
+        "count": 8,
+        "sha256": "95e5049fc4e547bef8954f2900c6f5237c3c72d586df08a982a44f1ef828e733",
+        "maxBytes": 367
+      },
+      {
+        "model": "DataProtectionRecord",
+        "count": 4,
+        "sha256": "657f9d93b0d5a5003979ea00df09c698b44cc2713be98b8c299aaa06513d2fcb",
+        "maxBytes": 525
+      },
+      {
+        "model": "ESOPGrant",
+        "count": 9,
+        "sha256": "c0bb7dc6f1d11857ec9be2d0201f8635ca1c6feedca95abcbfb7feb59623d358",
+        "maxBytes": 800
+      },
+      {
+        "model": "VestingEvent",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "PolicyDocument",
+        "count": 15,
+        "sha256": "863c151380e127489c28367842ba7025d1d8317ecba09a34f9a047d7b1d267f6",
+        "maxBytes": 302
+      },
+      {
+        "model": "PolicyAcknowledgment",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "LegalIssue",
+        "count": 9,
+        "sha256": "8a548be7aa3308826763e23fe882381fe3d638a5edaae03d90bea4b10bd85b90",
+        "maxBytes": 564
+      },
+      {
+        "model": "TrackerItem",
+        "count": 86,
+        "sha256": "136e1760a41744634c7cac23e93f1e5999f8ee5937a4e896f3d366a982994044",
+        "maxBytes": 401
+      },
+      {
+        "model": "PaymentCycle",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "KycDocument",
+        "count": 9,
+        "sha256": "04a9ebeb7a4b4a5e87cb557bae33fabfebf2d977eaf87c5ce6751af6b5a853a3",
+        "maxBytes": 466
+      },
+      {
+        "model": "AdminAccount",
+        "count": 9,
+        "sha256": "979143179b95b2ee07f2200b29808cc39ba45cad9c17d2fd5c09223382bd039e",
+        "maxBytes": 443
+      },
+      {
+        "model": "LitigationCase",
+        "count": 2,
+        "sha256": "909d1dc23466a8d98dc8c8490fd916d9bf40691227ad99920436171ba86dcacd",
+        "maxBytes": 968
+      },
+      {
+        "model": "LitigationEvent",
+        "count": 4,
+        "sha256": "4f7a892886feeb17f722e45de191b69cab64cfc5702af0c9768fc8590c673d77",
+        "maxBytes": 283
+      },
+      {
+        "model": "LitigationDocument",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "DetectedInvoice",
+        "count": 28,
+        "sha256": "f314c1497011b183a59329a4d4c4ae89765096d8f8dac49ecfcb2076dd79deb7",
+        "maxBytes": 734
+      },
+      {
+        "model": "EmailTagRecord",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "ClickwrapAcceptance",
+        "count": 5,
+        "sha256": "429061e1e490641aaa4406ae514358280478d757c1e38628cb2a82605de24a2b",
+        "maxBytes": 314
+      },
+      {
+        "model": "Subsidy",
+        "count": 4,
+        "sha256": "3792ffe8e5348f254efb23542f83f127eb5376282ae9163cea65c3a20041512b",
+        "maxBytes": 567
+      },
+      {
+        "model": "AuditReport",
+        "count": 13,
+        "sha256": "b787ce6085925ebf6f27fcfeb109c875ffda967993736b42976ec0fafb28da74",
+        "maxBytes": 124974
+      },
+      {
+        "model": "AgentActivityLog",
+        "count": 3201,
+        "sha256": "59f724d52df6eb8fe01a9e46558a3c46941fe804ed29561f332beab8712d525b",
+        "maxBytes": 1012
+      },
+      {
+        "model": "AgentMessage",
+        "count": 8,
+        "sha256": "4bebd9f06a7197cb9524a4b4bcc36f603d70d7836a071250137df364b037f0ad",
+        "maxBytes": 334
+      },
+      {
+        "model": "ProjectChecklist",
+        "count": 55,
+        "sha256": "3ed4328e3339be9f7b14070a65e305cd137cff211dd545d7d447b990d984769a",
+        "maxBytes": 357
+      },
+      {
+        "model": "DashboardTableConfig",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "FileNamingLog",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "AuditDocument",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "EmailThread",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "CalendarEvent",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "CrossModuleEvent",
+        "count": 20,
+        "sha256": "b109ce3eb19deaee24778c5694c6525d7cb945fa5b7b27aa6361280a4f276057",
+        "maxBytes": 1089
+      },
+      {
+        "model": "CisoSyncObject",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "CisoSyncJob",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "CisoSyncAttempt",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "DocumentNote",
+        "count": 24,
+        "sha256": "3db55ec23b737a85e66fb57f6f9bce2bfbed9fc41f4533e5c7139a0e3548e7a2",
+        "maxBytes": 272
+      },
+      {
+        "model": "DocumentComment",
+        "count": 15,
+        "sha256": "5df247cf127bb0e96ff499101f871911137daf06d1bee52d90b392141a8f71e7",
+        "maxBytes": 1895
+      },
+      {
+        "model": "Notification",
+        "count": 2581,
+        "sha256": "c5dfa808a85d55f3db1c63041ca98cd9afa3ba34b317797bac187db14c2305f2",
+        "maxBytes": 495
+      },
+      {
+        "model": "IncomingNotice",
+        "count": 647,
+        "sha256": "5a4022a1db8c8d2865abf0ee8ed15dfdb3ad1f400f76879ad3ced0778b250bd1",
+        "maxBytes": 995
+      },
+      {
+        "model": "DocumentAccessRequest",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "DocumentAccessGrant",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "FxRate",
+        "count": 372,
+        "sha256": "362bd60cd22c2a21b0dad7057cfde331a7b7e14a023c5157393b5b60e1487a8a",
+        "maxBytes": 259
+      },
+      {
+        "model": "DocumentArtifact",
+        "count": 123,
+        "sha256": "467e298090ce1344a5fc2107dabc132391bbbd047906b1441d88f5e46fb4bbb1",
+        "maxBytes": 1146
+      },
+      {
+        "model": "DocumentExport",
+        "count": 2,
+        "sha256": "0dec3916252ee7d3c045de44e6ab75307612787851ae84c8ad6a342fbbdcfad6",
+        "maxBytes": 2589254
+      },
+      {
+        "model": "NamingCode",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "EntityProfile",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "EntityFiling",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "EntityOwnership",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "ReviewSchedule",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "ReviewTask",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "ReviewDependency",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "ContractGenerationWorker",
+        "count": 1,
+        "sha256": "68b8aa8cf4753612358539aa02daad2d0f8241b7c53ec7e574844712b32aa5c4",
+        "maxBytes": 669
+      },
+      {
+        "model": "ContractGenerationJob",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      },
+      {
+        "model": "FspComplianceSnapshot",
+        "count": 1,
+        "sha256": "57d3989e2401c6ff64b2d2de1507fadff7df9f3616e63d86950b21ca0e8ba978",
+        "maxBytes": 59264
+      },
+      {
+        "model": "FspComplianceAssessment",
+        "count": 1,
+        "sha256": "6e8ba21f16f82790d50f7105b7de9824fc90d6a542f4aeeeb31ca09a863a2445",
+        "maxBytes": 5482
+      },
+      {
+        "model": "FspComplianceDecision",
+        "count": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "maxBytes": 0
+      }
+    ],
+    "totalRecords": 9852
+  },
+  "finalReconciliationAt": "2026-10-12T13:13:02.775Z",
+  "functions": [
+    {
+      "name": "legalApp",
+      "state": "ACTIVE",
+      "revision": "legalapp-00005-deq",
+      "uri": "https://legalapp-2feiiv4i4a-uc.a.run.app",
+      "runtime": "nodejs22",
+      "serviceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
+      "memory": "2Gi",
+      "timeoutSeconds": 540,
+      "maxInstances": 5,
+      "concurrency": 16,
+      "runtimeBundle": [
+        {
+          "key": "LEGAL_OS_FIREBASE_RUNTIME",
+          "version": "3"
+        }
+      ],
+      "releaseSHA": "7d71d479bd437b602ae45eaf20485593d3cef30b",
+      "build": "projects/344863505916/locations/us-central1/builds/3f80aec8-bed1-41ba-8bf2-fcfc5b6f8d26"
+    },
+    {
+      "name": "legalGeneration",
+      "state": "ACTIVE",
+      "revision": "legalgeneration-00003-rub",
+      "uri": "https://legalgeneration-2feiiv4i4a-uc.a.run.app",
+      "runtime": "nodejs22",
+      "serviceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
+      "memory": "4Gi",
+      "timeoutSeconds": 900,
+      "maxInstances": 1,
+      "concurrency": 1,
+      "runtimeBundle": [
+        {
+          "key": "LEGAL_OS_FIREBASE_RUNTIME",
+          "version": "2"
+        }
+      ],
+      "releaseSHA": "7d71d479bd437b602ae45eaf20485593d3cef30b",
+      "build": "projects/344863505916/locations/us-central1/builds/e456582f-b9db-4773-8897-bf856a1c56a3"
+    },
+    {
+      "name": "legalMaintenance",
+      "state": "ACTIVE",
+      "revision": "legalmaintenance-00003-vaw",
+      "uri": "https://legalmaintenance-2feiiv4i4a-uc.a.run.app",
+      "runtime": "nodejs22",
+      "serviceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
+      "memory": "4Gi",
+      "timeoutSeconds": 900,
+      "maxInstances": 1,
+      "concurrency": 1,
+      "runtimeBundle": [
+        {
+          "key": "LEGAL_OS_FIREBASE_RUNTIME",
+          "version": "2"
+        }
+      ],
+      "releaseSHA": "7d71d479bd437b602ae45eaf20485593d3cef30b",
+      "build": "projects/344863505916/locations/us-central1/builds/71d50405-3f58-45d1-932a-12859dc44d86"
+    },
+    {
+      "name": "legalBackground",
+      "state": "ACTIVE",
+      "revision": "legalbackground-00004-muy",
+      "uri": "https://legalbackground-2feiiv4i4a-uc.a.run.app",
+      "runtime": "nodejs22",
+      "serviceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
+      "memory": "256Mi",
+      "timeoutSeconds": 540,
+      "maxInstances": 5,
+      "concurrency": 1,
+      "runtimeBundle": [
+        {
+          "key": "LEGAL_OS_FIREBASE_RUNTIME",
+          "version": "2"
+        }
+      ],
+      "releaseSHA": "7d71d479bd437b602ae45eaf20485593d3cef30b",
+      "build": "projects/344863505916/locations/us-central1/builds/0cfb8046-3be7-4f97-ae4e-bbf3caac7da7"
+    }
+  ],
+  "gateways": [
+    {
+      "resource": "projects/fsp-us-prod-499705/locations/us-central1/services/lsc-legal-dashboard",
+      "uri": "https://lsc-legal-dashboard-2feiiv4i4a-uc.a.run.app",
+      "traffic": [
+        {
+          "revision": "lsc-legal-dashboard-firebase-gateway-1012",
+          "percent": 100
+        }
+      ],
+      "servedEnvironmentNames": [
+        "LEGAL_FIREBASE_ORIGIN"
+      ],
+      "databaseOrProviderCredentials": false
+    },
+    {
+      "resource": "projects/fsp-legal-esign/locations/asia-southeast1/services/lsc-legal-dashboard",
+      "uri": "https://lsc-legal-dashboard-goxxm577xq-as.a.run.app",
+      "traffic": [
+        {
+          "revision": "lsc-legal-dashboard-firebase-gateway-1012",
+          "percent": 100
+        }
+      ],
+      "servedEnvironmentNames": [
+        "LEGAL_FIREBASE_ORIGIN"
+      ],
+      "databaseOrProviderCredentials": false
+    }
+  ],
+  "database": {
+    "name": "projects/fsp-us-prod-499705/databases/legal-os",
+    "locationId": "us-central1",
+    "type": "FIRESTORE_NATIVE",
+    "deleteProtectionState": "DELETE_PROTECTION_ENABLED",
+    "pointInTimeRecoveryEnablement": "POINT_IN_TIME_RECOVERY_ENABLED",
+    "versionRetentionPeriod": "604800s"
+  },
+  "backupSchedules": [
+    {
+      "name": "projects/fsp-us-prod-499705/databases/legal-os/backupSchedules/c367628e-3a91-4c2a-9c7c-ec3c081c5145",
+      "createTime": "2026-10-12T12:25:01.876981Z",
+      "retention": "2419200s",
+      "dailyRecurrence": {},
+      "updateTime": "2026-10-12T12:25:01.876981Z"
+    }
+  ],
+  "backupRestoreExecuted": false,
+  "payloadBucket": {
+    "name": "fsp-us-prod-legal-firestore-payloads",
+    "location": "US-CENTRAL1",
+    "uniformAccess": true,
+    "publicAccessPrevention": "enforced"
+  },
+  "schedules": [
+    {
+      "name": "projects/fsp-us-prod-499705/locations/us-central1/jobs/legal-os-generation",
+      "state": "ENABLED",
+      "schedule": "* * * * *",
+      "timeZone": "Etc/UTC",
+      "uri": "https://legalgeneration-2feiiv4i4a-uc.a.run.app/",
+      "method": "POST",
+      "oidcServiceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
+      "lastAttemptTime": "2026-10-12T13:32:02.412040Z",
+      "lastStatusCode": 0
+    },
+    {
+      "name": "projects/fsp-us-prod-499705/locations/us-central1/jobs/legal-document-reviews",
+      "state": "ENABLED",
+      "schedule": "17 2 * * *",
+      "timeZone": "Etc/UTC",
+      "uri": "https://legalapp-2feiiv4i4a-uc.a.run.app/api/cron/document-reviews",
+      "method": "GET",
+      "oidcServiceAccount": null,
+      "lastAttemptTime": "2026-10-12T13:22:24.137803Z",
+      "lastStatusCode": 0
+    },
+    {
+      "name": "projects/fsp-us-prod-499705/locations/us-central1/jobs/opensign-poll",
+      "state": "ENABLED",
+      "schedule": "*/15 * * * *",
+      "timeZone": "Asia/Dubai",
+      "uri": "https://legalapp-2feiiv4i4a-uc.a.run.app/api/cron/opensign-poll",
+      "method": "GET",
+      "oidcServiceAccount": null,
+      "lastAttemptTime": "2026-10-12T13:30:00.732117Z",
+      "lastStatusCode": 0
+    },
+    {
+      "name": "projects/fsp-us-prod-499705/locations/us-central1/jobs/legal-os-maintenance",
+      "state": "ENABLED",
+      "schedule": "*/5 * * * *",
+      "timeZone": "Etc/UTC",
+      "uri": "https://legalmaintenance-2feiiv4i4a-uc.a.run.app/",
+      "method": "POST",
+      "oidcServiceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
+      "lastAttemptTime": "2026-10-12T13:30:01.941697Z",
+      "lastStatusCode": 0
+    }
+  ],
+  "schedulerHTTPReceipts": [
+    {
+      "job": "legal-os-generation",
+      "timestamp": "2026-10-12T14:10:16.824531316Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-maintenance",
+      "timestamp": "2026-10-12T14:10:14.079458276Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-generation",
+      "timestamp": "2026-10-12T14:09:08.359423684Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-generation",
+      "timestamp": "2026-10-12T14:08:09.177882800Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-generation",
+      "timestamp": "2026-10-12T14:07:07.955914315Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "opensign-poll",
+      "timestamp": "2026-10-12T14:07:02.896242577Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-document-reviews",
+      "timestamp": "2026-10-12T14:06:53.996142728Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-maintenance",
+      "timestamp": "2026-10-12T14:06:49.122613791Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-generation",
+      "timestamp": "2026-10-12T14:06:42.899716476Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-generation",
+      "timestamp": "2026-10-12T14:06:23.983189348Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-maintenance",
+      "timestamp": "2026-10-12T14:05:17.714404106Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-generation",
+      "timestamp": "2026-10-12T14:05:12.848144611Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    }
+  ],
+  "sourceSchedules": [
+    {
+      "name": "projects/fsp-legal-esign/locations/asia-southeast1/jobs/legal-document-reviews",
+      "state": "PAUSED"
+    },
+    {
+      "name": "projects/fsp-legal-esign/locations/asia-southeast1/jobs/opensign-poll",
+      "state": "PAUSED"
+    },
+    {
+      "name": "projects/fsp-legal-esign/locations/asia-southeast1/jobs/legal-os-maintenance",
+      "state": "PAUSED"
+    }
+  ],
+  "sourceRetirement": {
+    "neonDefaultReadOnly": true,
+    "generationVM": "TERMINATED, disk retained",
+    "oldGenerationCloudRunService": "deleted",
+    "oldMaintenanceCloudRunJob": "deleted, configuration retained privately"
+  },
+  "liveHTTPProbes": [
+    {
+      "origin": "https://legalapp-2feiiv4i4a-uc.a.run.app",
+      "path": "/api/health",
+      "http": 200,
+      "expected": 200,
+      "matches": true,
+      "response": {
+        "status": "ready",
+        "backend": "firestore"
+      }
+    },
+    {
+      "origin": "https://legalapp-2feiiv4i4a-uc.a.run.app",
+      "path": "/documents",
+      "http": 307,
+      "expected": 307,
+      "matches": true,
+      "location": "/login"
+    },
+    {
+      "origin": "https://legalapp-2feiiv4i4a-uc.a.run.app",
+      "path": "/api/integrations/dbot",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://legalapp-2feiiv4i4a-uc.a.run.app",
+      "path": "/api/webhooks/firebase-task",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://legalapp-2feiiv4i4a-uc.a.run.app",
+      "path": "/api/slack/commands",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://legalapp-2feiiv4i4a-uc.a.run.app",
+      "path": "/api/cron/opensign-poll",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://legalapp-2feiiv4i4a-uc.a.run.app",
+      "path": "/api/cron/document-reviews",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-344863505916.us-central1.run.app",
+      "path": "/api/health",
+      "http": 200,
+      "expected": 200,
+      "matches": true,
+      "response": {
+        "status": "ready",
+        "backend": "firestore"
+      }
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-344863505916.us-central1.run.app",
+      "path": "/documents",
+      "http": 307,
+      "expected": 307,
+      "matches": true,
+      "location": "/login"
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-344863505916.us-central1.run.app",
+      "path": "/api/integrations/dbot",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-344863505916.us-central1.run.app",
+      "path": "/api/webhooks/firebase-task",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-344863505916.us-central1.run.app",
+      "path": "/api/slack/commands",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-344863505916.us-central1.run.app",
+      "path": "/api/cron/opensign-poll",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-344863505916.us-central1.run.app",
+      "path": "/api/cron/document-reviews",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-221817683102.asia-southeast1.run.app",
+      "path": "/api/health",
+      "http": 200,
+      "expected": 200,
+      "matches": true,
+      "response": {
+        "status": "ready",
+        "backend": "firestore"
+      }
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-221817683102.asia-southeast1.run.app",
+      "path": "/documents",
+      "http": 307,
+      "expected": 307,
+      "matches": true,
+      "location": "/login"
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-221817683102.asia-southeast1.run.app",
+      "path": "/api/integrations/dbot",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-221817683102.asia-southeast1.run.app",
+      "path": "/api/webhooks/firebase-task",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-221817683102.asia-southeast1.run.app",
+      "path": "/api/slack/commands",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-221817683102.asia-southeast1.run.app",
+      "path": "/api/cron/opensign-poll",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-221817683102.asia-southeast1.run.app",
+      "path": "/api/cron/document-reviews",
+      "http": 401,
+      "expected": 401,
+      "matches": true
+    }
+  ],
+  "generationAcceptance": [
+    {
+      "origin": "https://legalapp-2feiiv4i4a-uc.a.run.app",
+      "worker": "legal-us-proxy",
+      "http": 200,
+      "ready": true,
+      "model": "gpt-6.1-sol",
+      "verifiedAt": "2026-10-12T13:18:50.454Z"
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-344863505916.us-central1.run.app",
+      "worker": "legal-us-proxy",
+      "http": 200,
+      "ready": true,
+      "model": "gpt-6.1-sol",
+      "verifiedAt": "2026-10-12T13:18:50.454Z"
+    },
+    {
+      "origin": "https://lsc-legal-dashboard-221817683102.asia-southeast1.run.app",
+      "worker": "legal-us-proxy",
+      "http": 200,
+      "ready": true,
+      "model": "gpt-6.1-sol",
+      "verifiedAt": "2026-10-12T13:18:50.454Z"
+    }
+  ],
+  "privateEndpointDenials": [
+    {
+      "target": "generation",
+      "unauthenticatedHTTP": 403
+    },
+    {
+      "target": "maintenance",
+      "unauthenticatedHTTP": 403
+    },
+    {
+      "target": "background",
+      "unauthenticatedHTTP": 403
+    },
+    {
+      "target": "directFirestore",
+      "unauthenticatedHTTP": 403
+    }
+  ],
+  "nativeEvent": {
+    "taskId": "c7699c02-c191-4a07-b8d4-74af4e278992",
+    "status": "DONE",
+    "startedAt": "2026-10-12T14:07:24.494Z",
+    "finishedAt": "2026-10-12T14:07:24.567Z",
+    "diagnostic": true,
+    "noLegalAction": true
+  },
+  "remainingAcceptanceBoundaries": [
+    "No production Adi/AK browser or Slack request was impersonated; positive human flows were tested against isolated Firestore.",
+    "D-bot companion activation remains subject to its separate eligible operator policy.",
+    "OpenSign, private CLIProxyAPI and CISO keep their own native stores; document bytes stay in existing managed object storage.",
+    "No Firestore backup restore drill was executed.",
+    "Source comparison predates legitimate new Firestore maintenance and heartbeat writes.",
+    "Production npm audit still reports 41 non-critical package entries, including 25 high entries; no new high package names compared with the pre-migration baseline."
+  ],
+  "firebaseProject": {
+    "name": "projects/fsp-us-prod-499705",
+    "projectId": "fsp-us-prod-499705",
+    "projectNumber": "344863505916",
+    "displayName": "FSP-US-PROD",
+    "state": "ACTIVE"
+  },
+  "functionTraffic": [
+    {
+      "function": "legalApp",
+      "revision": "legalapp-00005-deq",
+      "trafficPercent": 100,
+      "imageDigest": "sha256:f33978fedde9750a673898d8987d22d2f0b7706fc6f9827f4d5ba497128b049d",
+      "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/gcf-artifacts/fsp--us--prod--499705__us--central1__legal_app@sha256:f33978fedde9750a673898d8987d22d2f0b7706fc6f9827f4d5ba497128b049d"
+    },
+    {
+      "function": "legalGeneration",
+      "revision": "legalgeneration-00003-rub",
+      "trafficPercent": 100,
+      "imageDigest": "sha256:c647e9f1053397314141a12900fdefb48f9cb16159998bd64cde907169804eca",
+      "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/gcf-artifacts/fsp--us--prod--499705__us--central1__legal_generation@sha256:c647e9f1053397314141a12900fdefb48f9cb16159998bd64cde907169804eca",
+      "anonymousHTTP": 403
+    },
+    {
+      "function": "legalMaintenance",
+      "revision": "legalmaintenance-00003-vaw",
+      "trafficPercent": 100,
+      "imageDigest": "sha256:c7c390d34c211c335ecb3540a8476175da7a71d03a8a3b968eb578419e9e1b89",
+      "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/gcf-artifacts/fsp--us--prod--499705__us--central1__legal_maintenance@sha256:c7c390d34c211c335ecb3540a8476175da7a71d03a8a3b968eb578419e9e1b89",
+      "anonymousHTTP": 403
+    },
+    {
+      "function": "legalBackground",
+      "revision": "legalbackground-00004-muy",
+      "trafficPercent": 100,
+      "imageDigest": "sha256:223aef3f562f9bf59466d9145668266bce098442f52820cf6533d1b3432145b4",
+      "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/gcf-artifacts/fsp--us--prod--499705__us--central1__legal_background@sha256:223aef3f562f9bf59466d9145668266bce098442f52820cf6533d1b3432145b4",
+      "anonymousHTTP": 403
+    }
+  ],
+  "buildVersionReceipts": [
+    {
+      "buildId": "71d50405-3f58-45d1-932a-12859dc44d86",
+      "timestamp": "2026-10-12T13:53:19.202421838Z",
+      "nextPatchPresent": true
+    },
+    {
+      "buildId": "3f80aec8-bed1-41ba-8bf2-fcfc5b6f8d26",
+      "timestamp": "2026-10-12T13:53:17.351892940Z",
+      "nextPatchPresent": true
+    },
+    {
+      "buildId": "0cfb8046-3be7-4f97-ae4e-bbf3caac7da7",
+      "timestamp": "2026-10-12T13:53:03.602328975Z",
+      "nextPatchPresent": true
+    },
+    {
+      "buildId": "e456582f-b9db-4773-8897-bf856a1c56a3",
+      "timestamp": "2026-10-12T13:52:59.442474915Z",
+      "nextPatchPresent": true
+    }
+  ],
+  "securityPatchCommit": "7d71d479bd437b602ae45eaf20485593d3cef30b",
+  "runtimeVersions": {
+    "next": "16.3.8",
+    "eslint-config-next": "16.3.8",
+    "proxy-addr": "2.0.8"
+  },
+  "productionDependencyAudit": {
+    "counts": {
+      "info": 0,
+      "low": 2,
+      "moderate": 14,
+      "high": 25,
+      "critical": 0,
+      "total": 41
+    },
+    "preMigrationBaseline": {
+      "baselineCommit": "7dd168aac33c015e8d45ad89a0027dcff09859ee",
+      "counts": {
+        "info": 0,
+        "low": 2,
+        "moderate": 13,
+        "high": 25,
+        "critical": 2,
+        "total": 42
+      },
+      "newHighPackageEntries": []
+    },
+    "remediationScope": "Compatible patches for the two critical package entries. Remaining entries require separate reachability and remediation review.",
+    "primaryAdvisories": [
+      "https://github.com/vercel/next.js/security/advisories/GHSA-vcvr-r3jv-pc5j",
+      "https://github.com/jshttp/proxy-addr/security/advisories/GHSA-jqcg-44mw-7w3h"
+    ]
+  }
+}
