@@ -6,6 +6,7 @@ import { createServer, request } from 'node:http'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { generationTick, maintenanceTick } from './workers.mjs'
+import { cloudEvent } from '@google-cloud/functions-framework'
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 if (process.env.LEGAL_OS_FIREBASE_RUNTIME) {
   const configuration = JSON.parse(process.env.LEGAL_OS_FIREBASE_RUNTIME)
@@ -77,3 +78,7 @@ export const legalMaintenance = onRequest(workerOptions, async (req, res) => {
   await maintenanceTick()
   res.json({ state: 'completed' })
 })
+
+// Native gcloud deployment otherwise selects the legacy event signature.
+// Register the CloudEvent contract so Firestore path parameters remain intact.
+cloudEvent('legalBackground', legalBackground)

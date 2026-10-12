@@ -84,6 +84,12 @@ This version has breaking changes — APIs, conventions, and file structure may 
   loads that framework boundary only when requesting a web session or redirect.
 - Rules REST calls require `x-goog-user-project=fsp-us-prod-499705`; otherwise
   the gcloud OAuth client can report SERVICE_DISABLED for its quota project.
+- With native gcloud deployment, register the Firestore handler explicitly with
+  the Functions framework's `cloudEvent` API. Its legacy event adapter drops
+  Firestore document parameters even while the invocation reports HTTP 200.
+- Cloud Run memory flags use `Mi`/`Gi`, not Functions' `MiB`/`GiB`. A small
+  compatibility gateway must enable CPU throttling; inherited always-on CPU
+  rejects memory below 512 Mi.
 - Cancel subprocesses by retaining SIGKILL escalation until process close. Node's
   built-in spawn AbortSignal can reject before a stubborn child exits.
 - Preserve the exact template bytes before rendering/signature submission, including

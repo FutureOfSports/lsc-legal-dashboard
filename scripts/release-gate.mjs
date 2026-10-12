@@ -5,6 +5,7 @@ const commands = [
   ["node", ["scripts/check-agent-hygiene.mjs"]],
   ["npx", ["prisma", "validate"]],
   ["npx", ["tsc", "--noEmit"]],
+  ["node", ["scripts/verify-firebase-events.mjs"]],
   ["node", ["scripts/verify-ai-proxy.mjs"]],
   ["node", ["scripts/verify-ai-provider-routing.mjs"]],
   ["node", ["scripts/verify-proxy-generation.mjs"]],
