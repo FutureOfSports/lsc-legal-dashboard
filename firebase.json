@@ -1,0 +1,11 @@
+{
+  "firestore": [
+    { "database": "legal-os", "rules": "firestore.rules" }
+  ],
+  "functions": [{
+    "source": ".",
+    "codebase": "legal-os",
+    "runtime": "nodejs22",
+    "ignore": [".git", "node_modules", ".next", ".env*", ".vercel", "*.log", "coverage", "docs", ".claude"]
+  }]
+}

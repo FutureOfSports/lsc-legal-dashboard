@@ -39,7 +39,7 @@ until they have a class, trigger, tests, and observable output.
     boundaries. Production acceptance requires separate deployed receipts.
 
 - `src/actions/documents.ts`
-  - New upload with extracted text: schedules `agreement-analyzer` with `after()`.
+  - New upload with extracted text: durably queues `agreement-analyzer` through `scheduleLegalTask` on Firebase.
   - Analyzer output is persisted to `DocumentAnalysis`; the latest row is the source of truth for summaries, dates, clauses, gaps, risks, and next steps.
   - `DRAFT -> IN_REVIEW`: schedules `agreement-analyzer`.
   - `NEGOTIATION -> AWAITING_SIGNATURE`: schedules `pre-signature-checklist`.
@@ -63,7 +63,7 @@ until they have a class, trigger, tests, and observable output.
   - Uploads the current PDF to OpenSign, sends pending signers, and stores OpenSign provider IDs/signing links on Legal rows.
   - Optional widget JSON can be supplied per signer; otherwise the action sends default signature/date widgets on page 1.
   - Transitions the document to `AWAITING_SIGNATURE` and marks pending signers as `SENT`.
-  - After the transaction commits, schedules a legal tracker channel notification with `after()`. A channel outage must never fail or slow a signature send.
+  - After the transaction commits, durably queues a legal tracker channel notification. A channel outage must never fail or slow a signature send.
 - `src/lib/legal-tracker.ts` + `src/lib/legal-tracker-payloads.ts`
   - Outbound channel notifier for the legal tracker channel that Aditya Mishra watches. Transport and pure payload builders are split the same way `finance-webhook.ts` and `finance-payloads.ts` are.
   - Driver is chosen by `LEGAL_TRACKER_CHANNEL_PROVIDER`: `slack`, `google_chat`, `mailgun`, or `none`. Unset auto-detects from whichever credentials exist.
@@ -76,7 +76,7 @@ until they have a class, trigger, tests, and observable output.
 - `src/actions/redlines.ts`
   - Redline lifecycle for the redline editor and tracker. Every action requires `PLATFORM_ADMIN`, `LEGAL_ADMIN` or `OPS_ADMIN`.
   - `createRedlineFromDocument` extracts text from the stored S3 file (or a chosen `DocumentVersion`), stores it as both `base_text` and `proposed_text`, and opens a new round.
-  - `transitionRedline` writes the status plus a `RedlineEvent` in one transaction, and on `SENT_TO_COUNTERPARTY` notifies the legal tracker channel inside `after()`.
+  - `transitionRedline` writes the status plus a `RedlineEvent` in one transaction, and on `SENT_TO_COUNTERPARTY` durably queues a legal tracker channel notification.
 - `src/app/api/webhooks/opensign/route.ts`
   - Verifies `x-webhook-signature` / `x-opensign-signature` / `x-signature` with `OPENSIGN_WEBHOOK_SECRET` using HMAC-SHA256.
   - Dedupes callbacks with `WebhookEventLog.event_hash`.
@@ -92,9 +92,9 @@ until they have a class, trigger, tests, and observable output.
 
 ## Required Runtime Env
 
-Production configuration belongs to GCP Cloud Run and the isolated worker, never committed `.env` files:
+Production configuration belongs to the versioned Firebase Secret Manager bundle and private service dependencies, never committed `.env` files. See `ops/firebase/README.md`:
 
-- Auth/database: `AUTH_SESSION_SECRET`, `AUTH_ALLOWED_EMAILS`, `DATABASE_URL`, `DIRECT_DATABASE_URL`
+- Auth/database: `AUTH_SESSION_SECRET`, `AUTH_ALLOWED_EMAILS`, `LEGAL_DATA_BACKEND=firestore`, `LEGAL_FIRESTORE_PROJECT`, `LEGAL_FIRESTORE_DATABASE`, `LEGAL_FIRESTORE_PAYLOAD_BUCKET`. Postgres URLs remain only in rollback/source configuration.
 - Cron: `CRON_SECRET`
 - AI: `AI_PROVIDER=cliproxyapi`, `CLIPROXY_BASE_URL`, `CLIPROXY_MODEL=gpt-6.1-sol`,
   secret `CLIPROXY_API_KEY`, and `CLIPROXY_ID_TOKEN_AUDIENCE` equal to the private
@@ -157,7 +157,7 @@ Deployment invariants after the 21 September 2026 v2 implementation:
 
 ## V2 durable workflows
 
-- `scripts/run-document-exports.ts` runs outside the HTTP request, processing
+- The private `legalMaintenance` Function runs `scripts/run-document-exports.ts`, processing
   export and final-only Drive publication queues plus sourced FX refresh.
 - `/api/cron/document-reviews` materializes idempotent scheduled review tasks.
   Document and policy changes emit dependency tasks with source provenance.
@@ -172,13 +172,13 @@ Deployment invariants after the 21 September 2026 v2 implementation:
 
 - `src/actions/fsp-compliance.ts` records manual source reviews, business facts
   and legal decisions against immutable snapshots. Reads and writes require
-  fresh membership of the four confirmed legal principals; writes require a
+  fresh membership of Adi and AK only; writes require a
   legal, platform or operations administrator role.
 - The only production enqueue action derives metadata from a current applicable
   legal decision. Source-only feature signals never establish statutory scope.
   Unknown business facts, future rules, stale evidence and superseded decisions
   cannot approve a control for delivery.
-- A human Send to CISO request starts the fixed `CISO_ASSISTANT_SYNC_JOB` with no
+- A human Send to CISO request queues the fixed Firebase background task with no
   caller-supplied execution overrides. Queue persistence precedes job launch;
   a launch failure preserves the request for an explicit retry.
 - `scripts/run-ciso-sync.ts` rechecks the original actor and exact approval hash

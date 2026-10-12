@@ -5,6 +5,7 @@ const PUBLIC_PATHS = ["/login"]
 
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
+  if (pathname === '/api/health') return NextResponse.next()
 
   if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
     return NextResponse.next()

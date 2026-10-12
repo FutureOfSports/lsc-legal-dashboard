@@ -6,7 +6,7 @@ import { setKycVerification } from '@/lib/entity-service'
 import { dateField, enumField, requiredText, textField, ENTITY_CODES, JURISDICTION_CODES } from '@/lib/entity-input'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
-import { after } from 'next/server'
+import { scheduleLegalTask } from '@/lib/background-task'
 import { uploadToS3, getS3Key } from '@/lib/s3'
 import { extractTextFromFile } from '@/lib/extract-text'
 import { runAgent } from '@/lib/agents/orchestrator'
@@ -15,7 +15,7 @@ import type { Entity, Jurisdiction, KycDocStatus } from '@/generated/prisma/clie
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 
 export async function createKycDocument(formData: FormData) {
-  await requireGlobalDocumentAccess(await requireRole(['PLATFORM_ADMIN', 'LEGAL_ADMIN', 'OPS_ADMIN']))
+  const session = await requireGlobalDocumentAccess(await requireRole(['PLATFORM_ADMIN', 'LEGAL_ADMIN', 'OPS_ADMIN']))
 
   const file = formData.get('file') as File | null
   const entity = enumField(formData, 'entity', ENTITY_CODES)
@@ -53,7 +53,7 @@ export async function createKycDocument(formData: FormData) {
 
   const content = extractedText.trim() || documentName
   if (hasFile && content.trim()) {
-    after(async () => {
+    await scheduleLegalTask({ kind: 'agent', agentId: 'agreement-analyzer', input: { kycDocumentId: document.id, sourceType: 'kyc_document', sourceLabel: file.name, content } }, async () => {
       try {
         await runAgent('agreement-analyzer', {
           kycDocumentId: document.id,
@@ -64,7 +64,7 @@ export async function createKycDocument(formData: FormData) {
       } catch (error) {
         console.error('KYC document analysis failed (non-blocking):', error)
       }
-    })
+    }, session.userId)
   }
 
   revalidatePath('/legal/compliance/entities/kyc')
@@ -73,7 +73,7 @@ export async function createKycDocument(formData: FormData) {
 }
 
 export async function uploadKycDocumentFile(formData: FormData) {
-  await requireGlobalDocumentAccess(await requireRole(['PLATFORM_ADMIN', 'LEGAL_ADMIN', 'OPS_ADMIN']))
+  const session = await requireGlobalDocumentAccess(await requireRole(['PLATFORM_ADMIN', 'LEGAL_ADMIN', 'OPS_ADMIN']))
 
   const file = formData.get('file') as File
   const documentId = formData.get('kycDocumentId') as string
@@ -98,7 +98,7 @@ export async function uploadKycDocumentFile(formData: FormData) {
   })
 
   const content = extractedText.trim() || document.document_name
-  after(async () => {
+  await scheduleLegalTask({ kind: 'agent', agentId: 'agreement-analyzer', input: { kycDocumentId: document.id, sourceType: 'kyc_document', sourceLabel: file.name, content } }, async () => {
     try {
       await runAgent('agreement-analyzer', {
         kycDocumentId: document.id,
@@ -109,7 +109,7 @@ export async function uploadKycDocumentFile(formData: FormData) {
     } catch (error) {
       console.error('KYC document analysis failed (non-blocking):', error)
     }
-  })
+  }, session.userId)
 
   revalidatePath('/legal/compliance/entities/kyc')
   revalidatePath('/legal/compliance/entities', 'layout')

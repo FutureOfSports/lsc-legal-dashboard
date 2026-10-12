@@ -8,21 +8,21 @@ import { prisma } from "@/lib/prisma"
 import { requireRole } from "@/lib/auth"
 import { VALID_TRANSITIONS } from "@/lib/constants"
 import { revalidatePath } from "next/cache"
-import { after } from "next/server"
+import { scheduleLegalTask, type LegalTask } from "@/lib/background-task"
+import { maybeEmitContractEvent } from "@/lib/document-finance"
 import { runAgent } from "@/lib/agents/orchestrator"
 import { uploadToS3, getS3Key } from "@/lib/s3"
 import { extractTextFromFile } from "@/lib/extract-text"
 import { emitFinanceEvent } from "@/lib/finance-webhook"
 import { buildContractPayload } from "@/lib/finance-payloads"
-import { mapLifecycleStatusToContractStatus } from "@/lib/finance-mapping"
 import type { AgentId } from "@/lib/agents/types"
-import type { LegalDocument, LifecycleStatus } from "@/generated/prisma/client"
+import type { LifecycleStatus } from "@/generated/prisma/client"
 
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 
 /** Optional background work cannot change the receipt for a committed document mutation. */
-function scheduleAfterSave(work: () => Promise<void>) {
-  try { after(work) } catch (error) { console.error('Post-save work could not be scheduled (non-blocking):', error) }
+async function scheduleAfterSave(task: LegalTask, work: () => Promise<void>, actorId: string) {
+  try { await scheduleLegalTask(task, work, actorId) } catch (error) { console.error('Post-save work could not be scheduled (non-blocking):', error) }
 }
 
 // Lifecycle states for which we mirror a contract to Finance. Pre-signature
@@ -35,56 +35,6 @@ const SYNC_FROM_STATES = new Set<LifecycleStatus>([
   "EXPIRED",
   "TERMINATED",
 ])
-
-/**
- * Decide whether a lifecycle transition warrants firing a Finance contract
- * event, and if so, fire it. Mirrors sync status onto the LegalDocument.
- *
- * Rules:
- *  - First time the doc lands in a syncable state AND it has never been
- *    synced before (last_finance_post_at IS NULL) → contract.created
- *  - Subsequent transitions while in a syncable state → contract.updated
- *  - Pre-signature transitions → no-op (return early)
- */
-async function maybeEmitContractEvent(documentId: string): Promise<void> {
-  const doc = await prisma.legalDocument.findUnique({ where: { id: documentId } })
-  if (!doc) return
-
-  if (!SYNC_FROM_STATES.has(doc.lifecycle_status)) {
-    return
-  }
-
-  const eventType = doc.last_finance_post_at ? "contract.updated" : "contract.created"
-
-  // Auto-derive contract_status from lifecycle_status for the payload.
-  const derivedStatus = mapLifecycleStatusToContractStatus(doc.lifecycle_status)
-  const docForPayload: LegalDocument = {
-    ...doc,
-    contract_status: doc.contract_status ?? derivedStatus,
-  }
-
-  await prisma.legalDocument.update({
-    where: { id: documentId },
-    data: {
-      contract_status: derivedStatus,
-      finance_post_status: "pending",
-    },
-  })
-
-  const result = await emitFinanceEvent(eventType, buildContractPayload(docForPayload), {
-    entityType: "LegalDocument",
-    entityId: documentId,
-  })
-
-  await prisma.legalDocument.update({
-    where: { id: documentId },
-    data: {
-      last_finance_post_at: new Date(),
-      finance_post_status: result.ok ? "synced" : "failed",
-      last_finance_post_error: result.ok ? null : (result.error ?? "Unknown error"),
-    },
-  })
-}
 
 // Maps a lifecycle transition to the agent that fires once the DB update
 // succeeds. Only the three high-value transitions trigger an AI agent —
@@ -188,7 +138,7 @@ export async function createDocument(formData: FormData) {
     // 4. If a file was uploaded, fire the analyzer in the background on its
     // actual text content. UI returns instantly; AI runs via after().
     if (hasFile && extractedText.trim()) {
-      scheduleAfterSave(async () => {
+      await scheduleAfterSave({ kind: "agent", agentId: "agreement-analyzer", input: { documentId: document.id, versionId: initialVersion.id, sourceType: "legal_document", sourceLabel: file.name, content: extractedText } }, async () => {
         try {
           await runAgent("agreement-analyzer", {
             documentId: document.id,
@@ -200,7 +150,7 @@ export async function createDocument(formData: FormData) {
         } catch (err) {
           console.error("Agent analysis failed (non-blocking):", err)
         }
-      })
+      }, session.userId)
     }
 
     revalidatePath("/legal")
@@ -266,7 +216,7 @@ export async function transitionDocument(
     const willEmitFinance = SYNC_FROM_STATES.has(toStatus)
 
     if (agentId || willEmitFinance) {
-      scheduleAfterSave(async () => {
+      await scheduleAfterSave({ kind: "lifecycle", documentId, ...(agentId ? { agentId } : {}), emitFinance: willEmitFinance }, async () => {
         if (agentId) {
           try {
             const docContent = agentId === "agreement-analyzer"
@@ -287,7 +237,7 @@ export async function transitionDocument(
             console.error(`Finance contract event failed for ${documentId}:`, err)
           }
         }
-      })
+      }, session.userId)
     }
 
     return { success: true }

@@ -15,7 +15,7 @@ import {
 } from "@/lib/opensign"
 import { getPresignedUrl, getS3KeyFromUrl } from "@/lib/s3"
 import { revalidatePath } from "next/cache"
-import { after } from "next/server"
+import { scheduleLegalTask } from "@/lib/background-task"
 import { PDFDocument } from "pdf-lib"
 
 function getOpenSignErrorMessage(error: unknown): string {
@@ -309,7 +309,7 @@ export async function createOpenSignSignatureRequest(formData: FormData) {
       appBaseUrl: getAppBaseUrl(),
     })
 
-    after(async () => {
+    await scheduleLegalTask({ kind: "tracker", event: "agreement.sent", message: trackerMessage, ref: { entityType: "LegalDocument", entityId: documentId } }, async () => {
       try {
         // The notifier reports delivery failure by return value, not by
         // throwing, so an unchecked result would be a silent miss.
@@ -326,7 +326,7 @@ export async function createOpenSignSignatureRequest(formData: FormData) {
       } catch (err) {
         console.error("Legal tracker notification failed (non-blocking):", err)
       }
-    })
+    }, session.userId)
 
     return {
       success: true,

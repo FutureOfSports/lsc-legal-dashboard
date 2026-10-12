@@ -21,7 +21,8 @@ async function main() {
   assert.equal(process.env.FINANCE_WEBHOOK_URL, undefined, 'No external Finance receiver may be configured')
   const tag = `SYNTHETIC-V2-${randomUUID()}`
   const user = await prisma.appUser.upsert({ where: { email: 'ak@futureofsports.io' }, update: {}, create: { email: 'ak@futureofsports.io', full_name: 'Synthetic verification actor', role: 'LEGAL_ADMIN', password_hash: 'unusable-synthetic-test-hash' } })
-  const session: SessionPayload = { userId: user.id, email: user.email, role: user.role, fullName: user.full_name, exp: Date.now() + 60000 }
+  // Remote Firestore transaction checks outlast a minute; expiry denial has its own access check.
+  const session: SessionPayload = { userId: user.id, email: user.email, role: user.role, fullName: user.full_name, exp: Date.now() + 10 * 60000 }
   const createdCases: string[] = [], createdSchedules: string[] = [], createdProfiles: string[] = [], createdDocuments: string[] = [], createdKyc: string[] = [], createdPolicies: string[] = []
   try {
     const profile = await saveEntityProfileForSession(session, form({ legal_name: tag, jurisdiction: 'UAE', source_reference: 'Synthetic integration fixture only' })); createdProfiles.push(profile.id)

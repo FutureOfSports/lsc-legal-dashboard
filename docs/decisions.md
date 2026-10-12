@@ -276,3 +276,29 @@ Applicability decisions, verified controls, final document approval/publication,
 access grants and signature sends retain human approval. No recurring compliance
 review is enabled. See ops/dbot/README.md and the dated deployment receipt for
 implemented, deployed and pending boundaries.
+
+## 12 October 2026: Full Legal OS Firebase migration
+
+Anuj confirmed that the entire Legal OS application and business database should
+move to Firebase Functions and Firestore. The destination remains FSP US
+production. The database is dedicated `legal-os` in `us-central1`, with server
+IAM, client-deny rules, delete protection, PITR and daily retained backups.
+
+The existing typed model contract is retained through a Firestore transport,
+including exact Decimal values and atomic relational behavior. Original source
+snapshots preserve SQL types/text; normalized comparisons reflect the existing
+application's millisecond dates and empty-list representation. Large structured
+fields use hash-verified immutable private GCS payloads.
+
+Firebase Functions run the complete app and bounded operational consumers.
+Deferred tasks persist before HTTP acknowledgement. Unknown execution outcomes
+remain uncertain and require receipt inspection; no automatic legal action
+replay or recurring AI compliance review is introduced. Readiness maintenance
+continues for explicitly requested generation with the exact private proxy model.
+
+Old published URLs become compatibility gateways after the final frozen-writer
+snapshot and independent comparison. Old revisions and source backups are
+retained. Subsequent Firestore writes make a hosting-only database rollback
+unsafe. Signing, CISO, proxy native storage and D-bot operator controls remain
+separate dependencies. Current evidence and cutover state belong in
+`ops/firebase/README.md` and its dated deployment receipt.

@@ -1,8 +1,14 @@
 /** A human delivery request launches the isolated worker. No recurring schedule is installed. */
 import 'server-only'
 import { GoogleAuth } from 'google-auth-library'
+import { scheduleLegalTask } from '@/lib/background-task'
 
 export async function requestCisoDelivery(): Promise<void> {
+  if (process.env.LEGAL_DATA_BACKEND === 'firestore') {
+    if (process.env.CISO_ASSISTANT_ENABLED !== '1') throw new Error('CISO delivery is disabled.')
+    await scheduleLegalTask({ kind: 'ciso-delivery' }, async () => {})
+    return
+  }
   const job = process.env.CISO_ASSISTANT_SYNC_JOB
   if (process.env.CISO_ASSISTANT_ENABLED !== '1' || !job
     || !/^projects\/[a-z][a-z0-9-]+\/locations\/[a-z]+-[a-z]+[0-9]\/jobs\/[a-z][a-z0-9-]+$/.test(job)) {

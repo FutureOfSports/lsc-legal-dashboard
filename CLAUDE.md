@@ -36,20 +36,20 @@ Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()
 
 ## Tech Stack
 - **Framework**: Next.js 16.3.5 (App Router, Server Components)
-- **Database**: NeonDB (PostgreSQL) via Prisma 7.6.0
+- **Database**: Firestore migration in progress. The typed Prisma 7.6.0 model contract is retained through `src/lib/firestore`; Neon remains the source until the final frozen-writer comparison and cutover receipt.
 - **UI**: shadcn/ui + Tailwind CSS v4 (dark mode primary)
 - **Charts**: Recharts
 - **AI**: CLIProxyAPI v8.0.16 with verified native Codex OAuth and exact `gpt-6.1-sol`; private Responses transport, isolated generation worker and human approval. See the dated intelligence verification receipt for activation status.
 - **Drag & Drop**: @dnd-kit/core
 - **Icons**: lucide-react
 - **Auth**: Custom cookie-based HMAC sessions
-- **Deploy**: primary GCP Cloud Run `lsc-legal-dashboard` in `fsp-us-prod-499705` / `us-central1`; original `fsp-legal-esign` / `asia-southeast1` URL remains compatible. Existing Neon data, document bucket and signing URLs are retained.
+- **Deploy**: Firebase Functions v2 migration in `fsp-us-prod-499705` / `us-central1`. `ops/firebase/index.mjs` owns app and worker entry points. Existing Cloud Run URLs become raw-request forwarding gateways only after verified cutover. Document storage, private proxy and signing URLs are separate dependencies.
 
 ## Key Rules
 1. **Read Next.js 16 docs first**: Check `node_modules/next/dist/docs/` before writing any code. `params` and `searchParams` are Promises in page components — always `await` them.
 2. **Server Components by default**: Only add `'use client'` when you need state, effects, or event handlers.
 3. **Dark mode primary**: slate-950 background everywhere. See `.claude/skills/design-system.md` for full tokens.
-4. **Prisma for all DB access**: Use the singleton from `src/lib/prisma.ts`. Never raw SQL unless reading finance tables.
+4. **Typed model API for DB access**: Use the singleton from `src/lib/prisma.ts`. Firestore transactions enforce defaults, relations, uniqueness and exact decimal serialization. Regenerate its contract with `npm run firestore:schema` after changing `prisma/schema.prisma`. Never add unsupported transport operators or raw SQL to an application flow.
 5. **Server Actions for mutations**: All writes go through `src/actions/`. Always call `requireSession()` or `requireRole()` first.
 6. **Financial figures use JetBrains Mono**: `font-mono tabular-nums` class on all numbers.
 7. **USD reporting default**: Keep agreement-currency Decimal values and display native amounts with sourced USD references using `src/lib/money.ts`. Missing/stale FX and unknown amounts remain explicit. Never relabel native amounts or use floating-point money.

@@ -9,8 +9,6 @@ const strict = process.argv.includes("--strict") || process.env.RELEASE_GATE_STR
 const requiredEnv = [
   "AUTH_SESSION_SECRET",
   "AUTH_ALLOWED_EMAILS",
-  "DATABASE_URL",
-  "DIRECT_DATABASE_URL",
   "CRON_SECRET",
   "AI_PROVIDER",
   // File storage is GCS via the S3-interop API; the AWS account is retired.
@@ -23,6 +21,8 @@ const requiredEnv = [
   "FINANCE_WEBHOOK_KEY",
   "FINANCE_WEBHOOK_SECRET",
 ]
+if (process.env.LEGAL_DATA_BACKEND === 'firestore') requiredEnv.push('LEGAL_FIRESTORE_PROJECT', 'LEGAL_FIRESTORE_DATABASE', 'LEGAL_FIRESTORE_PAYLOAD_BUCKET')
+else requiredEnv.push('DATABASE_URL', 'DIRECT_DATABASE_URL')
 
 const aiProvider = (process.env.AI_PROVIDER ?? "cliproxyapi").toLowerCase()
 if (process.env.DBOT_ENABLED === '1') requiredEnv.push('DBOT_ID_TOKEN_AUDIENCE', 'DBOT_SERVICE_ACCOUNT')

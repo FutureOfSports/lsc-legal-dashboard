@@ -1,12 +1,14 @@
 import pg from "pg"
 import { PrismaPg } from "@prisma/adapter-pg"
 import { PrismaClient } from "@/generated/prisma/client"
+import { createFirestoreClient } from "./firestore/client"
 
 const globalForPrisma = globalThis as unknown as {
   prisma: InstanceType<typeof PrismaClient> | undefined
 }
 
 function createPrismaClient() {
+  if (process.env.LEGAL_DATA_BACKEND === "firestore") return createFirestoreClient()
   const pool = new pg.Pool({
     connectionString: process.env.DATABASE_URL,
   })

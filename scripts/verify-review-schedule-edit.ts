@@ -17,7 +17,8 @@ async function main() {
   assert.equal(new URL(process.env.DATABASE_URL ?? '').pathname, '/legal_os_v2_verify_20260921', 'Refusing non-verification database')
   const tag = `SYNTHETIC-EDIT-${randomUUID()}`
   const actor = await prisma.appUser.upsert({ where: { email: 'ak@futureofsports.io' }, update: {}, create: { email: 'ak@futureofsports.io', full_name: 'Synthetic verification actor', role: 'LEGAL_ADMIN', password_hash: 'unusable-synthetic-test-hash' } })
-  const session: SessionPayload = { userId: actor.id, email: actor.email, fullName: actor.full_name, role: actor.role, exp: Date.now() + 60000 }
+  // The remote transactional check needs a bounded fixture lifetime beyond one minute.
+  const session: SessionPayload = { userId: actor.id, email: actor.email, fullName: actor.full_name, role: actor.role, exp: Date.now() + 10 * 60000 }
   const today = utcDay(new Date())
   const start = addCalendarMonths(today, -12)
   let policyId: string | undefined, scheduleId: string | undefined, publicScheduleId: string | undefined, documentId: string | undefined
