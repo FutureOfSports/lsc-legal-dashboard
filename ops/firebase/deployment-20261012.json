@@ -1,10 +1,11 @@
 {
-  "capturedAt": "2026-10-12T13:32:43.465034+00:00",
+  "capturedAt": "2026-10-12T14:13:10.819456+00:00",
   "project": "fsp-us-prod-499705",
   "region": "us-central1",
   "codeCommits": [
     "5ca43c1a63744e4543c02a0d03e14d7277dc7359",
-    "7dd2d87d747116e0d7acfa2af271d8819b66fb85"
+    "7dd2d87d747116e0d7acfa2af271d8819b66fb85",
+    "7d71d479bd437b602ae45eaf20485593d3cef30b"
   ],
   "pullRequest": "https://github.com/FutureOfSports/lsc-legal-dashboard/pull/10",
   "dataVerification": {
@@ -436,7 +437,7 @@
     {
       "name": "legalApp",
       "state": "ACTIVE",
-      "revision": "legalapp-00004-joc",
+      "revision": "legalapp-00005-deq",
       "uri": "https://legalapp-2feiiv4i4a-uc.a.run.app",
       "runtime": "nodejs22",
       "serviceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
@@ -449,12 +450,14 @@
           "key": "LEGAL_OS_FIREBASE_RUNTIME",
           "version": "3"
         }
-      ]
+      ],
+      "releaseSHA": "7d71d479bd437b602ae45eaf20485593d3cef30b",
+      "build": "projects/344863505916/locations/us-central1/builds/3f80aec8-bed1-41ba-8bf2-fcfc5b6f8d26"
     },
     {
       "name": "legalGeneration",
       "state": "ACTIVE",
-      "revision": "legalgeneration-00002-dew",
+      "revision": "legalgeneration-00003-rub",
       "uri": "https://legalgeneration-2feiiv4i4a-uc.a.run.app",
       "runtime": "nodejs22",
       "serviceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
@@ -467,12 +470,14 @@
           "key": "LEGAL_OS_FIREBASE_RUNTIME",
           "version": "2"
         }
-      ]
+      ],
+      "releaseSHA": "7d71d479bd437b602ae45eaf20485593d3cef30b",
+      "build": "projects/344863505916/locations/us-central1/builds/e456582f-b9db-4773-8897-bf856a1c56a3"
     },
     {
       "name": "legalMaintenance",
       "state": "ACTIVE",
-      "revision": "legalmaintenance-00002-nil",
+      "revision": "legalmaintenance-00003-vaw",
       "uri": "https://legalmaintenance-2feiiv4i4a-uc.a.run.app",
       "runtime": "nodejs22",
       "serviceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
@@ -485,12 +490,14 @@
           "key": "LEGAL_OS_FIREBASE_RUNTIME",
           "version": "2"
         }
-      ]
+      ],
+      "releaseSHA": "7d71d479bd437b602ae45eaf20485593d3cef30b",
+      "build": "projects/344863505916/locations/us-central1/builds/71d50405-3f58-45d1-932a-12859dc44d86"
     },
     {
       "name": "legalBackground",
       "state": "ACTIVE",
-      "revision": "legalbackground-00003-lip",
+      "revision": "legalbackground-00004-muy",
       "uri": "https://legalbackground-2feiiv4i4a-uc.a.run.app",
       "runtime": "nodejs22",
       "serviceAccount": "legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com",
@@ -503,7 +510,9 @@
           "key": "LEGAL_OS_FIREBASE_RUNTIME",
           "version": "2"
         }
-      ]
+      ],
+      "releaseSHA": "7d71d479bd437b602ae45eaf20485593d3cef30b",
+      "build": "projects/344863505916/locations/us-central1/builds/0cfb8046-3be7-4f97-ae4e-bbf3caac7da7"
     }
   ],
   "gateways": [
@@ -608,50 +617,74 @@
   ],
   "schedulerHTTPReceipts": [
     {
+      "job": "legal-os-generation",
+      "timestamp": "2026-10-12T14:10:16.824531316Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
       "job": "legal-os-maintenance",
-      "timestamp": "2026-10-12T13:25:06.977885096Z",
+      "timestamp": "2026-10-12T14:10:14.079458276Z",
       "status": null,
       "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
     },
     {
       "job": "legal-os-generation",
-      "timestamp": "2026-10-12T13:24:10.948845414Z",
+      "timestamp": "2026-10-12T14:09:08.359423684Z",
       "status": null,
       "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
     },
     {
       "job": "legal-os-generation",
-      "timestamp": "2026-10-12T13:23:10.264762191Z",
+      "timestamp": "2026-10-12T14:08:09.177882800Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-generation",
+      "timestamp": "2026-10-12T14:07:07.955914315Z",
       "status": null,
       "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
     },
     {
       "job": "opensign-poll",
-      "timestamp": "2026-10-12T13:22:33.744930915Z",
-      "status": null,
-      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
-    },
-    {
-      "job": "legal-os-maintenance",
-      "timestamp": "2026-10-12T13:22:30.823710056Z",
+      "timestamp": "2026-10-12T14:07:02.896242577Z",
       "status": null,
       "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
     },
     {
       "job": "legal-document-reviews",
-      "timestamp": "2026-10-12T13:22:28.908008399Z",
+      "timestamp": "2026-10-12T14:06:53.996142728Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-maintenance",
+      "timestamp": "2026-10-12T14:06:49.122613791Z",
       "status": null,
       "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
     },
     {
       "job": "legal-os-generation",
-      "timestamp": "2026-10-12T13:22:23.735682542Z",
+      "timestamp": "2026-10-12T14:06:42.899716476Z",
       "status": null,
       "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
     },
     {
       "job": "legal-os-generation",
-      "timestamp": "2026-10-12T13:22:10.797556074Z",
+      "timestamp": "2026-10-12T14:06:23.983189348Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-maintenance",
+      "timestamp": "2026-10-12T14:05:17.714404106Z",
+      "status": null,
+      "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
+    },
+    {
+      "job": "legal-os-generation",
+      "timestamp": "2026-10-12T14:05:12.848144611Z",
       "status": null,
       "debugInfo": "URL_CRAWLED. Original HTTP response code number = 200"
     }
@@ -885,10 +918,11 @@
     }
   ],
   "nativeEvent": {
-    "taskId": "58db732f-6a62-4103-9f74-94b07bad8a44",
+    "taskId": "c7699c02-c191-4a07-b8d4-74af4e278992",
     "status": "DONE",
-    "startedAt": "2026-10-12T13:02:04.425Z",
-    "finishedAt": "2026-10-12T13:02:04.580Z",
+    "startedAt": "2026-10-12T14:07:24.494Z",
+    "finishedAt": "2026-10-12T14:07:24.567Z",
+    "diagnostic": true,
     "noLegalAction": true
   },
   "remainingAcceptanceBoundaries": [
@@ -896,7 +930,8 @@
     "D-bot companion activation remains subject to its separate eligible operator policy.",
     "OpenSign, private CLIProxyAPI and CISO keep their own native stores; document bytes stay in existing managed object storage.",
     "No Firestore backup restore drill was executed.",
-    "Source comparison predates legitimate new Firestore maintenance and heartbeat writes."
+    "Source comparison predates legitimate new Firestore maintenance and heartbeat writes.",
+    "Production npm audit still reports 41 non-critical package entries, including 25 high entries; no new high package names compared with the pre-migration baseline."
   ],
   "firebaseProject": {
     "name": "projects/fsp-us-prod-499705",
@@ -904,5 +939,93 @@
     "projectNumber": "344863505916",
     "displayName": "FSP-US-PROD",
     "state": "ACTIVE"
+  },
+  "functionTraffic": [
+    {
+      "function": "legalApp",
+      "revision": "legalapp-00005-deq",
+      "trafficPercent": 100,
+      "imageDigest": "sha256:f33978fedde9750a673898d8987d22d2f0b7706fc6f9827f4d5ba497128b049d",
+      "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/gcf-artifacts/fsp--us--prod--499705__us--central1__legal_app@sha256:f33978fedde9750a673898d8987d22d2f0b7706fc6f9827f4d5ba497128b049d"
+    },
+    {
+      "function": "legalGeneration",
+      "revision": "legalgeneration-00003-rub",
+      "trafficPercent": 100,
+      "imageDigest": "sha256:c647e9f1053397314141a12900fdefb48f9cb16159998bd64cde907169804eca",
+      "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/gcf-artifacts/fsp--us--prod--499705__us--central1__legal_generation@sha256:c647e9f1053397314141a12900fdefb48f9cb16159998bd64cde907169804eca",
+      "anonymousHTTP": 403
+    },
+    {
+      "function": "legalMaintenance",
+      "revision": "legalmaintenance-00003-vaw",
+      "trafficPercent": 100,
+      "imageDigest": "sha256:c7c390d34c211c335ecb3540a8476175da7a71d03a8a3b968eb578419e9e1b89",
+      "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/gcf-artifacts/fsp--us--prod--499705__us--central1__legal_maintenance@sha256:c7c390d34c211c335ecb3540a8476175da7a71d03a8a3b968eb578419e9e1b89",
+      "anonymousHTTP": 403
+    },
+    {
+      "function": "legalBackground",
+      "revision": "legalbackground-00004-muy",
+      "trafficPercent": 100,
+      "imageDigest": "sha256:223aef3f562f9bf59466d9145668266bce098442f52820cf6533d1b3432145b4",
+      "image": "us-central1-docker.pkg.dev/fsp-us-prod-499705/gcf-artifacts/fsp--us--prod--499705__us--central1__legal_background@sha256:223aef3f562f9bf59466d9145668266bce098442f52820cf6533d1b3432145b4",
+      "anonymousHTTP": 403
+    }
+  ],
+  "buildVersionReceipts": [
+    {
+      "buildId": "71d50405-3f58-45d1-932a-12859dc44d86",
+      "timestamp": "2026-10-12T13:53:19.202421838Z",
+      "nextPatchPresent": true
+    },
+    {
+      "buildId": "3f80aec8-bed1-41ba-8bf2-fcfc5b6f8d26",
+      "timestamp": "2026-10-12T13:53:17.351892940Z",
+      "nextPatchPresent": true
+    },
+    {
+      "buildId": "0cfb8046-3be7-4f97-ae4e-bbf3caac7da7",
+      "timestamp": "2026-10-12T13:53:03.602328975Z",
+      "nextPatchPresent": true
+    },
+    {
+      "buildId": "e456582f-b9db-4773-8897-bf856a1c56a3",
+      "timestamp": "2026-10-12T13:52:59.442474915Z",
+      "nextPatchPresent": true
+    }
+  ],
+  "securityPatchCommit": "7d71d479bd437b602ae45eaf20485593d3cef30b",
+  "runtimeVersions": {
+    "next": "16.3.8",
+    "eslint-config-next": "16.3.8",
+    "proxy-addr": "2.0.8"
+  },
+  "productionDependencyAudit": {
+    "counts": {
+      "info": 0,
+      "low": 2,
+      "moderate": 14,
+      "high": 25,
+      "critical": 0,
+      "total": 41
+    },
+    "preMigrationBaseline": {
+      "baselineCommit": "7dd168aac33c015e8d45ad89a0027dcff09859ee",
+      "counts": {
+        "info": 0,
+        "low": 2,
+        "moderate": 13,
+        "high": 25,
+        "critical": 2,
+        "total": 42
+      },
+      "newHighPackageEntries": []
+    },
+    "remediationScope": "Compatible patches for the two critical package entries. Remaining entries require separate reachability and remediation review.",
+    "primaryAdvisories": [
+      "https://github.com/vercel/next.js/security/advisories/GHSA-vcvr-r3jv-pc5j",
+      "https://github.com/jshttp/proxy-addr/security/advisories/GHSA-jqcg-44mw-7w3h"
+    ]
   }
 }

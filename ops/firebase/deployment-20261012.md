@@ -37,10 +37,10 @@ payloads. Document bytes remain in existing managed object storage.
 
 | Resource | Accepted production revision | Evidence |
 | --- | --- | --- |
-| `legalApp` | `legalapp-00004-joc` | HTTP 200, Firestore readiness, private-route denials and authenticated worker JSON through all three URLs |
-| `legalGeneration` | `legalgeneration-00002-dew` | Authenticated POST completed, exact-model inference receipt, READY heartbeat, anonymous HTTP 403 |
-| `legalMaintenance` | `legalmaintenance-00002-nil` | Authenticated POST completed and scheduled execution returned HTTP 200, anonymous HTTP 403 |
-| `legalBackground` | `legalbackground-00003-lip` | Native Firestore/Eventarc task reached DONE; anonymous HTTP 403 |
+| `legalApp` | `legalapp-00005-deq` | HTTP 200, Firestore readiness, private-route denials and authenticated worker JSON through all three URLs |
+| `legalGeneration` | `legalgeneration-00003-rub` | Authenticated POST completed, exact-model inference receipt, READY heartbeat, anonymous HTTP 403 |
+| `legalMaintenance` | `legalmaintenance-00003-vaw` | Authenticated POST completed and scheduled execution returned HTTP 200, anonymous HTTP 403 |
+| `legalBackground` | `legalbackground-00004-muy` | Native Firestore/Eventarc task reached DONE; anonymous HTTP 403 |
 
 App runtime bundle version 3 enables generation after real worker verification;
 workers retain version 2. Both bundles omit SQL connection strings. A fresh app
@@ -49,7 +49,9 @@ AK only; the subscription worker owner remains separate.
 
 The native background diagnostic was infrastructure-only, with no real document,
 agent, Finance event or legal action. Its DONE receipt is retained in
-`_LegalMetadata/native-event-20261012`. Two earlier legacy-adapter diagnostics
+`_LegalMetadata/native-event-20261012`. The patched-runtime receipt is in
+`_LegalMetadata/native-event-patched-20261012`, with DONE at
+2026-10-12 14:07:24 UTC. Two earlier legacy-adapter diagnostics
 were explicitly closed as FAILED without replay. The real framework test now
 guards explicit CloudEvent registration and bound task-ID delivery.
 
@@ -109,3 +111,25 @@ Implementation commits: `5ca43c1a63744e4543c02a0d03e14d7277dc7359` and
 `7dd2d87d747116e0d7acfa2af271d8819b66fb85`. The second adds the tested native event
 registration correction. Documentation-only evidence follows those commits.
 PR: https://github.com/FutureOfSports/lsc-legal-dashboard/pull/10
+
+## Runtime dependency patch
+
+A deployed-lockfile audit reported two critical package entries. Compatible
+patches upgraded Next and its ESLint config to 16.3.8 and pinned the transitive
+`proxy-addr` package to 2.0.8. See the maintained
+[Next advisory](https://github.com/vercel/next.js/security/advisories/GHSA-vcvr-r3jv-pc5j)
+and [proxy parser advisory](https://github.com/jshttp/proxy-addr/security/advisories/GHSA-jqcg-44mw-7w3h).
+The full release gate and native Next request checks passed again. All four
+new builds succeeded, their build logs confirmed Next 16.3.8, and independent
+Cloud Run readbacks showed 100% traffic on the new pinned image digests. The
+post-patch native event reached DONE, all four schedules returned HTTP 200, and
+authenticated generation readiness passed through all three URLs.
+
+The production audit now reports zero critical entries and 41 remaining
+non-critical package entries, including 25 high entries. The pre-migration
+baseline also had 25 high entries; no new high package names were introduced.
+This does not prove advisory reachability or complete dependency remediation.
+The remaining findings need a separate security review. The executed count and
+baseline comparison are recorded in the JSON receipt.
+
+Patch implementation commit: `7d71d479bd437b602ae45eaf20485593d3cef30b`.
