@@ -302,3 +302,14 @@ retained. Subsequent Firestore writes make a hosting-only database rollback
 unsafe. Signing, CISO, proxy native storage and D-bot operator controls remain
 separate dependencies. Current evidence and cutover state belong in
 `ops/firebase/README.md` and its dated deployment receipt.
+
+Cutover completed on 12 October 2026 after all 69 models and 9,852 frozen source
+records passed reconciliation and an independent fresh comparison. Both old
+URLs now forward to the native app function. Generation and maintenance
+functions executed successfully, the exact-model inference receipt passed
+authenticated readiness through all three URLs, and all four US operational
+schedules returned HTTP 200. The source is read-only, source schedules are
+paused, the old generation VM is stopped with its disk retained, and the old
+generation service and maintenance job are retired. The two failed native-event
+diagnostics are explicitly closed; the corrected real trigger has a DONE
+receipt. No legal documents or decisions were created for infrastructure tests.

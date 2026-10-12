@@ -48,12 +48,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Deployment and verification gotchas, 21 September 2026
 
-- Always pass the intended `--project` explicitly. Source production is
-  `fsp-legal-esign`; the migration destination is `fsp-us-prod-499705`. Local
+- Always pass the intended `--project` explicitly. Legal production is
+  `fsp-us-prod-499705`; `fsp-legal-esign` retains signing dependencies and the
+  original URL gateway. Local
   gcloud defaults to an unrelated project.
-- The 12 October 2026 Firebase migration retains Neon as source until its final
-  frozen-writer comparison. See `ops/firebase/README.md` for the current cutover
-  receipt. Hosting alone never proves database backup or migration completion.
+- The 12 October 2026 Firebase migration completed its frozen-writer comparison:
+  all 69 models and 9,852 source records matched before consumers were enabled.
+  Firestore is authoritative; Neon is read-only rollback data. See
+  `ops/firebase/deployment-20261012.md`. Hosting rollback alone is unsafe after
+  subsequent Firestore writes; freeze and reconcile data before changing backend.
 - Use the isolated verification database for fixtures. Never seed synthetic legal
   entities, money, signatures or Finance payloads into production.
 - Run one full TypeScript/release gate at a time; parallel compiler runs exhausted

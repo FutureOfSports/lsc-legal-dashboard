@@ -36,14 +36,14 @@ Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()
 
 ## Tech Stack
 - **Framework**: Next.js 16.3.5 (App Router, Server Components)
-- **Database**: Firestore migration in progress. The typed Prisma 7.6.0 model contract is retained through `src/lib/firestore`; Neon remains the source until the final frozen-writer comparison and cutover receipt.
+- **Database**: Dedicated Firestore `legal-os` in FSP US production, `us-central1`. All 69 models and 9,852 frozen source records passed the final comparison on 12 October 2026. The typed Prisma 7.6.0 model contract is retained through `src/lib/firestore`; Neon is read-only rollback data.
 - **UI**: shadcn/ui + Tailwind CSS v4 (dark mode primary)
 - **Charts**: Recharts
 - **AI**: CLIProxyAPI v8.0.16 with verified native Codex OAuth and exact `gpt-6.1-sol`; private Responses transport, isolated generation worker and human approval. See the dated intelligence verification receipt for activation status.
 - **Drag & Drop**: @dnd-kit/core
 - **Icons**: lucide-react
 - **Auth**: Custom cookie-based HMAC sessions
-- **Deploy**: Firebase Functions v2 migration in `fsp-us-prod-499705` / `us-central1`. `ops/firebase/index.mjs` owns app and worker entry points. Existing Cloud Run URLs become raw-request forwarding gateways only after verified cutover. Document storage, private proxy and signing URLs are separate dependencies.
+- **Deploy**: Firebase Functions v2 in `fsp-us-prod-499705` / `us-central1`. `ops/firebase/index.mjs` owns app and worker entry points. The complete app is live at `https://legalapp-2feiiv4i4a-uc.a.run.app`; existing Cloud Run URLs forward raw requests there. Document storage, private proxy and signing URLs are separate dependencies. See `ops/firebase/deployment-20261012.md` for executed acceptance and rollback boundaries.
 
 ## Key Rules
 1. **Read Next.js 16 docs first**: Check `node_modules/next/dist/docs/` before writing any code. `params` and `searchParams` are Promises in page components — always `await` them.

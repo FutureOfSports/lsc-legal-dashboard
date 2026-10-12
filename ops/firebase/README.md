@@ -3,10 +3,20 @@
 Destination: `fsp-us-prod-499705`, `us-central1`, named Firestore database
 `legal-os`. Runtime: `legal-os-runtime@fsp-us-prod-499705.iam.gserviceaccount.com`.
 
-Initial import on 12 October 2026: 69 model collections, 9,841 records, every
-model independently compared. This is an initial copy, not a final cutover
-receipt. Existing traffic remains on Cloud Run and Neon until final frozen-writer
-reconciliation. Never use isolated fixtures as production evidence.
+Production cutover completed on 12 October 2026. The frozen source contained
+69 model collections and 9,852 records. Reconciliation and a separate fresh
+source-to-target comparison both passed for every model before consumers were
+enabled. Initial import had 9,841 records; the final pass captured 11 subsequent
+source records. Firestore is now authoritative. Never use isolated fixtures as
+production evidence. See [the deployment receipt](deployment-20261012.md) and
+[the machine-readable evidence](deployment-20261012.json).
+
+The complete application is live at
+https://legalapp-2feiiv4i4a-uc.a.run.app. Both previously published Cloud Run URLs
+forward raw requests to that function. They have no database or provider
+credentials. The source Neon database is read-only, its schedules are paused,
+the old generation VM is stopped with its disk retained, and the old generation
+service and maintenance job are retired.
 
 | Function | Responsibility |
 | --- | --- |
@@ -46,11 +56,25 @@ Next, preserving multipart, Server Actions and HMAC bytes. Deferred work persist
 stays uncertain. Inspect its underlying receipt before explicit recovery;
 automatic replay is disabled.
 
+Native gcloud deployment must register `legalBackground` with the Functions
+framework's `cloudEvent` API. The default legacy adapter drops Firestore path
+parameters. `verify-firebase-events.mjs` executes the real framework and guards
+this boundary. A production infrastructure-only task reached DONE through the
+native Eventarc trigger; it performed no legal action.
+
 Generation persists its daily/configuration-bound readiness receipt outside
 ephemeral disks. It processes explicit requests and preserves human review.
 No legal AI review schedule is enabled. Maintenance consumes existing operational
 queues. OpenSign, CLIProxyAPI and CISO retain their native third-party stores.
 D-bot remains subject to its separate eligible operator deployment policy.
+
+US Cloud Scheduler now dispatches private generation every minute and private
+maintenance every five minutes through OIDC. The existing daily review-task and
+15-minute signing-status schedules moved to the same US project with their
+original time zones. All four have executed with HTTP 200. The generation
+heartbeat returned `ready: true` through each published URL after activation,
+using its real cached exact-model inference receipt. It does not approve or
+publish generated contracts.
 
 ## Verification and cutover
 
