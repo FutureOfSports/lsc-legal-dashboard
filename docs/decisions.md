@@ -313,3 +313,12 @@ paused, the old generation VM is stopped with its disk retained, and the old
 generation service and maintenance job are retired. The two failed native-event
 diagnostics are explicitly closed; the corrected real trigger has a DONE
 receipt. No legal documents or decisions were created for infrastructure tests.
+
+The deployed lockfile audit, separate from GitHub's default-branch aggregate,
+reported two critical package entries: Next and the Functions HTTP framework's
+transitive proxy parser. Compatible patches pin Next and its ESLint config to
+16.3.8 and override `proxy-addr` to 2.0.8. The resulting production audit reports
+zero critical entries and 41 remaining non-critical package findings, including
+25 high entries. This is scoped critical dependency repair, not a complete
+dependency security audit or a claim that every advisory is reachable. The full
+release gate is rerun before deploying the patched Functions.

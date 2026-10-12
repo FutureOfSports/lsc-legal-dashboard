@@ -35,7 +35,7 @@ Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()
 - `AgentMessage` is diagnostic/legacy plumbing only; production workflows use direct triggers. Cross-dashboard events use the durable `CrossModuleEvent` queue.
 
 ## Tech Stack
-- **Framework**: Next.js 16.3.5 (App Router, Server Components)
+- **Framework**: Next.js 16.3.8 (App Router, Server Components)
 - **Database**: Dedicated Firestore `legal-os` in FSP US production, `us-central1`. All 69 models and 9,852 frozen source records passed the final comparison on 12 October 2026. The typed Prisma 7.6.0 model contract is retained through `src/lib/firestore`; Neon is read-only rollback data.
 - **UI**: shadcn/ui + Tailwind CSS v4 (dark mode primary)
 - **Charts**: Recharts
