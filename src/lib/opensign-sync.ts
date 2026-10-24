@@ -11,7 +11,7 @@
  * must not create duplicate versions, duplicate Finance events, or repeated
  * lifecycle transitions.
  */
-import { after } from "next/server"
+import { scheduleLegalTask } from "@/lib/background-task"
 import { prisma } from "@/lib/prisma"
 import { fetchOpenSignDocument, type OpenSignDocumentStatus } from "@/lib/opensign"
 import { getS3Key, uploadBufferToS3 } from "@/lib/s3"
@@ -118,7 +118,7 @@ export async function applyOpenSignStatus(documentId: string, status?: OpenSignD
   if (!result.applied) return { documentId, changed: false, status: "skipped", detail: "Signing request changed during reconciliation" }
   if (signedFile && result.versionId) {
     const versionId = result.versionId
-    after(async () => {
+    await scheduleLegalTask({ kind: "upload-analysis", documentId, versionId, fileUrl: signedFile.url, name: `${doc.title}-signed.pdf`, mimeType: "application/pdf" }, async () => {
       try {
         const arrayBuffer = signedFile.bytes.buffer.slice(signedFile.bytes.byteOffset, signedFile.bytes.byteOffset + signedFile.bytes.byteLength) as ArrayBuffer
         const content = await extractTextFromFile(new File([arrayBuffer], `${doc.title}-signed.pdf`, { type: "application/pdf" }))

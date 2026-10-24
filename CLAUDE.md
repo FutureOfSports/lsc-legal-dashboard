@@ -35,21 +35,21 @@ Agents live in `src/lib/agents/`. Each extends `BaseAgent` and implements `run()
 - `AgentMessage` is diagnostic/legacy plumbing only; production workflows use direct triggers. Cross-dashboard events use the durable `CrossModuleEvent` queue.
 
 ## Tech Stack
-- **Framework**: Next.js 16.3.5 (App Router, Server Components)
-- **Database**: NeonDB (PostgreSQL) via Prisma 7.6.0
+- **Framework**: Next.js 16.3.8 (App Router, Server Components)
+- **Database**: Dedicated Firestore `legal-os` in FSP US production, `us-central1`. All 69 models and 9,852 frozen source records passed the final comparison on 12 October 2026. The typed Prisma 7.6.0 model contract is retained through `src/lib/firestore`; Neon is read-only rollback data.
 - **UI**: shadcn/ui + Tailwind CSS v4 (dark mode primary)
 - **Charts**: Recharts
 - **AI**: CLIProxyAPI v8.0.16 with verified native Codex OAuth and exact `gpt-6.1-sol`; private Responses transport, isolated generation worker and human approval. See the dated intelligence verification receipt for activation status.
 - **Drag & Drop**: @dnd-kit/core
 - **Icons**: lucide-react
 - **Auth**: Custom cookie-based HMAC sessions
-- **Deploy**: primary GCP Cloud Run `lsc-legal-dashboard` in `fsp-us-prod-499705` / `us-central1`; original `fsp-legal-esign` / `asia-southeast1` URL remains compatible. Existing Neon data, document bucket and signing URLs are retained.
+- **Deploy**: Firebase Functions v2 in `fsp-us-prod-499705` / `us-central1`. `ops/firebase/index.mjs` owns app and worker entry points. The complete app is live at `https://legalapp-2feiiv4i4a-uc.a.run.app`; existing Cloud Run URLs forward raw requests there. Document storage, private proxy and signing URLs are separate dependencies. See `ops/firebase/deployment-20261012.md` for executed acceptance and rollback boundaries.
 
 ## Key Rules
 1. **Read Next.js 16 docs first**: Check `node_modules/next/dist/docs/` before writing any code. `params` and `searchParams` are Promises in page components — always `await` them.
 2. **Server Components by default**: Only add `'use client'` when you need state, effects, or event handlers.
 3. **Dark mode primary**: slate-950 background everywhere. See `.claude/skills/design-system.md` for full tokens.
-4. **Prisma for all DB access**: Use the singleton from `src/lib/prisma.ts`. Never raw SQL unless reading finance tables.
+4. **Typed model API for DB access**: Use the singleton from `src/lib/prisma.ts`. Firestore transactions enforce defaults, relations, uniqueness and exact decimal serialization. Regenerate its contract with `npm run firestore:schema` after changing `prisma/schema.prisma`. Never add unsupported transport operators or raw SQL to an application flow.
 5. **Server Actions for mutations**: All writes go through `src/actions/`. Always call `requireSession()` or `requireRole()` first.
 6. **Financial figures use JetBrains Mono**: `font-mono tabular-nums` class on all numbers.
 7. **USD reporting default**: Keep agreement-currency Decimal values and display native amounts with sourced USD references using `src/lib/money.ts`. Missing/stale FX and unknown amounts remain explicit. Never relabel native amounts or use floating-point money.

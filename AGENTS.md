@@ -48,10 +48,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Deployment and verification gotchas, 21 September 2026
 
-- Always pass the intended `--project` explicitly. Source production is
-  `fsp-legal-esign`; the migration destination is `fsp-us-prod-499705`. Local
+- Always pass the intended `--project` explicitly. Legal production is
+  `fsp-us-prod-499705`; `fsp-legal-esign` retains signing dependencies and the
+  original URL gateway. Local
   gcloud defaults to an unrelated project.
-- Live data is Neon Postgres; Cloud Run hosting does not imply a Cloud SQL backup.
+- The 12 October 2026 Firebase migration completed its frozen-writer comparison:
+  all 69 models and 9,852 source records matched before consumers were enabled.
+  Firestore is authoritative; Neon is read-only rollback data. See
+  `ops/firebase/deployment-20261012.md`. Hosting rollback alone is unsafe after
+  subsequent Firestore writes; freeze and reconcile data before changing backend.
 - Use the isolated verification database for fixtures. Never seed synthetic legal
   entities, money, signatures or Finance payloads into production.
 - Run one full TypeScript/release gate at a time; parallel compiler runs exhausted
@@ -60,6 +65,34 @@ This version has breaking changes — APIs, conventions, and file structure may 
   Prisma migration history, so do not blindly apply a baseline-less deploy.
 - Real provider authentication must be verified on the worker, independently of
   local CLI login. A synthetic wrapper test is not a live provider receipt.
+
+## Firebase migration, 12 October 2026
+
+- Legal uses the dedicated `legal-os` Firestore database in `us-central1`, never
+  the default database or `fspbots`. Isolated fixtures belong only in
+  `legal-os-verify-20261012`. Direct client rules deny all reads and writes.
+- Firestore stores Decimal values as exact strings and application Date values
+  as UTC ISO strings. Raw Postgres snapshots preserve original timestamp text
+  and NULL arrays; application rows match Prisma's millisecond/empty-array view.
+- Google's Functions framework consumes HTTP bodies before Next receives them.
+  Forward `req.rawBody` through a real private Node HTTP stream. Do not mutate
+  private request internals or hand Next an already consumed Express request.
+- Firebase cannot finish arbitrary `after()` closures after returning HTTP.
+  Use `scheduleLegalTask` and the durable task trigger. PROCESSING without a
+  receipt stays uncertain and is never automatically replayed.
+- Oversized JSON fields use private immutable SHA-addressed GCS payloads.
+  Do not delete unreferenced blobs automatically: transaction retries can leave
+  harmless objects and historical/rollback snapshots may still reference them.
+- Standalone workers must not eagerly import Next navigation. Document access
+  loads that framework boundary only when requesting a web session or redirect.
+- Rules REST calls require `x-goog-user-project=fsp-us-prod-499705`; otherwise
+  the gcloud OAuth client can report SERVICE_DISABLED for its quota project.
+- With native gcloud deployment, register the Firestore handler explicitly with
+  the Functions framework's `cloudEvent` API. Its legacy event adapter drops
+  Firestore document parameters even while the invocation reports HTTP 200.
+- Cloud Run memory flags use `Mi`/`Gi`, not Functions' `MiB`/`GiB`. A small
+  compatibility gateway must enable CPU throttling; inherited always-on CPU
+  rejects memory below 512 Mi.
 - Cancel subprocesses by retaining SIGKILL escalation until process close. Node's
   built-in spawn AbortSignal can reject before a stubborn child exits.
 - Preserve the exact template bytes before rendering/signature submission, including

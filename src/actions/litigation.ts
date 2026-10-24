@@ -3,7 +3,7 @@
 import { requireRole } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
-import { after } from 'next/server'
+import { scheduleLegalTask } from '@/lib/background-task'
 import { runAgent } from '@/lib/agents/orchestrator'
 import { requireGlobalDocumentAccess } from '@/lib/document-access'
 import { saveDispute, setDisputeStatus } from '@/lib/dispute-service'
@@ -122,7 +122,7 @@ export async function uploadLitigationDocument(formData: FormData) {
   })
 
   const content = extractedText.trim() || `${caseRecord.case_name}\n${title}`
-  after(async () => {
+  await scheduleLegalTask({ kind: 'agent', agentId: 'agreement-analyzer', input: { litigationDocumentId: document.id, sourceType: 'litigation_document', sourceLabel: file.name, content } }, async () => {
     try {
       await runAgent('agreement-analyzer', {
         litigationDocumentId: document.id,
@@ -133,7 +133,7 @@ export async function uploadLitigationDocument(formData: FormData) {
     } catch (error) {
       console.error('Litigation document analysis failed (non-blocking):', error)
     }
-  })
+  }, session.userId)
 
   revalidatePath(`/legal/litigation/${caseId}`)
   return { success: true, documentId: document.id, hasFile: true }

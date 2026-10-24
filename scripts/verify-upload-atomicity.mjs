@@ -56,6 +56,8 @@ const modules = {
   '@/lib/extract-text': { extractTextFromFile: async () => { if (fail === 'extraction') throw new Error('Injected extraction failure'); return '' } },
   '@/lib/agents/orchestrator': { runAgent: async () => {} },
   'next/server': { after: (work) => { if (fail === 'background') throw new Error('Injected scheduling failure'); background.push(work) } },
+  '@/lib/background-task': { scheduleLegalTask: async (_task, work) => { if (fail === 'background') throw new Error('Injected scheduling failure'); background.push(work) } },
+  '@/lib/document-finance': { maybeEmitContractEvent: async () => {} },
   'next/cache': { revalidatePath: () => {} },
   '@/generated/prisma/client': { Prisma: { Decimal: class {} } },
   '@/lib/constants': { VALID_TRANSITIONS: { DRAFT: ['IN_REVIEW'] }, ENTITIES: [] },

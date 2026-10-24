@@ -170,7 +170,30 @@ if (process.env.CISO_ASSISTANT_ENABLED === "1") {
   }
 }
 
-if (process.env.DATABASE_URL) {
+if (process.env.LEGAL_DATA_BACKEND === 'firestore') {
+  try {
+    const { Firestore } = await import('@google-cloud/firestore')
+    const settings = { projectId: process.env.LEGAL_FIRESTORE_PROJECT, databaseId: process.env.LEGAL_FIRESTORE_DATABASE }
+    if (!settings.projectId || !settings.databaseId?.startsWith('legal-os')) throw new Error('Explicit Legal Firestore database required')
+    if (process.env.LEGAL_MIGRATION_ACCOUNT) {
+      if (!/^legal-os-verify-\d{8}$/.test(settings.databaseId)) throw new Error('Operator gate authentication is limited to the verification database')
+      const { execFileSync } = await import('node:child_process')
+      const { OAuth2Client } = await import('google-auth-library')
+      const client = new OAuth2Client()
+      client.setCredentials({ access_token: execFileSync('gcloud', ['auth', 'print-access-token', `--account=${process.env.LEGAL_MIGRATION_ACCOUNT}`, `--project=${settings.projectId}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim() })
+      settings.authClient = client
+    }
+    const db = new Firestore(settings)
+    try {
+      const snapshot = await db.doc('_LegalMetadata/schema').get()
+      const contract = JSON.parse(readFileSync('src/lib/firestore/schema.json', 'utf8'))
+      if (snapshot.get('schemaHash') !== contract.hash) throw new Error('The Firestore schema contract is missing or stale')
+      const models = snapshot.get('models')
+      for (const table of REQUIRED_TABLES) if (!models.some(model => model.name === table)) errors.push(`Runtime Firestore contract is missing ${table}`)
+      for (const [table, column] of REQUIRED_COLUMNS) if (!models.some(model => model.name === table && model.fields.includes(column))) errors.push(`Runtime Firestore contract is missing ${table}.${column}`)
+    } finally { await db.terminate() }
+  } catch { errors.push('Could not verify the runtime Firestore schema contract') }
+} else if (process.env.DATABASE_URL) {
   const client = new Client({ connectionString: process.env.DATABASE_URL })
   try {
     await client.connect()

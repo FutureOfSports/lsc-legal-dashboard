@@ -84,6 +84,7 @@ function fixture({ fallback = false, failArtifact = '', failReceipt = false, fai
   })
   const anchors = Object.fromEntries(['cp_signature', 'cp_date', 'fsp_signature', 'fsp_date'].map(name => [name, { page: 1, xPct: 10, yPct: 10, wPct: 10, hPct: 10 }]))
   const mnda = load('src/lib/mnda.ts', {
+    '@/lib/background-task': { async scheduleLegalTask() {} },
     'node:crypto': crypto, 'next/server': { after() {} }, '@/lib/prisma': { prisma }, '@/lib/s3': storage,
     '@/lib/opensign': { async createOpenSignDocument(input) {
       providerCalls++

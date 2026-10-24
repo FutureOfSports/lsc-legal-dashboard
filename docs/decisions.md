@@ -276,3 +276,49 @@ Applicability decisions, verified controls, final document approval/publication,
 access grants and signature sends retain human approval. No recurring compliance
 review is enabled. See ops/dbot/README.md and the dated deployment receipt for
 implemented, deployed and pending boundaries.
+
+## 12 October 2026: Full Legal OS Firebase migration
+
+Anuj confirmed that the entire Legal OS application and business database should
+move to Firebase Functions and Firestore. The destination remains FSP US
+production. The database is dedicated `legal-os` in `us-central1`, with server
+IAM, client-deny rules, delete protection, PITR and daily retained backups.
+
+The existing typed model contract is retained through a Firestore transport,
+including exact Decimal values and atomic relational behavior. Original source
+snapshots preserve SQL types/text; normalized comparisons reflect the existing
+application's millisecond dates and empty-list representation. Large structured
+fields use hash-verified immutable private GCS payloads.
+
+Firebase Functions run the complete app and bounded operational consumers.
+Deferred tasks persist before HTTP acknowledgement. Unknown execution outcomes
+remain uncertain and require receipt inspection; no automatic legal action
+replay or recurring AI compliance review is introduced. Readiness maintenance
+continues for explicitly requested generation with the exact private proxy model.
+
+Old published URLs become compatibility gateways after the final frozen-writer
+snapshot and independent comparison. Old revisions and source backups are
+retained. Subsequent Firestore writes make a hosting-only database rollback
+unsafe. Signing, CISO, proxy native storage and D-bot operator controls remain
+separate dependencies. Current evidence and cutover state belong in
+`ops/firebase/README.md` and its dated deployment receipt.
+
+Cutover completed on 12 October 2026 after all 69 models and 9,852 frozen source
+records passed reconciliation and an independent fresh comparison. Both old
+URLs now forward to the native app function. Generation and maintenance
+functions executed successfully, the exact-model inference receipt passed
+authenticated readiness through all three URLs, and all four US operational
+schedules returned HTTP 200. The source is read-only, source schedules are
+paused, the old generation VM is stopped with its disk retained, and the old
+generation service and maintenance job are retired. The two failed native-event
+diagnostics are explicitly closed; the corrected real trigger has a DONE
+receipt. No legal documents or decisions were created for infrastructure tests.
+
+The deployed lockfile audit, separate from GitHub's default-branch aggregate,
+reported two critical package entries: Next and the Functions HTTP framework's
+transitive proxy parser. Compatible patches pin Next and its ESLint config to
+16.3.8 and override `proxy-addr` to 2.0.8. The resulting production audit reports
+zero critical entries and 41 remaining non-critical package findings, including
+25 high entries. This is scoped critical dependency repair, not a complete
+dependency security audit or a claim that every advisory is reachable. The full
+release gate is rerun before deploying the patched Functions.
